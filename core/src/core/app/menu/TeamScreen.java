@@ -1,76 +1,35 @@
 package core.app.menu;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 import core.app.Core;
-import core.app.GdxUtils;
-import core.app.entity.Division;
 import core.app.entity.Team;
-import core.fsdb.ViewModel;
 
 import java.util.stream.IntStream;
 
 import static core.app.Core.CELL_PADDING;
 import static core.app.Core.CELL_WIDTH;
 
-public class TeamScreen extends ScreenAdapter {
-
-    public static float WIDTH = 640f;
-    public static float HEIGHT = 720f;
-
-    private Team team;
-    private Stage stage;
-    private Viewport viewport;
-    private Skin skin;
-    private Core core;
+public class TeamScreen extends BaseScreen<Team> {
 
 
     public TeamScreen(Team team, Skin skin, Core core ) {
-        this.team = team;
-        this.skin = skin;
-        this.core = core;
+        super(team, skin, core);
     }
 
-    @Override
-    public void resize(int width, int height) {
-        viewport.update(width, height,true);
-    }
 
-    @Override
-    public void show() {
-        viewport = new FitViewport(WIDTH, HEIGHT);
-        stage = new Stage(viewport);
 
-        Gdx.input.setInputProcessor(stage);
-        
-        initUi();
-    }
 
-    private void initUi() {
-        Table table =  new Table(skin);
-        table.setBackground("bg");
-        table.add(getTeamTable()).growX();
-        table.center();
-        table.setFillParent(true);
-        table.pack();
-        stage.addActor(table);
-
-    }
-
-    private Table getTeamTable() {
+   @Override
+    protected Table getTable() {
             Table rootTable = new Table();
             Table table = new Table();
-            Label label = new Label( team.getName(), skin,"bg");
+            Label label = new Label( t.getName(), skin,"bg");
             label.setTouchable(Touchable.disabled);
             label.setAlignment(Align.center);
             table.add(label);
@@ -78,30 +37,30 @@ public class TeamScreen extends ScreenAdapter {
             rootTable.row();
             table = new Table();
             label = new Label("Name:" ,skin);
-            table.add(label).width(CELL_WIDTH).align(Align.left).padLeft(CELL_PADDING);
+            table.add(label).width(CELL_WIDTH).align(Align.left).padLeft(CELL_PADDING * 2);
             label = new Label("Damage", skin);
             table.add(label).expandX().align(Align.center);
             label = new Label("Hp", skin);
-            table.add(label).expandX().align(Align.right);
+            table.add(label).expandX().align(Align.right).padRight(CELL_PADDING * 2);;
             rootTable.add(table).expandX().growX();
             rootTable.row();
             table = new Table();
             rootTable.add(table).growX();
             Table finalTable = table;
-            IntStream.range(0,team.getFighters().size()).forEach(i ->{
+            IntStream.range(0, t.getFighters().size()).forEach(i ->{
                 Table listItemTable = new Table();
-                Label itemLabel = new Label(team.getFighters().get(i).getName() ,skin);
-                listItemTable.add(itemLabel).width(CELL_WIDTH).align(Align.left).padLeft(CELL_PADDING);
-                itemLabel = new Label(team.getFighters().get(i).getDmg()+"", skin);
+                Label itemLabel = new Label(t.getFighters().get(i).getName() ,skin);
+                listItemTable.add(itemLabel).width(CELL_WIDTH).align(Align.left).padLeft(CELL_PADDING * 2);
+                itemLabel = new Label(t.getFighters().get(i).getDmg()+"", skin);
                 listItemTable.add(itemLabel).expandX().align(Align.center);
-                itemLabel = new Label(team.getFighters().get(i).getHp()+"", skin);
-                listItemTable.add(itemLabel).expandX().align(Align.right);
+                itemLabel = new Label(t.getFighters().get(i).getHp()+"", skin);
+                listItemTable.add(itemLabel).expandX().align(Align.right).padRight(CELL_PADDING * 2);;
                 finalTable.add(listItemTable).growX();
                 finalTable.row();
                 listItemTable.addListener(new ClickListener(){
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
-
+                        core.setScreen(new FighterScreen(t.getFighters().get(i),skin,core));
                     }
                 });
             });
@@ -119,21 +78,5 @@ public class TeamScreen extends ScreenAdapter {
 
 
 
-    @Override
-    public void render(float delta) {
-        GdxUtils.clearScreen();
-        stage.act();
-        stage.draw();
-    }
 
-    @Override
-    public void hide() {
-        dispose();
-    }
-
-    @Override
-    public void dispose() {
-       skin.dispose();
-       stage.dispose();
-    }
 }

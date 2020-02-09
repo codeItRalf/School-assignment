@@ -16,7 +16,7 @@ import static core.annotation.ForeignKey.CASCADE;
         listOfChildren = "fighters",
         child = Fighter.class,
         onDelete = CASCADE))
-public class Team  extends Identity{
+public class Team extends Identity{
     private int divisionId;
     private int wins;
     private int losses;
