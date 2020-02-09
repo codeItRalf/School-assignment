@@ -2,17 +2,17 @@ package core.app.menu;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import core.app.Core;
 import core.app.GdxUtils;
 import core.app.entity.Division;
 import core.app.entity.Team;
@@ -32,10 +32,13 @@ public class TeamScreen extends ScreenAdapter {
     private Stage stage;
     private Viewport viewport;
     private Skin skin;
+    private Core core;
 
-    public TeamScreen(Team team, Skin skin ) {
+
+    public TeamScreen(Team team, Skin skin, Core core ) {
         this.team = team;
         this.skin = skin;
+        this.core = core;
     }
 
     @Override
@@ -56,7 +59,7 @@ public class TeamScreen extends ScreenAdapter {
     private void initUi() {
         Table table =  new Table(skin);
         table.setBackground("bg");
-        table.add(getTeamTable());
+        table.add(getTeamTable()).growX();
         table.center();
         table.setFillParent(true);
         table.pack();
@@ -65,7 +68,6 @@ public class TeamScreen extends ScreenAdapter {
     }
 
     private Table getTeamTable() {
-
             Table rootTable = new Table();
             Table table = new Table();
             Label label = new Label( team.getName(), skin,"bg");
@@ -103,7 +105,15 @@ public class TeamScreen extends ScreenAdapter {
                     }
                 });
             });
-
+        rootTable.row();
+        TextButton textButton = new TextButton("Back", skin);
+        textButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+             core.showStartScreen();
+            }
+        });
+        rootTable.add(textButton);
             return rootTable;
         }
 

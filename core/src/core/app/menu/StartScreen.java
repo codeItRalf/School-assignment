@@ -79,7 +79,7 @@ public class StartScreen extends ScreenAdapter {
         Table table = new Table();
         ScrollPane scrollPane = new ScrollPane(table);
         scrollPane.setScrollY(0);
-      //  stack.add(table);
+
         stack.add(scrollPane);
         Label label = new Label("The Arena", skin, "bg");
         label.setTouchable(Touchable.disabled);
@@ -237,7 +237,7 @@ public class StartScreen extends ScreenAdapter {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     System.out.println(division.getTeams().get(i).getName() +" clicked! ");
-                    core.setScreen(new TeamScreen(division.getTeams().get(i),skin));
+                    core.setScreen(new TeamScreen(division.getTeams().get(i),skin,core));
                 }
             });
         });
