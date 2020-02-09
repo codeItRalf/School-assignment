@@ -1,6 +1,9 @@
 package core.app;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -11,6 +14,7 @@ import core.fsdb.ViewModel;
 public class Core extends Game {
     private Stage stage;
     private Skin skin;
+    private BitmapFont bitmapFont;
     public static DesktopWorker desktopWorker;
     private int dragStartX, dragStartY;
     private int windowStartX, windowStartY;
@@ -31,10 +35,24 @@ public class Core extends Game {
 
     @Override
     public void create() {
+        generateBitmapFont();
         showStartScreen();
     }
 
     public void showStartScreen() {
         setScreen(new StartScreen(viewModel, this));
+    }
+
+    private void generateBitmapFont(){
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("Cinzel-Regular.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size = 12;
+        bitmapFont = generator.generateFont(parameter); // font size 12 pixels
+        generator.dispose();
+        // don'
+    }
+
+    public BitmapFont getBitmapFont() {
+        return bitmapFont;
     }
 }

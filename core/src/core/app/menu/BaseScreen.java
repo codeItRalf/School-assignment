@@ -2,6 +2,7 @@ package core.app.menu;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -20,6 +21,7 @@ public abstract class BaseScreen<T extends Identity> extends ScreenAdapter {
     protected Stage stage;
     protected Viewport viewport;
     protected Skin skin;
+    protected BitmapFont bitmapFont;
     protected Core core;
 
 
@@ -27,6 +29,7 @@ public abstract class BaseScreen<T extends Identity> extends ScreenAdapter {
         this.t = t;
         this.skin = skin;
         this.core = core;
+        this.bitmapFont = core.getBitmapFont();
     }
 
     @Override
