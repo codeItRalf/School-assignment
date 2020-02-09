@@ -37,11 +37,11 @@ public class TeamScreen extends BaseScreen<Team> {
             rootTable.row();
             table = new Table();
             label = new Label("Name:" ,skin);
-            table.add(label).width(CELL_WIDTH).align(Align.left).padLeft(CELL_PADDING * 2);
+            table.add(label).width(CELL_WIDTH).align(Align.left).padLeft(CELL_PADDING);
             label = new Label("Damage", skin);
             table.add(label).expandX().align(Align.center);
             label = new Label("Hp", skin);
-            table.add(label).expandX().align(Align.right).padRight(CELL_PADDING * 2);;
+            table.add(label).expandX().align(Align.right);
             rootTable.add(table).expandX().growX();
             rootTable.row();
             table = new Table();
@@ -50,11 +50,11 @@ public class TeamScreen extends BaseScreen<Team> {
             IntStream.range(0, t.getFighters().size()).forEach(i ->{
                 Table listItemTable = new Table();
                 Label itemLabel = new Label(t.getFighters().get(i).getName() ,skin);
-                listItemTable.add(itemLabel).width(CELL_WIDTH).align(Align.left).padLeft(CELL_PADDING * 2);
+                listItemTable.add(itemLabel).width(CELL_WIDTH).align(Align.left).padLeft(CELL_PADDING);
                 itemLabel = new Label(t.getFighters().get(i).getDmg()+"", skin);
                 listItemTable.add(itemLabel).expandX().align(Align.center);
                 itemLabel = new Label(t.getFighters().get(i).getHp()+"", skin);
-                listItemTable.add(itemLabel).expandX().align(Align.right).padRight(CELL_PADDING * 2);;
+                listItemTable.add(itemLabel).expandX().align(Align.right);
                 finalTable.add(listItemTable).growX();
                 finalTable.row();
                 listItemTable.addListener(new ClickListener(){
