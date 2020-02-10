@@ -12,20 +12,21 @@ import core.app.entity.Team;
 
 import java.util.stream.IntStream;
 
-import static core.app.Core.CELL_PADDING;
-import static core.app.Core.CELL_WIDTH;
 
 public class TeamScreen extends BaseScreen<Team> {
 
 
-    public TeamScreen(Team team, Skin skin, Core core ) {
-        super(team, skin, core);
+    public TeamScreen(Team team,  Core core ) {
+        super(team,  core);
+    }
+
+    @Override
+    protected Table getFooter() {
+        return null;
     }
 
 
-
-
-   @Override
+    @Override
     protected Table getTable() {
             Table rootTable = new Table();
             Table table = new Table();
@@ -37,12 +38,12 @@ public class TeamScreen extends BaseScreen<Team> {
             rootTable.row();
             table = new Table();
             label = new Label("Name:" ,skin);
-            table.add(label).width(CELL_WIDTH).align(Align.left).padLeft(CELL_PADDING);
+            table.add(label).width(CELL_WIDTH).align(Align.left);
             label = new Label("Damage", skin);
             table.add(label).expandX().align(Align.center);
             label = new Label("Hp", skin);
             table.add(label).expandX().align(Align.right);
-            rootTable.add(table).expandX().growX();
+            rootTable.add(table).growX().padLeft(CELL_PADDING *2).padRight(CELL_PADDING * 2);;
             rootTable.row();
             table = new Table();
             rootTable.add(table).growX();
@@ -50,17 +51,17 @@ public class TeamScreen extends BaseScreen<Team> {
             IntStream.range(0, t.getFighters().size()).forEach(i ->{
                 Table listItemTable = new Table();
                 Label itemLabel = new Label(t.getFighters().get(i).getName() ,skin);
-                listItemTable.add(itemLabel).width(CELL_WIDTH).align(Align.left).padLeft(CELL_PADDING);
+                listItemTable.add(itemLabel).width(CELL_WIDTH).align(Align.left);
                 itemLabel = new Label(t.getFighters().get(i).getDmg()+"", skin);
                 listItemTable.add(itemLabel).expandX().align(Align.center);
                 itemLabel = new Label(t.getFighters().get(i).getHp()+"", skin);
                 listItemTable.add(itemLabel).expandX().align(Align.right);
-                finalTable.add(listItemTable).growX();
+                finalTable.add(listItemTable).growX().padLeft(CELL_PADDING *2).padRight(CELL_PADDING * 2);
                 finalTable.row();
                 listItemTable.addListener(new ClickListener(){
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
-                        core.setScreen(new FighterScreen(t.getFighters().get(i),skin,core));
+                        core.setScreen(new FighterScreen(t.getFighters().get(i),core));
                     }
                 });
             });

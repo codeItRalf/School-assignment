@@ -1,5 +1,6 @@
 package com.mygdx.game.desktop;
 
+import core.app.menu.BaseScreen;
 import core.fsdb.ViewModel;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
@@ -23,7 +24,7 @@ public class DesktopLauncher implements DesktopWorker {
         config.setWindowedMode(640, 720);
         ViewModel viewModel = new ViewModel();
         Core core = new Core(viewModel);
-        Core.desktopWorker = new DesktopLauncher();
+        BaseScreen.desktopWorker = new DesktopLauncher();
         new Lwjgl3Application(core, config);
     }
     

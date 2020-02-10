@@ -10,21 +10,22 @@ import com.badlogic.gdx.utils.Align;
 import core.app.Core;
 import core.app.entity.Fighter;
 
-import java.util.stream.IntStream;
-
-import static core.app.Core.CELL_PADDING;
-import static core.app.Core.CELL_WIDTH;
 
 public class FighterScreen extends BaseScreen<Fighter> {
 
     private Fighter fighter = this.t;
 
-    public FighterScreen(Fighter fighter, Skin skin, Core core ) {
-        super(fighter, skin, core);
+    public FighterScreen(Fighter fighter, Core core ) {
+        super(fighter, core);
+    }
+
+    @Override
+    protected Table getFooter() {
+        return null;
     }
 
 
-   @Override
+    @Override
     protected Table getTable() {
 
             Table table = new Table();
@@ -37,7 +38,7 @@ public class FighterScreen extends BaseScreen<Fighter> {
             table.add(label);
             table.row();
        TextField textField = new TextField("banan",new TextField.TextFieldStyle(bitmapFont,
-               Color.BLACK,
+               Color.WHITE,
                null,
                null,
                null));
