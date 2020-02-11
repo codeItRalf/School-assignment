@@ -8,8 +8,8 @@ import java.util.List;
 
 public interface RepositoryInterface<T extends Identity> {
     T get(String entity, int id);
-    void insert(T entity);
+    <T extends Identity> void insert( T entity);
     void remove(T entity);
     void update(T entity);
-    List<T> getAllOf(String type);
+     List<T> getAllOf(String type);
 }

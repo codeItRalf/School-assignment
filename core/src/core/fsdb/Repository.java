@@ -24,7 +24,7 @@ public  class Repository<T extends Identity> implements RepositoryInterface<T> {
 
 
     @Override
-    public T get(String entityType, int id) {
+    public  T get(String entityType, int id) {
         T t = deserializeFile(entityType,id);
         String child = getChildName(t);
         if(child!= null){
@@ -35,8 +35,9 @@ public  class Repository<T extends Identity> implements RepositoryInterface<T> {
 
 
 
+
     @Override
-    public void insert(T entity) {
+    public <T extends Identity>  void insert(T entity) {
         if (entity.getId() == -1) {
             entity.setId(generateId(dbName + "/" + entity.getClass().getSimpleName()));
         }
@@ -86,7 +87,7 @@ public  class Repository<T extends Identity> implements RepositoryInterface<T> {
         return t;
     }
 
-    private List<T> extractChildrenFromParent(T entity){
+    private <T extends Identity>  List<T> extractChildrenFromParent(T entity){
         String fieldName = entity.getClass().getAnnotation(Entity.class).foreignKey()[0].listOfChildren();
         if(fieldName.length() < 1){
             return null;
@@ -121,7 +122,7 @@ public  class Repository<T extends Identity> implements RepositoryInterface<T> {
         return  entity;
     }
 
-    private void setIgnoreFieldsToNull(T entity){
+    private <T extends Identity>  void setIgnoreFieldsToNull(T entity){
 
         Arrays.stream(entity.getClass().getDeclaredFields()).forEach(e -> {
             if (e.getAnnotation(Ignore.class) != null) {

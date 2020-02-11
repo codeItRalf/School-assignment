@@ -51,8 +51,4 @@ public class Fighter extends Identity  {
         this.dmg = dmg;
     }
 
-    @Override
-    public String getNameColored() {
-        return super.getNameColored();
-    }
 }

@@ -36,8 +36,4 @@ public class Division extends Identity {
         this.teams = teams;
     }
 
-    @Override
-    public String getNameColored() {
-        return super.getNameColored();
-    }
 }

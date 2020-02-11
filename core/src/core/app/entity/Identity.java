@@ -54,9 +54,6 @@ abstract public class Identity implements Serializable {
 
     }
 
-    public String getNameColored(){
-        return null;
-    }
 
     @Override
     public boolean equals(Object o) {

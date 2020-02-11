@@ -28,6 +28,7 @@ public abstract class BaseScreen<T extends Identity> extends ScreenAdapter {
     protected Stage stage;
     protected Viewport viewport;
     protected Skin skin;
+    protected Skin uiSkin;
     protected TextField.TextFieldStyle textFieldStyle;
     protected Core core;
     public static DesktopWorker desktopWorker;
@@ -44,6 +45,7 @@ public abstract class BaseScreen<T extends Identity> extends ScreenAdapter {
         this.skin = core.getSkin();
         this.core = core;
         this.textFieldStyle = core.getTextFieldStyle();
+        uiSkin = new Skin(Gdx.files.internal("default_skin/uiskin.json"));
     }
 
 

@@ -68,8 +68,4 @@ public class Team extends Identity{
         this.fighters = fighters;
     }
 
-    @Override
-    public String getNameColored() {
-        return super.getNameColored();
-    }
 }

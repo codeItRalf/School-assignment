@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import core.app.Core;
 import core.app.Logic;
+import core.app.dialog.BaseDialog;
 import core.app.entity.Division;
 import core.fsdb.ViewModel;
 
@@ -77,6 +78,12 @@ public class StartScreen extends BaseScreen<Division> {
         subTable.defaults().fillX();
         TextButton textButton = new TextButton("Create Div", skin);
         subTable.add(textButton);
+        textButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                BaseDialog.createDialog("Create new Division", uiSkin ,stage);
+            }
+        });
         textButton = new TextButton("Quit", skin);
         subTable.add(textButton);
         textButton.addListener(new ChangeListener() {

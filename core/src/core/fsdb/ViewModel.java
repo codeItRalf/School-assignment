@@ -52,4 +52,8 @@ public class ViewModel {
     public Division getDivisionForFighter(Fighter fighter){
         return getDivisionForTeam(getTeamForFighter(fighter));
     }
+
+    public void insertDivision(Division division){
+        repository.insert(division);
+    }
 }
