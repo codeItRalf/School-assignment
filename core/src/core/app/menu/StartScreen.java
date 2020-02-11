@@ -81,7 +81,7 @@ public class StartScreen extends BaseScreen<Division> {
         textButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                BaseDialog.createDialog("Create new Division", uiSkin ,stage);
+                BaseDialog.createDialog("Create new Division", "Division name: ", uiSkin, stage, core);
             }
         });
         textButton = new TextButton("Quit", skin);

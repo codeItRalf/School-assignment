@@ -13,6 +13,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static core.fsdb.FileSystem.generateId;
+
 public class ViewModel {
 
         private Repository<? extends Identity> repository;
@@ -23,7 +25,6 @@ public class ViewModel {
      repository = new Repository<>();
      divisions = (ArrayList<Division>) repository.getAllOf(Division.class.getSimpleName());
      myObserver = new MyObserver(divisions);
-
     }
 
 
@@ -54,6 +55,9 @@ public class ViewModel {
     }
 
     public void insertDivision(Division division){
+        division.setId(generateId(MyDatabase.class.getSimpleName() + "/" + division.getClass().getSimpleName()));
+        division.addPropertyChangeListener(myObserver);
+        divisions.add(division);
         repository.insert(division);
     }
 }

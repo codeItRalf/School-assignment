@@ -60,7 +60,7 @@ public abstract class BaseScreen<T extends Identity> extends ScreenAdapter {
         root.setFillParent(true);;
         root.setBackground("bg");
         stage.addActor(root);
-        root.add(getHeader(t == null? "The Arena" : t.getClass().getSimpleName())).growX().align(Align.top);
+        root.add(getHeader(t == null? "The Arena" : t.getName())).growX().align(Align.top);
         root.row();
 
 
@@ -153,21 +153,25 @@ public abstract class BaseScreen<T extends Identity> extends ScreenAdapter {
         table.add(label).align(Align.center);
         rootTable.add(table);
         rootTable.row();
-        table = new Table();
-        rootTable.add(table).growX();
-        Table finalTable = table;
-        IntStream.range(0,division.getTeams().size()).forEach(i -> {
-            Table listItemTable = getTeamItem(division, i);
-            finalTable.add(listItemTable).growX();
-            finalTable.row();
-            listItemTable.addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    System.out.println(division.getTeams().get(i).getName() + " clicked! ");
-                    core.setScreen(new TeamScreen(division.getTeams().get(i), core));
-                }
+
+        if(division.getTeams() != null && division.getTeams().size() > 0) {
+            table = new Table();
+            rootTable.add(table).growX();
+            Table finalTable = table;
+            IntStream.range(0, division.getTeams().size()).forEach(i -> {
+                Table listItemTable = getTeamItem(division, i);
+                finalTable.add(listItemTable).growX();
+                finalTable.row();
+                listItemTable.addListener(new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        System.out.println(division.getTeams().get(i).getName() + " clicked! ");
+                        core.setScreen(new TeamScreen(division.getTeams().get(i), core));
+                    }
+                });
             });
-        });
+        }
+
         return rootTable;
     }
 

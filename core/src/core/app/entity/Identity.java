@@ -15,6 +15,7 @@ abstract public class Identity implements Serializable {
 
 
     public Identity() {
+        this.name = "undefined";
         id = -1;
     }
 
@@ -22,6 +23,11 @@ abstract public class Identity implements Serializable {
         this.id = id;
         this.name = name;
 
+    }
+
+    public Identity(String name) {
+        this.name = name;
+        this.id = -1;
     }
 
     public void addPropertyChangeListener(PropertyChangeListener pcl){

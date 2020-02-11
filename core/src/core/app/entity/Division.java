@@ -17,10 +17,14 @@ import static core.annotation.ForeignKey.CASCADE;
 public class Division extends Identity {
 
   @Ignore
-  private ArrayList<Team> teams;
+  private ArrayList<Team> teams = new ArrayList<>();
 
     public Division() {
+        super("undefined");
+    }
 
+    public Division(String name) {
+        super(name);
     }
 
     public Division(String name, int id, ArrayList<Team> teams) {

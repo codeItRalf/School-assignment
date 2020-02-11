@@ -24,12 +24,7 @@ public class FighterScreen extends BaseScreen<Fighter> {
     protected Table getBody() {
 
         Table table = new Table();
-        Label label = new Label( fighter.getName(), skin,"bg");
-        label.setTouchable(Touchable.disabled);
-        label.setAlignment(Align.center);
-        table.add(label);
-        table.row();
-        label = new Label("Damage: " + fighter.getDmg(), skin);
+        Label label = new Label("Damage: " + fighter.getDmg(), skin);
         table.add(label);
         table.row();
         label = new Label("Hp: " + fighter.getHp(), skin);
