@@ -19,6 +19,7 @@ import java.util.stream.IntStream;
 
 public class StartScreen extends BaseScreen<Division> {
 
+
     //Logic and ViewModel
     private ViewModel viewModel;
     private Logic logic;
@@ -29,38 +30,12 @@ public class StartScreen extends BaseScreen<Division> {
         this.viewModel = viewModel;
     }
 
+
     @Override
-    public void show() {
-
-        stage = new Stage(new ScreenViewport());
-        setBackGround();
-        Gdx.input.setInputProcessor(stage);
-
-        root.setTouchable(Touchable.enabled);
-        root.setFillParent(true);
-        root.row();
-        stage.addActor(root);
-        root.add(getHeader("The Arena")).growX();
-        root.row();
-        Stack stack = new Stack();
-        root.add(stack).growX();
-
-
-        Table table = new Table();
-        ScrollPane scrollPane = new ScrollPane(table);
-        scrollPane.setScrollY(0);
-
-        stack.add(scrollPane);
-
-        table.row();
-        table.add(getAllDivisionTables()).growX().padLeft(CELL_PADDING).padRight(CELL_PADDING);
-        table.row();
-
-        root.row();
-        root.add(getFooter()).align(Align.bottom).growX();
-        
-
+    protected Table getBody() {
+      return   getAllDivisionTables() ;
     }
+
 
     @Override
     protected Table getFooter() {
@@ -79,23 +54,7 @@ public class StartScreen extends BaseScreen<Division> {
         return subTable;
     }
 
-    @Override
-    protected Table getTable() {
-        return null;
-    }
 
-    @Override
-    public void render(float delta) {
-        GdxUtils.clearScreen();
-
-        //fix incorrect blending
-        stage.getBatch().setBlendFunction(-1, -1);
-        Gdx.gl.glBlendFuncSeparate(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA, GL20.GL_ONE, GL20.GL_ONE_MINUS_SRC_ALPHA);
-
-        //render the scene
-        stage.act();
-        stage.draw();
-    }
 
     private Table getAllDivisionTables() {
         Table table = new Table();
@@ -146,16 +105,6 @@ public class StartScreen extends BaseScreen<Division> {
 return rootTable;
     }
 
-    @Override
-    public void resize(int width, int height) {
-        stage.getViewport().update(width, height, true);
-    }
-
-    @Override
-    public void dispose() {
-        skin.dispose();
-        stage.dispose();
-    }
 
 
 }

@@ -20,47 +20,43 @@ public class FighterScreen extends BaseScreen<Fighter> {
     }
 
     @Override
-    protected Table getFooter() {
-        return null;
-    }
+    protected Table getBody() {
 
-
-    @Override
-    protected Table getTable() {
-
-            Table table = new Table();
-            Label label = new Label( t.getName(), skin,"bg");
-            label.setTouchable(Touchable.disabled);
-            label.setAlignment(Align.center);
-            table.add(label);
-            table.row();
-            label = new Label("Damage: " + fighter.getDmg(), skin);
-            table.add(label);
-            table.row();
-       TextField textField = new TextField("banan",new TextField.TextFieldStyle(bitmapFont,
-               Color.WHITE,
-               null,
-               null,
-               null));
-            table.add(textField);
-            table.row();
-            label = new Label("Hp: " + fighter.getHp(), skin);
-            table.add(label);
-            table.row();
+        Table table = new Table();
+        Label label = new Label( t.getName(), skin,"bg");
+        label.setTouchable(Touchable.disabled);
+        label.setAlignment(Align.center);
+        table.add(label);
+        table.row();
+        label = new Label("Damage: " + fighter.getDmg(), skin);
+        table.add(label);
+        table.row();
+        TextField textField = new TextField("banan",new TextField.TextFieldStyle(bitmapFont,
+                Color.WHITE,
+                null,
+                null,
+                null));
+        table.add(textField);
+        table.row();
+        label = new Label("Hp: " + fighter.getHp(), skin);
+        table.add(label);
+        table.row();
 
 
         TextButton textButton = new TextButton("Back", skin);
         textButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-             core.showStartScreen();
+                core.showStartScreen();
             }
         });
         table.add(textButton);
-            return table;
-        }
+        return table;
+    }
 
-
-
+    @Override
+    protected Table getFooter() {
+        return null;
+    }
 
 }
