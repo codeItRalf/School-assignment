@@ -1,9 +1,8 @@
-package core.app.menu;
+package core.app.menuScreen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -12,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import core.app.Core;
 import core.app.Logic;
+import core.app.dialog.AddDivisionDialog;
 import core.app.dialog.BaseDialog;
 import core.app.entity.Division;
 import core.fsdb.ViewModel;
@@ -81,7 +81,7 @@ public class StartScreen extends BaseScreen<Division> {
         textButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                BaseDialog.createDialog("Create new Division", "Division name: ", uiSkin, stage, core);
+                new AddDivisionDialog(uiSkin,stage,core).createDialog();
             }
         });
         textButton = new TextButton("Quit", skin);

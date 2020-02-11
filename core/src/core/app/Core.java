@@ -13,9 +13,9 @@ import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import core.app.entity.Fighter;
 import core.app.entity.Team;
-import core.app.menu.DivisionScreen;
-import core.app.menu.StartScreen;
-import core.app.menu.TeamScreen;
+import core.app.menuScreen.DivisionScreen;
+import core.app.menuScreen.StartScreen;
+import core.app.menuScreen.TeamScreen;
 import core.fsdb.ViewModel;
 
 public class Core extends Game {

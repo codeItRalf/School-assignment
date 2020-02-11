@@ -60,4 +60,11 @@ public class ViewModel {
         divisions.add(division);
         repository.insert(division);
     }
+
+    public void insertTeam(Team team){
+        team.setId(generateId(MyDatabase.class.getSimpleName() + "/" + team.getClass().getSimpleName()));
+        team.addPropertyChangeListener(myObserver);
+       divisions.get(team.getDivisionId()).getTeams().add(team);
+       repository.insert(team);
+    }
 }

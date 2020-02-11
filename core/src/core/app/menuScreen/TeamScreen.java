@@ -1,4 +1,4 @@
-package core.app.menu;
+package core.app.menuScreen;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -8,7 +8,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import core.app.Core;
-import core.app.entity.Division;
 import core.app.entity.Team;
 
 import java.util.stream.IntStream;

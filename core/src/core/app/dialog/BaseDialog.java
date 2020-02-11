@@ -13,7 +13,7 @@ import core.fsdb.ViewModel;
 import java.util.ArrayList;
 
 
-public class BaseDialog extends Dialog {
+public abstract class BaseDialog extends Dialog {
 
     protected static final int RESULT_OK = 0;
     protected static final int RESULT_CANCEL = 1;
@@ -22,7 +22,7 @@ public class BaseDialog extends Dialog {
     protected ViewModel viewModel;
     protected Stage stage;
     protected Skin skin;
-    protected static String text = "";
+    protected static String inputText = "";
     protected Core core;
 
     protected BaseDialog(String title, Skin skin, Stage stage, Core core) {
@@ -33,31 +33,26 @@ public class BaseDialog extends Dialog {
         this.core = core;
     }
 
-    protected BaseDialog(String s, Skin skin, Stage stage) {
-        super(s, skin);
-    }
 
-    public static void createDialog(String title, String dialogMsg, Skin skin, Stage stage, Core core){
-       BaseDialog baseDialog = new  BaseDialog(title,skin, stage, core);
-       Table table = baseDialog.getContentTable();
-        baseDialog.text(dialogMsg);
+    public void createDialog() {
+        Table table = getContentTable();
         TextField textField = new TextField("",skin);
         textField.setTextFieldListener(new TextField.TextFieldListener() {
             @Override
             public void keyTyped(TextField textField, char c) {
-               text = textField.getText();
+                inputText = textField.getText();
             }
         });
         table.row();
         textField.setMessageText("Type name..");
         table.add(textField);
-        baseDialog.button("Create",RESULT_OK);
-        baseDialog.button("Cancel",RESULT_CANCEL);
-        baseDialog.show(stage);
+        button("Create",RESULT_OK);
+        button("Cancel",RESULT_CANCEL);
+        show(stage);
     }
 
     private void alertDialog(){
-        BaseDialog baseDialog = new  BaseDialog("Warning!",skin, stage);
+        Dialog baseDialog = new  Dialog("Warning!",skin);
         baseDialog.text("Invalid Input");
         baseDialog.button("OK",RESULT_WARNING);
         baseDialog.show(stage);
@@ -67,14 +62,16 @@ public class BaseDialog extends Dialog {
     @Override
     protected void result(Object object) {
         int result = (Integer) object;
-        System.out.println(text);
-         if(text != null && text.length() > 0 && result == RESULT_OK){
-             viewModel.insertDivision(new Division(text,-1,new ArrayList<>()));
+        System.out.println(inputText);
+         if(inputText != null && inputText.length() > 0 && result == RESULT_OK){
+             createEntity();
              System.out.println("Div created!");
-             text = "";
-             core.showStartScreen();
+             inputText = "";
          }else if(result != RESULT_CANCEL && result != RESULT_WARNING) {
           alertDialog();
          }
+        inputText = "";
     }
+
+    protected abstract void createEntity();
 }

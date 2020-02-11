@@ -1,6 +1,6 @@
 package com.mygdx.game.desktop;
 
-import core.app.menu.BaseScreen;
+import core.app.menuScreen.BaseScreen;
 import core.fsdb.ViewModel;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;

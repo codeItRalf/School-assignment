@@ -25,6 +25,7 @@ public class Team extends Identity{
    private ArrayList<Fighter> fighters;
 
     public Team() {
+        super("undefined", -1);
     }
 
     public Team(String name, int id, int divisionId, ArrayList<Fighter> fighters) {
