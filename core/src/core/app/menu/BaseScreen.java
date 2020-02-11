@@ -11,7 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import core.app.Core;
@@ -29,7 +28,7 @@ public abstract class BaseScreen<T extends Identity> extends ScreenAdapter {
     protected Stage stage;
     protected Viewport viewport;
     protected Skin skin;
-    protected BitmapFont bitmapFont;
+    protected TextField.TextFieldStyle textFieldStyle;
     protected Core core;
     public static DesktopWorker desktopWorker;
     private int dragStartX, dragStartY;
@@ -40,10 +39,11 @@ public abstract class BaseScreen<T extends Identity> extends ScreenAdapter {
 
 
 
-    public BaseScreen(Core core) {
+    public BaseScreen(T t, Core core) {
+        this.t = t;
         this.skin = core.getSkin();
         this.core = core;
-        this.bitmapFont = core.getBitmapFont();
+        this.textFieldStyle = core.getTextFieldStyle();
     }
 
 
@@ -55,22 +55,22 @@ public abstract class BaseScreen<T extends Identity> extends ScreenAdapter {
 
         final Table root = new Table(skin);
         root.setTouchable(Touchable.enabled);
-        root.setFillParent(true);
-        root.debug();
+        root.setFillParent(true);;
         root.setBackground("bg");
         stage.addActor(root);
-        root.add(getHeader("The Arena")).growX().align(Align.top);
+        root.add(getHeader(t == null? "The Arena" : t.getClass().getSimpleName())).growX().align(Align.top);
         root.row();
 
 
         Table table = new Table();
+        table.defaults().padRight(CELL_PADDING).padLeft(CELL_PADDING);
         ScrollPane scrollPane = new ScrollPane(table);
         scrollPane.setScrollY(0);
 
         root.add(scrollPane).growX().growY();
 
         table.row();
-        table.add(getBody()).growX().padLeft(CELL_PADDING).padRight(CELL_PADDING);
+        table.add(getBody()).growX();
         table.row();
 
         root.row();
@@ -128,21 +128,28 @@ public abstract class BaseScreen<T extends Identity> extends ScreenAdapter {
 
     protected Table getTeamItem(Division division, int i){
         Table listItemTable =  new Table();
+        listItemTable.defaults().growX();
         Label itemLabel = new Label(division.getTeams().get(i).getName() ,skin);
-        listItemTable.add(itemLabel).width(CELL_WIDTH).align(Align.left).padLeft(CELL_PADDING);
+        itemLabel.setAlignment(Align.center);
+        listItemTable.add(itemLabel).align(Align.center);
         itemLabel = new Label(division.getTeams().get(i).getWins() +" - " + division.getTeams().get(i).getLosses() , skin);
-        listItemTable.add(itemLabel).expandX().align(Align.center);
+        itemLabel.setAlignment(Align.center);
+        listItemTable.add(itemLabel).align(Align.center);
         return listItemTable;
     }
 
     protected Table getDivisionContent(Division division){
         Table rootTable = new Table();
+        rootTable.defaults().growX();
         Table  table = new Table();
-        Label label = new Label("Team:" ,skin);
-        table.add(label).width(CELL_WIDTH).align(Align.left).padLeft(CELL_PADDING);
+        table.defaults().growX();
+        Label label = new Label("Team Name:" ,skin);
+        label.setAlignment(Align.center);
+        table.add(label).align(Align.center);
         label = new Label("Win - Loss", skin);
-        table.add(label).expandX().align(Align.center);
-        rootTable.add(table).expandX().growX();
+        label.setAlignment(Align.center);
+        table.add(label).align(Align.center);
+        rootTable.add(table);
         rootTable.row();
         table = new Table();
         rootTable.add(table).growX();

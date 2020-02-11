@@ -21,9 +21,10 @@ public class DivisionScreen extends BaseScreen<Division> {
     private Division division;
 
     public DivisionScreen(Division division, Core core ) {
-        super(core);
+        super(division, core);
         this.division = division;
     }
+
 
     @Override
     protected Table getBody() {
@@ -34,7 +35,7 @@ public class DivisionScreen extends BaseScreen<Division> {
     @Override
     protected Table getFooter() {
         Table table = new Table();
-        TextButton textButton = new TextButton("Create Fighter", skin);
+        TextButton textButton = new TextButton("Create Team", skin);
         table.add(textButton);
         textButton = new TextButton("Back", skin);
         textButton.addListener(new ChangeListener() {

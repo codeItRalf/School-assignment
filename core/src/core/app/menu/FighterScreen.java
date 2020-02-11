@@ -16,7 +16,7 @@ public class FighterScreen extends BaseScreen<Fighter> {
     private Fighter fighter;
 
     public FighterScreen(Fighter fighter, Core core ) {
-        super( core);
+        super(fighter, core);
         this.fighter = fighter;
     }
 
@@ -32,32 +32,30 @@ public class FighterScreen extends BaseScreen<Fighter> {
         label = new Label("Damage: " + fighter.getDmg(), skin);
         table.add(label);
         table.row();
-        TextField textField = new TextField("banan",new TextField.TextFieldStyle(bitmapFont,
-                Color.WHITE,
-                null,
-                null,
-                null));
-        table.add(textField);
-        table.row();
         label = new Label("Hp: " + fighter.getHp(), skin);
         table.add(label);
         table.row();
-
-
-        TextButton textButton = new TextButton("Back", skin);
-        textButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                core.showStartScreen();
-            }
-        });
-        table.add(textButton);
+        label = new Label("Team: " + core.getViewModel().getTeamForFighter(fighter).getName(), skin);
+        table.add(label);
+        table.row();
+        label = new Label("Division: " + core.getViewModel().getDivisionForFighter(fighter).getName(), skin);
+        table.add(label);
+        table.row();
         return table;
     }
 
     @Override
     protected Table getFooter() {
-        return null;
+        Table table = new Table();
+        TextButton textButton = new TextButton("Back", skin);
+        textButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                core.showTeamScreen(fighter);
+            }
+        });
+        table.add(textButton);
+        return table;
     }
 
 }

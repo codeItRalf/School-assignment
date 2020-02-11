@@ -18,13 +18,14 @@ public class TeamScreen extends BaseScreen<Team> {
 
      private  Team team;
     public TeamScreen(Team team,  Core core ) {
-        super( core);
+        super(team, core);
         this.team = team;
     }
 
     @Override
     protected Table getBody() {
         Table rootTable = new Table();
+        rootTable.defaults().growX();
         Table table = new Table();
         Label label = new Label( team.getName(), skin,"bg");
         label.setTouchable(Touchable.disabled);
@@ -32,27 +33,40 @@ public class TeamScreen extends BaseScreen<Team> {
         table.add(label);
         rootTable.add(table);
         rootTable.row();
+        label = new Label("Wins: " + team.getWins() + " | Losses: " + team.getLosses(),skin);
+        label.setTouchable(Touchable.disabled);
+        label.setAlignment(Align.center);
+        rootTable.add(label);
+        rootTable.row();
         table = new Table();
+        table.defaults().growX();
         label = new Label("Name:" ,skin);
-        table.add(label).width(CELL_WIDTH).align(Align.left);
+        label.setAlignment(Align.left);
+        table.add(label).align(Align.center).width(CELL_WIDTH);
         label = new Label("Damage", skin);
-        table.add(label).expandX().align(Align.center);
+        label.setAlignment(Align.center);
+        table.add(label).align(Align.center).width(CELL_WIDTH);
         label = new Label("Hp", skin);
-        table.add(label).expandX().align(Align.right);
-        rootTable.add(table).growX().padLeft(CELL_PADDING *2).padRight(CELL_PADDING * 2);;
+        label.setAlignment(Align.center);
+        table.add(label).align(Align.center).width(CELL_WIDTH);
+        rootTable.add(table).growX();
         rootTable.row();
         table = new Table();
         rootTable.add(table).growX();
         Table finalTable = table;
         IntStream.range(0, team.getFighters().size()).forEach(i ->{
             Table listItemTable = new Table();
+            listItemTable.defaults().growX();
             Label itemLabel = new Label(team.getFighters().get(i).getName() ,skin);
-            listItemTable.add(itemLabel).width(CELL_WIDTH).align(Align.left);
+            itemLabel.setAlignment(Align.left);
+            listItemTable.add(itemLabel).align(Align.center).width(CELL_WIDTH);
             itemLabel = new Label(team.getFighters().get(i).getDmg()+"", skin);
-            listItemTable.add(itemLabel).expandX().align(Align.center);
+            itemLabel.setAlignment(Align.center);
+            listItemTable.add(itemLabel).align(Align.center).width(CELL_WIDTH);
             itemLabel = new Label(team.getFighters().get(i).getHp()+"", skin);
-            listItemTable.add(itemLabel).expandX().align(Align.right);
-            finalTable.add(listItemTable).growX().padLeft(CELL_PADDING *2).padRight(CELL_PADDING * 2);
+            itemLabel.setAlignment(Align.center);
+            listItemTable.add(itemLabel).align(Align.center).width(CELL_WIDTH);
+            finalTable.add(listItemTable).growX();
             finalTable.row();
             listItemTable.addListener(new ClickListener(){
                 @Override

@@ -2,11 +2,13 @@ package core.app.menu;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import core.app.Core;
 import core.app.Logic;
@@ -24,9 +26,10 @@ public class StartScreen extends BaseScreen<Division> {
 
 
     public StartScreen(ViewModel viewModel, Core core) {
-        super(core);
+        super(null, core);
         this.viewModel = viewModel;
     }
+
 
 
     @Override
@@ -37,6 +40,7 @@ public class StartScreen extends BaseScreen<Division> {
 
     private Table getAllDivisionTables() {
         Table table = new Table();
+        table.defaults().growX();
         IntStream.range(0, viewModel.getAllDivisions().size()).forEach(i -> {
             table.add(getDivisionTable(i));
             table.row();
@@ -47,12 +51,13 @@ public class StartScreen extends BaseScreen<Division> {
     private Table getDivisionTable(int divIndex) {
         Division division = viewModel.getDivision(divIndex);
         Table rootTable = new Table();
+        rootTable.defaults().growX();
         Table table = new Table();
         Label label = new Label(division.getName(), skin, "bg");
-        label.setTouchable(Touchable.disabled);
-        label.addListener(new ChangeListener() {
+      //   label.setTouchable(Touchable.disabled);
+        label.addListener(new ClickListener(){
             @Override
-            public void changed(ChangeEvent event, Actor actor) {
+            public void clicked(InputEvent event, float x, float y) {
                 core.setScreen(new DivisionScreen(division, core));
             }
         });

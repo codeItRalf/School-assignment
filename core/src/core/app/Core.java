@@ -3,16 +3,19 @@ package core.app;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
+import core.app.entity.Fighter;
+import core.app.entity.Team;
+import core.app.menu.DivisionScreen;
 import core.app.menu.StartScreen;
+import core.app.menu.TeamScreen;
 import core.fsdb.ViewModel;
 
 public class Core extends Game {
@@ -34,7 +37,7 @@ public class Core extends Game {
     @Override
     public void create() {
         generateBitmapFont();
-        skin = initSKin();
+        skin = initSkin();
         showStartScreen();
 
 
@@ -42,6 +45,15 @@ public class Core extends Game {
 
     public void showStartScreen() {
         setScreen(new StartScreen(viewModel, this));
+    }
+
+
+    public void showDivisionScreen(Team team){
+        setScreen(new DivisionScreen(viewModel.getDivisionForTeam(team), this));
+    }
+
+    public void showTeamScreen(Fighter fighter){
+        setScreen(new TeamScreen(viewModel.getTeamForFighter(fighter), this));
     }
 
     private void generateBitmapFont(){
@@ -53,7 +65,7 @@ public class Core extends Game {
         // don'
     }
 
-    private Skin initSKin() {
+    private Skin initSkin() {
         return  new Skin(Gdx.files.internal("shadow-walker-ui.json")) {
             //Override json loader to process FreeType fonts from skin JSON
             @Override
@@ -107,7 +119,15 @@ public class Core extends Game {
         return skin;
     }
 
-    public BitmapFont getBitmapFont() {
-        return bitmapFont;
+    public TextField.TextFieldStyle getTextFieldStyle() {
+        return   new TextField.TextFieldStyle(bitmapFont,
+                Color.WHITE,
+                null,
+                null,
+                null);
+    }
+
+    public ViewModel getViewModel() {
+        return viewModel;
     }
 }
