@@ -13,17 +13,18 @@ import core.app.entity.Fighter;
 
 public class FighterScreen extends BaseScreen<Fighter> {
 
-    private Fighter fighter = this.t;
+    private Fighter fighter;
 
     public FighterScreen(Fighter fighter, Core core ) {
-        super(fighter, core);
+        super( core);
+        this.fighter = fighter;
     }
 
     @Override
     protected Table getBody() {
 
         Table table = new Table();
-        Label label = new Label( t.getName(), skin,"bg");
+        Label label = new Label( fighter.getName(), skin,"bg");
         label.setTouchable(Touchable.disabled);
         label.setAlignment(Align.center);
         table.add(label);

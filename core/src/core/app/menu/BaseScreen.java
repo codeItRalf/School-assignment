@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -16,12 +17,13 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import core.app.Core;
 import core.app.DesktopWorker;
 import core.app.GdxUtils;
+import core.app.entity.Division;
 import core.app.entity.Identity;
+
+import java.util.stream.IntStream;
 
 public abstract class BaseScreen<T extends Identity> extends ScreenAdapter {
 
-    public static float WIDTH = 640f;
-    public static float HEIGHT = 720f;
 
     protected T t;
     protected Stage stage;
@@ -36,12 +38,7 @@ public abstract class BaseScreen<T extends Identity> extends ScreenAdapter {
     public static final float CELL_WIDTH = 150f;
     public static final float CELL_PADDING = 30f;
 
-    public BaseScreen(T t, Core core) {
-        this.t = t;
-        this.skin = core.getSkin();
-        this.core = core;
-        this.bitmapFont = core.getBitmapFont();
-    }
+
 
     public BaseScreen(Core core) {
         this.skin = core.getSkin();
@@ -59,11 +56,10 @@ public abstract class BaseScreen<T extends Identity> extends ScreenAdapter {
         final Table root = new Table(skin);
         root.setTouchable(Touchable.enabled);
         root.setFillParent(true);
-
-
+        root.debug();
         root.setBackground("bg");
         stage.addActor(root);
-        root.add(getHeader("The Arena")).growX();
+        root.add(getHeader("The Arena")).growX().align(Align.top);
         root.row();
 
 
@@ -71,14 +67,14 @@ public abstract class BaseScreen<T extends Identity> extends ScreenAdapter {
         ScrollPane scrollPane = new ScrollPane(table);
         scrollPane.setScrollY(0);
 
-        root.add(scrollPane).growX();
+        root.add(scrollPane).growX().growY();
 
         table.row();
         table.add(getBody()).growX().padLeft(CELL_PADDING).padRight(CELL_PADDING);
         table.row();
 
         root.row();
-        root.add(getFooter()).align(Align.bottom).growX();
+        root.add(getFooter()).align(Align.bottom).growX().align(Align.bottom);
 
         stage.addListener(new DragListener() {
             @Override
@@ -130,7 +126,41 @@ public abstract class BaseScreen<T extends Identity> extends ScreenAdapter {
 
     protected abstract Table getFooter();
 
+    protected Table getTeamItem(Division division, int i){
+        Table listItemTable =  new Table();
+        Label itemLabel = new Label(division.getTeams().get(i).getName() ,skin);
+        listItemTable.add(itemLabel).width(CELL_WIDTH).align(Align.left).padLeft(CELL_PADDING);
+        itemLabel = new Label(division.getTeams().get(i).getWins() +" - " + division.getTeams().get(i).getLosses() , skin);
+        listItemTable.add(itemLabel).expandX().align(Align.center);
+        return listItemTable;
+    }
 
+    protected Table getDivisionContent(Division division){
+        Table rootTable = new Table();
+        Table  table = new Table();
+        Label label = new Label("Team:" ,skin);
+        table.add(label).width(CELL_WIDTH).align(Align.left).padLeft(CELL_PADDING);
+        label = new Label("Win - Loss", skin);
+        table.add(label).expandX().align(Align.center);
+        rootTable.add(table).expandX().growX();
+        rootTable.row();
+        table = new Table();
+        rootTable.add(table).growX();
+        Table finalTable = table;
+        IntStream.range(0,division.getTeams().size()).forEach(i -> {
+            Table listItemTable = getTeamItem(division, i);
+            finalTable.add(listItemTable).growX();
+            finalTable.row();
+            listItemTable.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    System.out.println(division.getTeams().get(i).getName() + " clicked! ");
+                    core.setScreen(new TeamScreen(division.getTeams().get(i), core));
+                }
+            });
+        });
+        return rootTable;
+    }
 
 
     @Override

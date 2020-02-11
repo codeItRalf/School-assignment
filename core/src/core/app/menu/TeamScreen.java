@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import core.app.Core;
+import core.app.entity.Division;
 import core.app.entity.Team;
 
 import java.util.stream.IntStream;
@@ -15,16 +16,17 @@ import java.util.stream.IntStream;
 
 public class TeamScreen extends BaseScreen<Team> {
 
-
+     private  Team team;
     public TeamScreen(Team team,  Core core ) {
-        super(team,  core);
+        super( core);
+        this.team = team;
     }
 
     @Override
     protected Table getBody() {
         Table rootTable = new Table();
         Table table = new Table();
-        Label label = new Label( t.getName(), skin,"bg");
+        Label label = new Label( team.getName(), skin,"bg");
         label.setTouchable(Touchable.disabled);
         label.setAlignment(Align.center);
         table.add(label);
@@ -42,43 +44,43 @@ public class TeamScreen extends BaseScreen<Team> {
         table = new Table();
         rootTable.add(table).growX();
         Table finalTable = table;
-        IntStream.range(0, t.getFighters().size()).forEach(i ->{
+        IntStream.range(0, team.getFighters().size()).forEach(i ->{
             Table listItemTable = new Table();
-            Label itemLabel = new Label(t.getFighters().get(i).getName() ,skin);
+            Label itemLabel = new Label(team.getFighters().get(i).getName() ,skin);
             listItemTable.add(itemLabel).width(CELL_WIDTH).align(Align.left);
-            itemLabel = new Label(t.getFighters().get(i).getDmg()+"", skin);
+            itemLabel = new Label(team.getFighters().get(i).getDmg()+"", skin);
             listItemTable.add(itemLabel).expandX().align(Align.center);
-            itemLabel = new Label(t.getFighters().get(i).getHp()+"", skin);
+            itemLabel = new Label(team.getFighters().get(i).getHp()+"", skin);
             listItemTable.add(itemLabel).expandX().align(Align.right);
             finalTable.add(listItemTable).growX().padLeft(CELL_PADDING *2).padRight(CELL_PADDING * 2);
             finalTable.row();
             listItemTable.addListener(new ClickListener(){
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    core.setScreen(new FighterScreen(t.getFighters().get(i),core));
+                    core.setScreen(new FighterScreen(team.getFighters().get(i),core));
                 }
             });
         });
-        rootTable.row();
-        TextButton textButton = new TextButton("Back", skin);
-        textButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                core.showStartScreen();
-            }
-        });
-        rootTable.add(textButton);
+
         return rootTable;
     }
 
 
     @Override
     protected Table getFooter() {
-        return null;
+        Table table = new Table();
+        TextButton textButton = new TextButton("Create Fighter", skin);
+        table.add(textButton);
+        textButton = new TextButton("Back", skin);
+        textButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                core.showStartScreen();
+            }
+        });
+        table.add(textButton);
+        return table;
     }
-
-
-
 
 
 
