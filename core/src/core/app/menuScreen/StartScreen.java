@@ -10,9 +10,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import core.app.Core;
-import core.app.Logic;
+import core.app.GameLogic;
 import core.app.dialog.AddDivisionDialog;
-import core.app.dialog.BaseDialog;
 import core.app.entity.Division;
 import core.fsdb.ViewModel;
 
@@ -23,7 +22,7 @@ public class StartScreen extends BaseScreen<Division> {
 
     //Logic and ViewModel
     private ViewModel viewModel;
-    private Logic logic;
+    private GameLogic gameLogic;
 
 
     public StartScreen(ViewModel viewModel, Core core) {

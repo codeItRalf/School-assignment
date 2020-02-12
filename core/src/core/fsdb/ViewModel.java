@@ -39,13 +39,15 @@ public class ViewModel {
     public Team getTeamForFighter(Fighter fighter){
        return divisions.stream().map(Division::getTeams)
               .flatMap(List::stream)
+               .parallel()
           .filter(e-> e.getId() == fighter.getTeamId())
         .collect(Collectors.toList()).get(0);
 
     }
 
     public Division getDivisionForTeam(Team team){
-        return  divisions.stream()
+        return   divisions.stream()
+                .parallel()
                 .filter(div -> div.getId() == team.getDivisionId())
                 .collect(Collectors.toList()).get(0);
     }
@@ -64,7 +66,15 @@ public class ViewModel {
     public void insertTeam(Team team){
         team.setId(generateId(MyDatabase.class.getSimpleName() + "/" + team.getClass().getSimpleName()));
         team.addPropertyChangeListener(myObserver);
-       divisions.get(team.getDivisionId()).getTeams().add(team);
+       getDivisionForTeam(team).getTeams().add(team);
        repository.insert(team);
+    }
+
+    public void insertFighter(Fighter fighter){
+        int divIndex = getDivisionForFighter(fighter).getId();
+        fighter.setId(generateId(MyDatabase.class.getSimpleName() + "/" + fighter.getClass().getSimpleName()));
+        fighter.addPropertyChangeListener(myObserver);
+        getTeamForFighter(fighter).getFighters().add(fighter);
+        repository.insert(fighter);
     }
 }

@@ -8,6 +8,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import core.app.Core;
+import core.app.dialog.AddFighterDialog;
+import core.app.dialog.AddTeamDialog;
 import core.app.entity.Team;
 
 import java.util.stream.IntStream;
@@ -83,6 +85,12 @@ public class TeamScreen extends BaseScreen<Team> {
     protected Table getFooter() {
         Table table = new Table();
         TextButton textButton = new TextButton("Create Fighter", skin);
+        textButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                new AddFighterDialog(uiSkin,stage,core, team.getId()).createDialog();
+            }
+        });
         table.add(textButton);
         textButton = new TextButton("Back", skin);
         textButton.addListener(new ChangeListener() {

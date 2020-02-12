@@ -28,7 +28,7 @@ public class Core extends Game {
 
     //Logic and ViewModel
     private ViewModel viewModel;
-    private Logic logic;
+    private GameLogic gameLogic;
 
     public Core(ViewModel viewModel) {
         this.viewModel = viewModel;
