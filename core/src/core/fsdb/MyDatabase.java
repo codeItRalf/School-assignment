@@ -77,9 +77,11 @@ public class MyDatabase {
 
     synchronized void serialize( Identity obj){
         String path = dbName + "/" + obj.getClass().getSimpleName() + "/" + obj.getId();
-        try (var out = new ObjectOutputStream(new FileOutputStream(path))) {
+        try (var out = new ObjectOutputStream(new FileOutputStream(path,false))) {
             out.writeObject(obj);
+
         } catch (IOException e) {
+            System.out.println("serialize un-sucessfull!");
             e.printStackTrace();
         }
     }

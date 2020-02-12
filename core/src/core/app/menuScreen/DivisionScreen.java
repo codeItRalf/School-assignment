@@ -22,7 +22,11 @@ public class DivisionScreen extends BaseScreen<Division> {
 
     @Override
     protected Table getBody() {
-        return getDivisionContent(division);
+        Table table = new Table();
+        table.add(setNameLabel());
+        table.row();
+        table.add(getDivisionContent(division));
+        return table;
     }
 
 
@@ -33,7 +37,7 @@ public class DivisionScreen extends BaseScreen<Division> {
         textButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                new AddTeamDialog(uiSkin,stage,core, division.getId()).createDialog();
+                new AddTeamDialog(uiSkin,stage,core, division).createDialog();
             }
         });
         table.add(textButton);

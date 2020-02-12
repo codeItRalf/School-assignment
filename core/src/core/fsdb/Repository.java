@@ -67,6 +67,7 @@ public  class  Repository<T extends Identity> implements  RepositoryInterface<T>
 //           list.forEach(this::update);
 //           setIgnoreFieldsToNull(entity);
 //       }
+      //  FileSystem.delete(dbName + "/" + entity.getClass().getSimpleName() + "/" + entity.getId());
         myDatabase.serialize(entity);
     }
 

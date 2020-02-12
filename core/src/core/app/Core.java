@@ -11,9 +11,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
+import core.app.entity.Division;
 import core.app.entity.Fighter;
 import core.app.entity.Team;
 import core.app.menuScreen.DivisionScreen;
+import core.app.menuScreen.FighterScreen;
 import core.app.menuScreen.StartScreen;
 import core.app.menuScreen.TeamScreen;
 import core.fsdb.ViewModel;
@@ -48,12 +50,16 @@ public class Core extends Game {
     }
 
 
-    public void showDivisionScreen(Team team){
-        setScreen(new DivisionScreen(viewModel.getDivisionForTeam(team), this));
+    public void showDivisionScreen(Division division){
+        setScreen(new DivisionScreen(division, this));
     }
 
-    public void showTeamScreen(Fighter fighter){
-        setScreen(new TeamScreen(viewModel.getTeamForFighter(fighter), this));
+    public void showTeamScreen(Team team){
+        setScreen(new TeamScreen(team, this));
+    }
+
+    public void showFighterScreen(Fighter fighter){
+        setScreen(new FighterScreen(fighter, this));
     }
 
     private void generateBitmapFont(){

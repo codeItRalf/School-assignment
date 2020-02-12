@@ -14,18 +14,18 @@ import java.util.ArrayList;
 
 public class AddTeamDialog extends BaseDialog {
 
-    private int divisionId;
+    private Division division;
 
-    public AddTeamDialog(Skin skin, Stage stage, Core core, int divisionId) {
+    public AddTeamDialog(Skin skin, Stage stage, Core core, Division division) {
         super("Create new Team", skin, stage, core);
-        this.divisionId = divisionId;
+        this.division = division;
     }
 
 
     @Override
-    protected void createEntity() {
-        Team team = new Team(inputText,-1, divisionId, new ArrayList<>());
+    protected void actionRequest() {
+        Team team = new Team(inputText,-1, division.getId(), new ArrayList<>());
         viewModel.insertTeam(team);
-        core.showDivisionScreen(team);
+        core.showDivisionScreen(division);
     }
 }

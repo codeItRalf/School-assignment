@@ -2,11 +2,9 @@ package core.app.menuScreen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.badlogic.gdx.utils.Align;
@@ -15,6 +13,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import core.app.Core;
 import core.app.DesktopWorker;
 import core.app.GdxUtils;
+import core.app.dialog.ChangeNameDialog;
 import core.app.entity.Division;
 import core.app.entity.Identity;
 
@@ -56,10 +55,10 @@ public abstract class BaseScreen<T extends Identity> extends ScreenAdapter {
 
         final Table root = new Table(skin);
         root.setTouchable(Touchable.enabled);
-        root.setFillParent(true);;
+        root.setFillParent(true);
         root.setBackground("bg");
         stage.addActor(root);
-        root.add(getHeader(t == null? "The Arena" : t.getName())).growX().align(Align.top);
+        root.add(getHeader());
         root.row();
 
 
@@ -116,7 +115,8 @@ public abstract class BaseScreen<T extends Identity> extends ScreenAdapter {
 
 
 
-    protected Table getHeader(String headerTitle){
+    protected Table getHeader(){
+        String headerTitle = t == null ? "The Arena" : t.getClass().getSimpleName();
         Table table = new Table();
         Label label = new Label(headerTitle, skin, "bg");
         label.setTouchable(Touchable.disabled);
@@ -191,5 +191,18 @@ public abstract class BaseScreen<T extends Identity> extends ScreenAdapter {
     public void dispose() {
        skin.dispose();
        stage.dispose();
+    }
+
+    protected Label setNameLabel(){
+        Label label = new Label( t.getName(), skin,"bg");
+        label.setAlignment(Align.center);
+        label.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                new ChangeNameDialog<>(uiSkin, stage, core, t).createDialog();
+                System.out.println("Label clicked!");
+            }
+        });
+        return label;
     }
 }

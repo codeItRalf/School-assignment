@@ -22,7 +22,7 @@ public class AddDivisionDialog extends BaseDialog {
 
 
     @Override
-    protected void createEntity() {
+    protected void actionRequest() {
         viewModel.insertDivision(new Division(inputText,-1,new ArrayList<>()));
         core.showStartScreen();
     }

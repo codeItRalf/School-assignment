@@ -21,6 +21,8 @@ public class FighterScreen extends BaseScreen<Fighter> {
     protected Table getBody() {
 
         Table table = new Table();
+        table.add(setNameLabel());
+        table.row();
         Label label = new Label("Damage: " + fighter.getDmg(), skin);
         table.add(label);
         table.row();
@@ -43,7 +45,7 @@ public class FighterScreen extends BaseScreen<Fighter> {
         textButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                core.showTeamScreen(fighter);
+                core.showTeamScreen(core.getViewModel().getTeamForFighter(fighter));
             }
         });
         table.add(textButton);

@@ -28,13 +28,10 @@ public class TeamScreen extends BaseScreen<Team> {
         Table rootTable = new Table();
         rootTable.defaults().growX();
         Table table = new Table();
-        Label label = new Label( team.getName(), skin,"bg");
-        label.setTouchable(Touchable.disabled);
-        label.setAlignment(Align.center);
-        table.add(label);
+        table.add(setNameLabel());
         rootTable.add(table);
         rootTable.row();
-        label = new Label("Wins: " + team.getWins() + " | Losses: " + team.getLosses(),skin);
+        Label label = new Label("Wins: " + team.getWins() + " | Losses: " + team.getLosses(),skin);
         label.setTouchable(Touchable.disabled);
         label.setAlignment(Align.center);
         rootTable.add(label);
@@ -88,7 +85,7 @@ public class TeamScreen extends BaseScreen<Team> {
         textButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                new AddFighterDialog(uiSkin,stage,core, team.getId()).createDialog();
+                new AddFighterDialog(uiSkin,stage,core, team).createDialog();
             }
         });
         table.add(textButton);

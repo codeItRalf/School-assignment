@@ -5,24 +5,25 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import core.app.Core;
 import core.app.entity.Fighter;
+import core.app.entity.Team;
 
 import java.util.ArrayList;
 
 
 public class AddFighterDialog extends BaseDialog {
 
-    private int teamId;
+    private Team team;
 
-    public AddFighterDialog(Skin skin, Stage stage, Core core, int teamId) {
+    public AddFighterDialog(Skin skin, Stage stage, Core core, Team team) {
         super("Create new Fighter", skin, stage, core);
-        this.teamId = teamId;
+        this.team = team;
     }
 
 
     @Override
-    protected void createEntity() {
-        Fighter fighter = new Fighter(inputText,-1, teamId);
+    protected void actionRequest() {
+        Fighter fighter = new Fighter(inputText,-1, team.getId());
         viewModel.insertFighter(fighter);
-        core.showTeamScreen(fighter);
+        core.showTeamScreen(team);
     }
 }

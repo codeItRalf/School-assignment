@@ -7,10 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import core.app.Core;
-import core.app.entity.Division;
 import core.fsdb.ViewModel;
-
-import java.util.ArrayList;
 
 
 public abstract class BaseDialog extends Dialog {
@@ -64,8 +61,7 @@ public abstract class BaseDialog extends Dialog {
         int result = (Integer) object;
         System.out.println(inputText);
          if(inputText != null && inputText.length() > 0 && result == RESULT_OK){
-             createEntity();
-             System.out.println("Div created!");
+             actionRequest();
              inputText = "";
          }else if(result != RESULT_CANCEL && result != RESULT_WARNING) {
           alertDialog();
@@ -73,5 +69,5 @@ public abstract class BaseDialog extends Dialog {
         inputText = "";
     }
 
-    protected abstract void createEntity();
+    protected abstract void actionRequest();
 }
