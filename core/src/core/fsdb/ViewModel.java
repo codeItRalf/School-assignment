@@ -24,7 +24,7 @@ public class ViewModel {
     public ViewModel() {
      repository = new Repository<>();
      divisions = (ArrayList<Division>) repository.getAllOf(Division.class.getSimpleName());
-     myObserver = new MyObserver(divisions);
+     myObserver = new MyObserver(divisions, repository);
     }
 
 
@@ -71,7 +71,6 @@ public class ViewModel {
     }
 
     public void insertFighter(Fighter fighter){
-        int divIndex = getDivisionForFighter(fighter).getId();
         fighter.setId(generateId(MyDatabase.class.getSimpleName() + "/" + fighter.getClass().getSimpleName()));
         fighter.addPropertyChangeListener(myObserver);
         getTeamForFighter(fighter).getFighters().add(fighter);

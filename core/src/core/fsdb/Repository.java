@@ -18,7 +18,7 @@ import java.util.stream.IntStream;
 import static core.fsdb.FileSystem.generateId;
 
 
-public  class Repository<T extends Identity> implements RepositoryInterface<T> {
+public  class  Repository<T extends Identity> implements  RepositoryInterface<T> {
     private String dbName = MyDatabase.class.getSimpleName();
     private MyDatabase myDatabase = MyDatabase.getDatabase();
 
@@ -52,7 +52,7 @@ public  class Repository<T extends Identity> implements RepositoryInterface<T> {
     }
 
     @Override
-    public void remove(T entity) {
+     public  <T extends Identity> void remove(T entity) {
         if (getChildName(entity) != null && deepRemove(entity)) {
             removeChildren(entity);
         }
@@ -61,25 +61,25 @@ public  class Repository<T extends Identity> implements RepositoryInterface<T> {
 
 
     @Override
-    public void update(T entity) {
-       List<T> list =  extractChildrenFromParent(entity);
-       if(list != null){
-           list.forEach(this::update);
-           setIgnoreFieldsToNull(entity);
-       }
+    public  <T extends Identity> void update(T entity) {
+//       List<T> list =  extractChildrenFromParent(entity);
+//       if(list != null){
+//           list.forEach(this::update);
+//           setIgnoreFieldsToNull(entity);
+//       }
         myDatabase.serialize(entity);
     }
 
     @Override
-    public List<T> getAllOf(String type) {
+    public  List<T> getAllOf(String type) {
         List<Integer> ids = FileSystem.getAllIds(dbName + "/" + type);
         return ids.stream().map(e -> {
-         Object object =   deserializeFile(type, e);
-         return get((T) object);
+         T object =   deserializeFile(type, e);
+         return  get((T) object);
         }).collect(Collectors.toList());
     }
 
-    private T get(T t) {
+    private  <T extends Identity> T get(T t) {
         String child = getChildName(t);
         if(child!= null){
             t = addChildrenToParent(t);
@@ -104,13 +104,13 @@ public  class Repository<T extends Identity> implements RepositoryInterface<T> {
         return list;
     }
 
-    private T addChildrenToParent(T entity){
+    private  <T extends Identity> T addChildrenToParent(T entity){
         List<T> listOfChildren = getListOfChildren(entity).stream().map(this::get).collect(Collectors.toList());
         String fieldName = entity.getClass().getAnnotation(Entity.class).foreignKey()[0].listOfChildren();
         return updateField(fieldName,listOfChildren,entity);
     }
 
-    private T updateField(String fieldName, List<T> list, T entity){
+    private  <T extends Identity> T updateField(String fieldName, List<T> list, T entity){
         Field field;
         try {
             field = entity.getClass().getDeclaredField(fieldName);
@@ -137,25 +137,25 @@ public  class Repository<T extends Identity> implements RepositoryInterface<T> {
         });
     }
 
-    private T deserializeFile(String path, int id){
+    private  <T extends Identity> T deserializeFile(String path, int id){
         return (T) myDatabase.deserialize(path, id);
     }
 
-    private String getChildName(T entity) {
+    private  <T extends Identity> String getChildName(T entity) {
         String child = entity.getClass().getAnnotation(Entity.class).foreignKey()[0].child().getSimpleName();
         return child.equals(NoClass.class.getSimpleName()) ? null : child;
     }
 
-    private void removeFile(T entity) {
+    private  <T extends Identity> void removeFile(T entity) {
         String path = dbName + "/" + entity.getClass().getSimpleName() + "/" + entity.getId();
         FileSystem.delete(path);
     }
 
-    private boolean deepRemove(T entity) {
+    private  <T extends Identity> boolean deepRemove(T entity) {
         return entity.getClass().getAnnotation(Entity.class).foreignKey()[0].onDelete() == ForeignKey.CASCADE;
     }
 
-    private void removeChildren(T entity) {
+    private  <T extends Identity> void removeChildren(T entity) {
         List<T> childList = getListOfChildren(entity);
         IntStream.range(0, childList.size()).forEach(index -> {
             if (index != childList.size() -1) {
@@ -166,11 +166,11 @@ public  class Repository<T extends Identity> implements RepositoryInterface<T> {
         });
     }
 
-    private List<T> getListOfChildren(T entity){
-        return getAllOf(getChildName(entity)).stream().filter(e -> ifParentIdMatchesChild(entity,e)).collect(Collectors.toList());
+    private  <T extends Identity> List<T> getListOfChildren(T entity){
+        return (List<T>) getAllOf(getChildName(entity)).stream().filter(e -> ifParentIdMatchesChild(entity,e)).collect(Collectors.toList());
     }
 
-    private boolean ifParentIdMatchesChild(T parent, T child) {
+    private  <T extends Identity> boolean ifParentIdMatchesChild(T parent, T child) {
         String parentId = child.getClass().getAnnotation(Entity.class).foreignKey()[0].parentId();
         if(parentId.length() < 1){
             return false;
