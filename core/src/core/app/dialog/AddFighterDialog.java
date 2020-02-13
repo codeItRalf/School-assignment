@@ -10,20 +10,20 @@ import core.app.entity.Team;
 import java.util.ArrayList;
 
 
-public class AddFighterDialog extends BaseDialog {
+public class AddFighterDialog extends BaseDialog<Team> {
 
-    private Team team;
 
     public AddFighterDialog(Skin skin, Stage stage, Core core, Team team) {
-        super("Create new Fighter", skin, stage, core);
-        this.team = team;
+        super("Create new Fighter", skin, stage, core, team);
+
     }
 
 
     @Override
     protected void actionRequest() {
-        Fighter fighter = new Fighter(inputText,-1, team.getId());
+        Fighter fighter = new Fighter(inputText, -1, t.getId());
         viewModel.insertFighter(fighter);
-        core.showTeamScreen(team);
+        core.showTeamScreen(t);
+        posButton = "Create";
     }
 }

@@ -8,15 +8,15 @@ import core.app.entity.Fighter;
 import core.app.entity.Identity;
 
 
-public  class ChangeValueDialog<T extends Identity> extends BaseDialog {
+public class ChangeValueDialog<T extends Identity> extends BaseDialog<T> {
 
-    private T t;
+
     private Fighter.attribute attribute;
 
     public ChangeValueDialog(Skin skin, Stage stage, Core core, T t, Fighter.attribute attribute) {
-        super("Change Value!", skin, stage, core);
-       this.t = t;
-       this.attribute = attribute;
+        super("Change Value!", skin, stage, core, t);
+        this.attribute = attribute;
+        posButton = "Change";
     }
 
 

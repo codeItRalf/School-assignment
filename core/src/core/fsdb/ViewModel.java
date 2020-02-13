@@ -32,6 +32,7 @@ public class ViewModel {
         return divisions;
     }
 
+
     public Team getTeamForFighter(Fighter fighter) {
         return divisions.stream().parallel()
                  .map(Division::getTeams)

@@ -80,7 +80,7 @@ public class StartScreen extends BaseScreen<Division> {
         textButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                new AddDivisionDialog(uiSkin,stage,core).createDialog();
+                 new AddDivisionDialog(uiSkin, stage, core, t).createDialog();
             }
         });
         textButton = new TextButton("Quit", skin);

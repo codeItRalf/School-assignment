@@ -10,13 +10,13 @@ import core.app.entity.Identity;
 import core.app.entity.Team;
 
 
-public  class ChangeNameDialog<T extends Identity> extends BaseDialog {
+public class ChangeNameDialog<T extends Identity> extends BaseDialog<T> {
 
-    private T t;
 
-    public  ChangeNameDialog(Skin skin, Stage stage, Core core, T t) {
-        super("Change Name!", skin, stage, core);
-       this.t = t;
+    public ChangeNameDialog(Skin skin, Stage stage, Core core, T t) {
+        super("Change Name!", skin, stage, core, t);
+
+        posButton = "Change";
     }
 
 

@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import core.app.Core;
 import core.app.dialog.ChangeValueDialog;
+import core.app.dialog.MoveToTeamDialog;
 import core.app.entity.Fighter;
 
 
@@ -39,12 +40,18 @@ public class FighterScreen extends BaseScreen<Fighter> {
         label.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                new ChangeValueDialog<>(uiSkin,stage,core,fighter, Fighter.attribute.HP).createDialog();
+                new ChangeValueDialog<>(uiSkin, stage, core, fighter, Fighter.attribute.HP).createDialog();
             }
         });
         table.add(label);
         table.row();
         label = new Label("Team: " + core.getViewModel().getTeamForFighter(fighter).getName(), skin);
+        label.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                new MoveToTeamDialog<>(uiSkin, stage, core, t).createDialog();
+            }
+        });
         table.add(label);
         table.row();
         label = new Label("Division: " + core.getViewModel().getDivisionForFighter(fighter).getName(), skin);

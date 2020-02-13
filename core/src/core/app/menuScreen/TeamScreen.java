@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.Align;
 import core.app.Core;
 import core.app.dialog.AddFighterDialog;
 import core.app.dialog.AddTeamDialog;
+import core.app.dialog.MoveToDivisionDialog;
 import core.app.entity.Team;
 
 import java.util.stream.IntStream;
@@ -31,11 +32,17 @@ public class TeamScreen extends BaseScreen<Team> {
         table.add(setNameLabel());
         rootTable.add(table);
         rootTable.row();
-        Label label = new Label("Division: " + core.getViewModel().getDivisionForTeam(team).getName(),skin);
+        Label label = new Label("Division: " + core.getViewModel().getDivisionForTeam(team).getName(), skin);
+        label.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                new MoveToDivisionDialog<>(uiSkin, stage, core, t).createDialog();
+            }
+        });
         label.setAlignment(Align.center);
         rootTable.add(label);
         rootTable.row();
-        label = new Label("Wins: " + team.getWins() + " | Losses: " + team.getLosses(),skin);
+        label = new Label("Wins: " + team.getWins() + " | Losses: " + team.getLosses(), skin);
         label.setTouchable(Touchable.disabled);
         label.setAlignment(Align.center);
         rootTable.add(label);
