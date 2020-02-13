@@ -1,19 +1,13 @@
 package core.app.dialog;
 
 
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import core.app.Core;
 import core.app.entity.Division;
 import core.app.entity.Fighter;
 import core.app.entity.Identity;
 import core.app.entity.Team;
-import core.fsdb.ViewModel;
 
 import java.util.ArrayList;
 
@@ -22,13 +16,14 @@ public class MoveToDivisionDialog<T extends Identity> extends BaseDialog<T> {
 
     protected int parentIndex;
     protected Division divDestination;
-    protected Team teamDestination;
+
 
 
     public MoveToDivisionDialog(Skin skin, Stage stage, Core core, T t) {
         super("Move to!", skin, stage, core, t);
         if (t.getClass().equals(Team.class)) parentIndex = ((Team) t).getDivisionId();
-        else if (t.getClass().equals(Fighter.class)) parentIndex = ((Fighter) t).getTeamId();
+        else if (t.getClass().equals(Fighter.class))
+            parentIndex = viewModel.getTeamForFighter((Fighter) t).getDivisionId();
     }
 
     @Override
@@ -49,10 +44,16 @@ public class MoveToDivisionDialog<T extends Identity> extends BaseDialog<T> {
 
     @Override
     protected void actionRequest() {
-        moveToDivision();
+        teamToDiv();
+        fighterToDiv();
     }
 
-    private void moveToDivision() {
+    private void fighterToDiv() {
+        if (t.getClass().equals(Fighter.class))
+            new MoveToTeamDialog<>(skin, stage, core, t, divDestination).createDialog();
+    }
+
+    private void teamToDiv() {
         Division currentDivision;
         int currentIndex;
         if (t.getClass().equals(Team.class)) {

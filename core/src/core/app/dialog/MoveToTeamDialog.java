@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class MoveToTeamDialog<T extends Identity> extends BaseDialog<T> {
 
 
-    protected Division divDestination;
+    protected Division divisionDestination;
     protected Team teamDestination;
     protected int parentIndex;
 
@@ -23,12 +23,20 @@ public class MoveToTeamDialog<T extends Identity> extends BaseDialog<T> {
     public MoveToTeamDialog(Skin skin, Stage stage, Core core, T t) {
         super("Move to!", skin, stage, core, t);
         if (t.getClass().equals(Fighter.class)) parentIndex = ((Fighter) t).getTeamId();
+        this.divisionDestination = viewModel.getDivisionForFighter((Fighter) t);
     }
+
+    public MoveToTeamDialog(Skin skin, Stage stage, Core core, T t, Division divisionDestination) {
+        super("Move to!", skin, stage, core, t);
+        parentIndex = -1;
+        this.divisionDestination = divisionDestination;
+    }
+
 
     @Override
     public void createDialog() {
         getContentTable().row();
-        getContentTable().add(getListOfEntities((ArrayList<T>) viewModel.getDivisionForFighter((Fighter) t).getTeams(), parentIndex)).space(10f).pad(10f);
+        getContentTable().add(getListOfEntities((ArrayList<T>) divisionDestination.getTeams(), parentIndex)).space(10f).pad(10f);
         button("Cancel");
         show(stage);
     }
@@ -46,16 +54,16 @@ public class MoveToTeamDialog<T extends Identity> extends BaseDialog<T> {
         moveToTeam();
     }
 
+
     private void moveToTeam() {
         Team currentTeam;
         int currentIndex;
-        if (t.getClass().equals(Fighter.class)) {
             currentTeam = viewModel.getTeamForFighter((Fighter) t);
             currentIndex = currentTeam.getFighters().indexOf(t);
             teamDestination.getFighters().add(currentTeam.getFighters().remove(currentIndex));
             ((Fighter) t).setTeamId(teamDestination.getId());
             core.showFighterScreen((Fighter) t);
-        }
+
 
     }
 }
