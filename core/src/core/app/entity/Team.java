@@ -39,8 +39,9 @@ public class Team extends Identity{
     }
 
     public void setDivisionId(int divisionId) {
-        support.firePropertyChange("divisionId", this.divisionId, divisionId);
+        int oldValue = this.divisionId;
         this.divisionId = divisionId;
+        support.firePropertyChange("divisionId", oldValue, this.divisionId);
     }
 
     public int getWins() {
@@ -48,8 +49,9 @@ public class Team extends Identity{
     }
 
     public void setWins(int wins) {
-        support.firePropertyChange("wins", this.wins, wins);
+        int oldValue = this.wins;
         this.wins = wins;
+        support.firePropertyChange("wins", oldValue, this.wins);
     }
 
     public int getLosses() {
@@ -57,8 +59,10 @@ public class Team extends Identity{
     }
 
     public void setLosses(int losses) {
-        support.firePropertyChange("losses", this.losses, losses);
+        int oldValue = this.losses;
         this.losses = losses;
+        support.firePropertyChange("losses", oldValue, this.losses);
+
     }
 
     public ArrayList<Fighter> getFighters() {

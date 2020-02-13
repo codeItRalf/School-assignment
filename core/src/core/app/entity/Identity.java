@@ -42,9 +42,11 @@ abstract public class Identity implements Serializable {
         return name;
     }
 
-    public void setName(String name) {
-        support.firePropertyChange("name",this.name,name);
-        this.name = name;
+    public void setName(String value) {
+        String oldValue = this.name;
+        this.name = value;
+        support.firePropertyChange("name",oldValue,this.name);
+
     }
 
     public int getId() {
@@ -68,11 +70,14 @@ abstract public class Identity implements Serializable {
 
         Identity identity = (Identity) o;
 
-        return getId() == identity.getId();
+        if (getId() != identity.getId()) return false;
+        return getName().equals(identity.getName());
     }
 
     @Override
     public int hashCode() {
-        return getId();
+        int result = getId();
+        result = 31 * result + getName().hashCode();
+        return result;
     }
 }

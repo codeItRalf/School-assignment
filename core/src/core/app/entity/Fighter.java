@@ -29,8 +29,10 @@ public class Fighter extends Identity  {
     }
 
     public void setTeamId(int teamId) {
-        support.firePropertyChange("teamId", this.teamId, teamId);
+        int oldValue = this.teamId;
         this.teamId = teamId;
+        support.firePropertyChange("teamId", oldValue, this.teamId);
+
     }
 
     public int getHp() {
@@ -38,8 +40,10 @@ public class Fighter extends Identity  {
     }
 
     public void setHp(int hp) {
-        support.firePropertyChange("hp", this.hp, hp);
+        int oldValue = this.hp;
         this.hp = hp;
+        support.firePropertyChange("hp", oldValue, this.hp);
+
     }
 
     public int getDmg() {
@@ -47,8 +51,10 @@ public class Fighter extends Identity  {
     }
 
     public void setDmg(int dmg) {
-        support.firePropertyChange("dmg", this.dmg, dmg);
+        int oldValue = this.dmg;
         this.dmg = dmg;
+        support.firePropertyChange("dmg", oldValue, this.dmg);
+
     }
 
 }

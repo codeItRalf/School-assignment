@@ -32,8 +32,8 @@ public class MyObserver implements PropertyChangeListener {
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-
+        Identity identity = (Identity) evt.getSource();
         repository.update((Identity) evt.getSource());
-        System.out.println("Listener fired! Bean= " +  evt.getNewValue());
+        System.out.println("Listener fired! Bean= " +  identity.getName());
     }
 }
