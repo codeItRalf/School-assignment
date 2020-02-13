@@ -31,7 +31,11 @@ public class TeamScreen extends BaseScreen<Team> {
         table.add(setNameLabel());
         rootTable.add(table);
         rootTable.row();
-        Label label = new Label("Wins: " + team.getWins() + " | Losses: " + team.getLosses(),skin);
+        Label label = new Label("Division: " + core.getViewModel().getDivisionForTeam(team).getName(),skin);
+        label.setAlignment(Align.center);
+        rootTable.add(label);
+        rootTable.row();
+        label = new Label("Wins: " + team.getWins() + " | Losses: " + team.getLosses(),skin);
         label.setTouchable(Touchable.disabled);
         label.setAlignment(Align.center);
         rootTable.add(label);

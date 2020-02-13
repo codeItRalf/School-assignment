@@ -123,7 +123,7 @@ public class FileSystem {
         return new File(databasePath).listFiles(File::isDirectory);
     }
 
-synchronized public static int generateId(String path) {
+synchronized static int generateId(String path) {
         var ref = new Object() {
             int id = 0;
         };

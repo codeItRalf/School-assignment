@@ -2,9 +2,12 @@ package core.app.menuScreen;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import core.app.Core;
+import core.app.dialog.ChangeValueDialog;
 import core.app.entity.Fighter;
 
 
@@ -24,9 +27,21 @@ public class FighterScreen extends BaseScreen<Fighter> {
         table.add(setNameLabel());
         table.row();
         Label label = new Label("Damage: " + fighter.getDmg(), skin);
+        label.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+             new ChangeValueDialog<>(uiSkin,stage,core,fighter, Fighter.attribute.DMG).createDialog();
+            }
+        });
         table.add(label);
         table.row();
         label = new Label("Hp: " + fighter.getHp(), skin);
+        label.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                new ChangeValueDialog<>(uiSkin,stage,core,fighter, Fighter.attribute.HP).createDialog();
+            }
+        });
         table.add(label);
         table.row();
         label = new Label("Team: " + core.getViewModel().getTeamForFighter(fighter).getName(), skin);

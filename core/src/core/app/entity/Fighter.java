@@ -12,7 +12,10 @@ public class Fighter extends Identity  {
     private int hp = 10;
     private int dmg = 2;
 
-
+    public enum attribute {
+        DMG,
+        HP
+    }
 
     public Fighter() {
     }

@@ -48,7 +48,7 @@ public abstract class BaseDialog extends Dialog {
         show(stage);
     }
 
-    private void alertDialog(){
+    protected void alertDialog(){
         Dialog baseDialog = new  Dialog("Warning!",skin);
         baseDialog.text("Invalid Input");
         baseDialog.button("OK",RESULT_WARNING);
@@ -59,7 +59,6 @@ public abstract class BaseDialog extends Dialog {
     @Override
     protected void result(Object object) {
         int result = (Integer) object;
-        System.out.println(inputText);
          if(inputText != null && inputText.length() > 0 && result == RESULT_OK){
              actionRequest();
              inputText = "";

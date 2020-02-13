@@ -180,4 +180,8 @@ public  class  Repository<T extends Identity> implements  RepositoryInterface<T>
         }
         return fieldValue == parent.getId();
     }
+
+    <O extends Integer> void setNewId(Identity identity){
+        identity.setId(generateId(MyDatabase.class.getSimpleName() + "/" + identity.getClass().getSimpleName()));
+    }
 }

@@ -55,23 +55,21 @@ public class ViewModel {
     }
 
     public void insertDivision(Division division) {
-        division.setId(generateId(MyDatabase.class.getSimpleName() + "/" + division.getClass().getSimpleName()));
+        repository.setNewId(division);
         division.addPropertyChangeListener(myObserver);
-        System.out.printf("insertDivision(Division division), Division ID = [%d]\n", division.getId());
         divisions.add(division);
         repository.insert(division);
     }
 
     public void insertTeam(Team team) {
-        team.setId(generateId(MyDatabase.class.getSimpleName() + "/" + team.getClass().getSimpleName()));
+        repository.setNewId(team);
         team.addPropertyChangeListener(myObserver);
-        System.out.printf("insertTeam(Team team), Team; Division ID = [%d]\n ", team.getDivisionId());
         getDivisionForTeam(team).getTeams().add(team);
         repository.insert(team);
     }
 
     public void insertFighter(Fighter fighter) {
-        fighter.setId(generateId(MyDatabase.class.getSimpleName() + "/" + fighter.getClass().getSimpleName()));
+        repository.setNewId(fighter);
         fighter.addPropertyChangeListener(myObserver);
         getTeamForFighter(fighter).getFighters().add(fighter);
         repository.insert(fighter);
