@@ -86,7 +86,7 @@ public class MyDatabase {
         }
     }
 
-    synchronized <T extends Identity>  Object deserialize(String path, int id){
+    synchronized Object deserialize(String path, int id){
         String rootPath = dbName + "/" + path +  "/" + id;
         Object o = null;
         try(var in = new ObjectInputStream(new FileInputStream(rootPath))){

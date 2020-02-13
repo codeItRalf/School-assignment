@@ -7,11 +7,8 @@ import core.app.entity.Identity;
 import core.app.entity.Team;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static core.fsdb.FileSystem.generateId;
 
@@ -23,7 +20,7 @@ public class ViewModel {
 
     public ViewModel() {
      repository = new Repository<>();
-     divisions = (ArrayList<Division>) repository.getAllOf(Division.class.getSimpleName());
+     divisions = new ArrayList<> (repository.getAllOf(Division.class.getSimpleName()));
      myObserver = new MyObserver(divisions, repository);
     }
 
@@ -46,7 +43,7 @@ public class ViewModel {
     }
 
     public Division getDivisionForTeam(Team team){
-        return   divisions.stream()
+        return divisions.stream()
                 .parallel()
                 .filter(div -> div.getId() == team.getDivisionId())
                 .collect(Collectors.toList()).get(0);
@@ -59,6 +56,7 @@ public class ViewModel {
     public void insertDivision(Division division){
         division.setId(generateId(MyDatabase.class.getSimpleName() + "/" + division.getClass().getSimpleName()));
         division.addPropertyChangeListener(myObserver);
+        System.out.printf("insertDivision(Division division), Division ID = [%d]\n", division.getId());
         divisions.add(division);
         repository.insert(division);
     }
@@ -66,6 +64,7 @@ public class ViewModel {
     public void insertTeam(Team team){
         team.setId(generateId(MyDatabase.class.getSimpleName() + "/" + team.getClass().getSimpleName()));
         team.addPropertyChangeListener(myObserver);
+        System.out.printf("insertTeam(Team team), Team; Division ID = [%d]\n ", team.getDivisionId());
        getDivisionForTeam(team).getTeams().add(team);
        repository.insert(team);
     }
