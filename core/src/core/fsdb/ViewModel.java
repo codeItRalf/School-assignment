@@ -8,52 +8,53 @@ import core.app.entity.Team;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static core.fsdb.FileSystem.generateId;
 
 public class ViewModel {
 
-        private Repository<? extends Identity> repository;
-        private ArrayList<Division> divisions;
-        private MyObserver myObserver;
+    private Repository<? extends Identity> repository;
+    private ArrayList<Division> divisions;
+    private MyObserver myObserver;
 
     public ViewModel() {
-     repository = new Repository<>();
-     divisions = new ArrayList<> (repository.getAllOf(Division.class.getSimpleName()));
-     myObserver = new MyObserver(divisions, repository);
+        repository = new Repository<>();
+        divisions = new ArrayList<>(repository.getAllOf(Division.class.getSimpleName()));
+        myObserver = new MyObserver(divisions, repository);
     }
 
 
-    public Division getDivision(int id){
+    public Division getDivision(int id) {
         return divisions.get(id);
     }
 
-    public ArrayList<Division> getAllDivisions(){
+    public ArrayList<Division> getAllDivisions() {
         return divisions;
     }
 
-    public Team getTeamForFighter(Fighter fighter){
-       return divisions.stream().map(Division::getTeams)
-              .flatMap(List::stream)
-               .parallel()
-          .filter(e-> e.getId() == fighter.getTeamId())
-        .collect(Collectors.toList()).get(0);
+    public Team getTeamForFighter(Fighter fighter) {
+        return divisions.stream().parallel()
+                 .map(Division::getTeams)
+                .flatMap(List::stream)
+                .filter(e -> e.getId() == fighter.getTeamId())
+                .findAny()
+                .get();
 
     }
 
-    public Division getDivisionForTeam(Team team){
+    public Division getDivisionForTeam(Team team) {
         return divisions.stream()
                 .parallel()
                 .filter(div -> div.getId() == team.getDivisionId())
-                .collect(Collectors.toList()).get(0);
+                .findAny()
+                .get();
     }
 
-    public Division getDivisionForFighter(Fighter fighter){
+    public Division getDivisionForFighter(Fighter fighter) {
         return getDivisionForTeam(getTeamForFighter(fighter));
     }
 
-    public void insertDivision(Division division){
+    public void insertDivision(Division division) {
         division.setId(generateId(MyDatabase.class.getSimpleName() + "/" + division.getClass().getSimpleName()));
         division.addPropertyChangeListener(myObserver);
         System.out.printf("insertDivision(Division division), Division ID = [%d]\n", division.getId());
@@ -61,15 +62,15 @@ public class ViewModel {
         repository.insert(division);
     }
 
-    public void insertTeam(Team team){
+    public void insertTeam(Team team) {
         team.setId(generateId(MyDatabase.class.getSimpleName() + "/" + team.getClass().getSimpleName()));
         team.addPropertyChangeListener(myObserver);
         System.out.printf("insertTeam(Team team), Team; Division ID = [%d]\n ", team.getDivisionId());
-       getDivisionForTeam(team).getTeams().add(team);
-       repository.insert(team);
+        getDivisionForTeam(team).getTeams().add(team);
+        repository.insert(team);
     }
 
-    public void insertFighter(Fighter fighter){
+    public void insertFighter(Fighter fighter) {
         fighter.setId(generateId(MyDatabase.class.getSimpleName() + "/" + fighter.getClass().getSimpleName()));
         fighter.addPropertyChangeListener(myObserver);
         getTeamForFighter(fighter).getFighters().add(fighter);

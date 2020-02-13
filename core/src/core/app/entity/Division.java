@@ -33,6 +33,9 @@ public class Division extends Identity {
     }
 
     public ArrayList<Team> getTeams() {
+        if(teams == null){
+            teams = new ArrayList<>();
+        }
         return teams;
     }
 

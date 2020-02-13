@@ -66,6 +66,9 @@ public class Team extends Identity{
     }
 
     public ArrayList<Fighter> getFighters() {
+        if(fighters == null){
+            fighters = new ArrayList<>();
+        }
         return fighters;
     }
 
