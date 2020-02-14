@@ -21,11 +21,16 @@ public class Fighter extends Identity  {
     }
 
     public Fighter(String name, int id, int teamId) {
-        super(name,id);
+        super(name, id);
         this.teamId = teamId;
     }
 
-
+    public Fighter(Fighter fighter) {
+        super(fighter.getName(), fighter.getId());
+        this.teamId = fighter.getTeamId();
+        this.dmg = fighter.getDmg();
+        this.hp = fighter.getHp();
+    }
 
     public int getTeamId() {
         return teamId;

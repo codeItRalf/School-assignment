@@ -60,7 +60,7 @@ public class SearchScreen extends BaseScreen<Division> {
                 if (c == '\n') {
                     filterList();
                 }
-                inputText = textField.getText();
+                inputText = textField.getText().trim();
             }
         });
         headerTable.add(textField);

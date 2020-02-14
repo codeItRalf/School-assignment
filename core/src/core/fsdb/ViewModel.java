@@ -16,7 +16,7 @@ public class ViewModel {
     private Repository<? extends Identity> repository;
     private ArrayList<Division> divisions;
     private MyObserver myObserver;
-    private int fightCount = -1;
+    private int roundCount = -1;
 
     public ViewModel() {
         repository = new Repository<>();
@@ -88,15 +88,15 @@ public class ViewModel {
         repository.remove(entity);
     }
 
-    public int getActualFightCount() {
-        if (fightCount == -1) {
-            fightCount = repository.getFightCount();
+    public int getActualRoundCount() {
+        if (roundCount == -1) {
+            roundCount = repository.getRoundCount();
         }
-        return fightCount;
+        return roundCount;
     }
 
-    public void incrementFightCount() {
-        fightCount++;
-        repository.updateFightCount(fightCount);
+    public void incrementRoundCount() {
+        roundCount++;
+        repository.updateRoundCount(roundCount);
     }
 }

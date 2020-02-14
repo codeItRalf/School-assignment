@@ -12,9 +12,11 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import core.app.Core;
 import core.app.DesktopWorker;
+import core.app.GameLogic;
 import core.app.GdxUtils;
 import core.app.dialog.ChangeNameDialog;
 import core.app.dialog.DeleteDialog;
+import core.app.dialog.GameRoundDialog;
 import core.app.entity.Division;
 import core.app.entity.Identity;
 import core.fsdb.ViewModel;
@@ -63,7 +65,7 @@ public abstract class BaseScreen<T extends Identity> extends ScreenAdapter {
         root.setFillParent(true);
         root.setBackground("bg");
         stage.addActor(root);
-        root.add(getHeader());
+        root.add(getHeader()).growX();
         root.row();
 
 
@@ -119,17 +121,27 @@ public abstract class BaseScreen<T extends Identity> extends ScreenAdapter {
 
 
     protected Table getHeader() {
-        String headerTitle = t == null ? "The Arena" : t.getClass().getSimpleName();
+        boolean isStartPage = this.getClass() == StartScreen.class;
+        String headerTitle = isStartPage ? "The Arena" : t.getClass().getSimpleName();
         Table table = new Table();
+        Table column1 = new Table();
+        table.add(column1).expandX();
+        Table column2 = new Table();
+        table.add(column2).expandX();
+        Table column3 = new Table();
+        table.add(column3).expandX();
+        if (isStartPage) column1.add(getRoundButton()).align(Align.left);
         Label label = new Label(headerTitle, skin, "bg");
         label.setTouchable(Touchable.disabled);
         label.setAlignment(Align.center);
-        table.add(label);
-        table.row();
-        if (t != null) {
-            table.add(getDeleteButton());
+        column2.add(label).align(Align.center);
+        if (isStartPage)
+            column3.add(new Label("Season " + (viewModel.getActualRoundCount() / 10 + 1), skin)).align(Align.right);
+        column2.row();
+        if (!isStartPage) {
+            column2.add(getDeleteButton()).colspan(2);
         } else {
-            table.add(getSearchButton());
+            column2.add(getSearchButton()).colspan(2);
         }
         return table;
     }
@@ -236,6 +248,18 @@ public abstract class BaseScreen<T extends Identity> extends ScreenAdapter {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 new DeleteDialog<>(uiSkin, stage, core, t).createDialog();
+            }
+        });
+        return label;
+    }
+
+    protected Label getRoundButton() {
+        Label label = new Label("Round: " + viewModel.getActualRoundCount(), skin);
+        label.setAlignment(Align.left);
+        label.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                new GameRoundDialog<>(uiSkin, stage, core).createDialog();
             }
         });
         return label;

@@ -19,11 +19,10 @@ import java.util.stream.IntStream;
 
 public class StartScreen extends BaseScreen<Division> {
 
-    private GameLogic gameLogic;
 
     public StartScreen(Core core) {
         super(null, core);
-        gameLogic = new GameLogic();
+
     }
 
 

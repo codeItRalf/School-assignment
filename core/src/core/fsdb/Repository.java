@@ -184,7 +184,7 @@ public  class  Repository<T extends Identity> implements  RepositoryInterface<T>
         identity.setId(generateId(MyDatabase.class.getSimpleName() + "/" + identity.getClass().getSimpleName()));
     }
 
-    public int getFightCount() {
+    public int getRoundCount() {
         String path = MyDatabase.class.getSimpleName() + "/fightCount";
         if (!FileSystem.exists(path)) {
             FileSystem.writeFile(path, "1");
@@ -192,7 +192,7 @@ public  class  Repository<T extends Identity> implements  RepositoryInterface<T>
         return Integer.parseInt(Objects.requireNonNull(FileSystem.readFile(path)));
     }
 
-    public void updateFightCount(int fightCount) {
+    public void updateRoundCount(int fightCount) {
         String path = MyDatabase.class.getSimpleName() + "/fightCount";
         FileSystem.writeFile(path, String.valueOf(fightCount));
     }
