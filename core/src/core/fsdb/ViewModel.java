@@ -9,13 +9,14 @@ import core.app.entity.Team;
 import java.util.ArrayList;
 import java.util.List;
 
-import static core.fsdb.FileSystem.generateId;
+
 
 public class ViewModel {
 
     private Repository<? extends Identity> repository;
     private ArrayList<Division> divisions;
     private MyObserver myObserver;
+    private int fightCount = -1;
 
     public ViewModel() {
         repository = new Repository<>();
@@ -85,5 +86,17 @@ public class ViewModel {
             division.getTeams().remove(entity);
         } else divisions.remove(entity);
         repository.remove(entity);
+    }
+
+    public int getActualFightCount() {
+        if (fightCount == -1) {
+            fightCount = repository.getFightCount();
+        }
+        return fightCount;
+    }
+
+    public void incrementFightCount() {
+        fightCount++;
+        repository.updateFightCount(fightCount);
     }
 }

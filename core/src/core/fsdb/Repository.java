@@ -11,6 +11,7 @@ import core.app.entity.NoClass;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -181,5 +182,18 @@ public  class  Repository<T extends Identity> implements  RepositoryInterface<T>
 
     <E extends Identity> void setNewId(Identity identity) {
         identity.setId(generateId(MyDatabase.class.getSimpleName() + "/" + identity.getClass().getSimpleName()));
+    }
+
+    public int getFightCount() {
+        String path = MyDatabase.class.getSimpleName() + "/fightCount";
+        if (!FileSystem.exists(path)) {
+            FileSystem.writeFile(path, "1");
+        }
+        return Integer.parseInt(Objects.requireNonNull(FileSystem.readFile(path)));
+    }
+
+    public void updateFightCount(int fightCount) {
+        String path = MyDatabase.class.getSimpleName() + "/fightCount";
+        FileSystem.writeFile(path, String.valueOf(fightCount));
     }
 }

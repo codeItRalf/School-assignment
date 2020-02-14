@@ -22,12 +22,8 @@ public class Core extends Game {
     private BitmapFont bitmapFont;
 
 
-    public static final float CELL_WIDTH = 150f;
-    public static final float CELL_PADDING = 30f;
-
     //Logic and ViewModel
     private ViewModel viewModel;
-    private GameLogic gameLogic;
 
     public Core(ViewModel viewModel) {
         this.viewModel = viewModel;
@@ -38,8 +34,6 @@ public class Core extends Game {
         generateBitmapFont();
         skin = initSkin();
         showStartScreen();
-
-
     }
 
     public void showStartScreen() {
