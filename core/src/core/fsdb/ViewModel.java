@@ -75,4 +75,15 @@ public class ViewModel {
         getTeamForFighter(fighter).getFighters().add(fighter);
         repository.insert(fighter);
     }
+
+    public void deleteEntity(Identity entity) {
+        if (entity.getClass().equals(Fighter.class)) {
+            Team team = getTeamForFighter((Fighter) entity);
+            team.getFighters().remove(entity);
+        } else if (entity.getClass().equals(Team.class)) {
+            Division division = getDivisionForTeam((Team) entity);
+            division.getTeams().remove(entity);
+        } else divisions.remove(entity);
+        repository.remove(entity);
+    }
 }

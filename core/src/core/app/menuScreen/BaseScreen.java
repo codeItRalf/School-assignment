@@ -14,6 +14,7 @@ import core.app.Core;
 import core.app.DesktopWorker;
 import core.app.GdxUtils;
 import core.app.dialog.ChangeNameDialog;
+import core.app.dialog.DeleteDialog;
 import core.app.entity.Division;
 import core.app.entity.Identity;
 
@@ -113,16 +114,16 @@ public abstract class BaseScreen<T extends Identity> extends ScreenAdapter {
     }
 
 
-
-
-    protected Table getHeader(){
+    protected Table getHeader() {
         String headerTitle = t == null ? "The Arena" : t.getClass().getSimpleName();
         Table table = new Table();
         Label label = new Label(headerTitle, skin, "bg");
         label.setTouchable(Touchable.disabled);
         label.setAlignment(Align.center);
-         table.add(label);
-         return table;
+        table.add(label);
+        table.row();
+        if (t != null) table.add(getDeleteButton());
+        return table;
     }
 
     protected abstract Table getFooter();
@@ -201,6 +202,18 @@ public abstract class BaseScreen<T extends Identity> extends ScreenAdapter {
             public void clicked(InputEvent event, float x, float y) {
                 new ChangeNameDialog<>(uiSkin, stage, core, t).createDialog();
                 System.out.println("Label clicked!");
+            }
+        });
+        return label;
+    }
+
+    protected Label getDeleteButton() {
+        Label label = new Label("Delete", skin);
+        label.setAlignment(Align.center);
+        label.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                new DeleteDialog<>(uiSkin, stage, core, t).createDialog();
             }
         });
         return label;
