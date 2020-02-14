@@ -72,7 +72,7 @@ public abstract class BaseScreen<T extends Identity> extends ScreenAdapter {
         ScrollPane scrollPane = new ScrollPane(table);
         scrollPane.setScrollY(0);
 
-        root.add(scrollPane).growX().growY();
+        root.add(scrollPane).growX().growY().align(Align.top);
 
         table.row();
         table.add(getBody()).growX();

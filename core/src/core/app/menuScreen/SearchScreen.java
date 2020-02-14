@@ -1,6 +1,5 @@
 package core.app.menuScreen;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -11,16 +10,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import core.app.Core;
-import core.app.GameLogic;
-import core.app.dialog.AddDivisionDialog;
 import core.app.entity.Division;
 import core.app.entity.Fighter;
 import core.app.entity.Identity;
 import core.app.entity.Team;
-import core.fsdb.ViewModel;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,11 +25,15 @@ public class SearchScreen extends BaseScreen<Division> {
 
 
     private String inputText;
-    private ArrayList<Fighter> allFighters;
+    private final ArrayList<Fighter> allFighters;
+    private ArrayList<Fighter> filteredList;
+    private Table scrollTable;
 
     public SearchScreen(Core core) {
         super(null, core);
         allFighters = getAllFighters();
+        filteredList = new ArrayList<>(allFighters);
+        scrollTable = new Table();
     }
 
     private ArrayList<Fighter> getAllFighters() {
@@ -59,7 +58,7 @@ public class SearchScreen extends BaseScreen<Division> {
             @Override
             public void keyTyped(TextField textField, char c) {
                 if (c == '\n') {
-
+                    filterList();
                 }
                 inputText = textField.getText();
             }
@@ -80,22 +79,31 @@ public class SearchScreen extends BaseScreen<Division> {
         return headerTable;
     }
 
+    private void filterList() {
+        filteredList = allFighters
+                .stream()
+                .parallel()
+                .filter(a -> a.getName().toLowerCase().contains(inputText.toLowerCase()))
+                .collect(Collectors.toCollection(ArrayList::new));
+        getBody();
+    }
+
     @Override
     protected Table getBody() {
-        Table rootTable = new Table();
+        scrollTable.clearChildren();
         Table table = new Table();
-        rootTable.add(table).growX();
+        scrollTable.add(table).growX();
         Table finalTable = table;
-        if (allFighters != null && allFighters.size() > 0) {
-            IntStream.range(0, allFighters.size()).forEach(i -> {
+        if (filteredList != null && filteredList.size() > 0) {
+            IntStream.range(0, filteredList.size()).forEach(i -> {
                 Table listItemTable = new Table();
-                Label itemLabel = new Label(allFighters.get(i).getName(), skin);
+                Label itemLabel = new Label(filteredList.get(i).getName(), skin);
                 itemLabel.setAlignment(Align.left);
                 listItemTable.add(itemLabel).align(Align.center).width(CELL_WIDTH);
-                itemLabel = new Label(allFighters.get(i).getDmg() + "", skin);
+                itemLabel = new Label(filteredList.get(i).getDmg() + "", skin);
                 itemLabel.setAlignment(Align.center);
                 listItemTable.add(itemLabel).align(Align.center).width(CELL_WIDTH);
-                itemLabel = new Label(viewModel.getTeamForFighter(allFighters.get(i)).getName(), skin);
+                itemLabel = new Label(viewModel.getTeamForFighter(filteredList.get(i)).getName(), skin);
                 itemLabel.setAlignment(Align.right);
                 listItemTable.add(itemLabel).align(Align.center).width(CELL_WIDTH);
                 finalTable.add(listItemTable).growX();
@@ -103,12 +111,12 @@ public class SearchScreen extends BaseScreen<Division> {
                 listItemTable.addListener(new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
-                        core.setScreen(new FighterScreen(allFighters.get(i), core));
+                        core.setScreen(new FighterScreen(filteredList.get(i), core));
                     }
                 });
             });
         }
-        return rootTable;
+        return scrollTable;
     }
 
 
