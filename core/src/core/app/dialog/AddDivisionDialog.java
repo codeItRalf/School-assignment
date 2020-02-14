@@ -15,6 +15,7 @@ public class AddDivisionDialog<T extends Identity> extends BaseDialog<T> {
 
     public AddDivisionDialog(Skin skin, Stage stage, Core core, T t) {
         super("Create new Division", skin, stage, core, t);
+        posButton = "Create";
     }
 
 
@@ -22,6 +23,6 @@ public class AddDivisionDialog<T extends Identity> extends BaseDialog<T> {
     protected void actionRequest() {
         viewModel.insertDivision(new Division(inputText, -1, new ArrayList<>()));
         core.showStartScreen();
-        posButton = "Create";
+
     }
 }

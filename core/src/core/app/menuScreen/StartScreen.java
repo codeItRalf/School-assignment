@@ -20,14 +20,8 @@ import java.util.stream.IntStream;
 public class StartScreen extends BaseScreen<Division> {
 
 
-    //Logic and ViewModel
-    private ViewModel viewModel;
-    private GameLogic gameLogic;
-
-
-    public StartScreen(ViewModel viewModel, Core core) {
+    public StartScreen(Core core) {
         super(null, core);
-        this.viewModel = viewModel;
     }
 
 

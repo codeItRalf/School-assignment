@@ -14,10 +14,7 @@ import com.badlogic.gdx.utils.JsonValue;
 import core.app.entity.Division;
 import core.app.entity.Fighter;
 import core.app.entity.Team;
-import core.app.menuScreen.DivisionScreen;
-import core.app.menuScreen.FighterScreen;
-import core.app.menuScreen.StartScreen;
-import core.app.menuScreen.TeamScreen;
+import core.app.menuScreen.*;
 import core.fsdb.ViewModel;
 
 public class Core extends Game {
@@ -46,15 +43,19 @@ public class Core extends Game {
     }
 
     public void showStartScreen() {
-        setScreen(new StartScreen(viewModel, this));
+        setScreen(new StartScreen(this));
+    }
+
+    public void showSearchScreen() {
+        setScreen(new SearchScreen(this));
     }
 
 
-    public void showDivisionScreen(Division division){
+    public void showDivisionScreen(Division division) {
         setScreen(new DivisionScreen(division, this));
     }
 
-    public void showTeamScreen(Team team){
+    public void showTeamScreen(Team team) {
         setScreen(new TeamScreen(team, this));
     }
 

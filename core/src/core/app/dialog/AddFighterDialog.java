@@ -15,7 +15,7 @@ public class AddFighterDialog extends BaseDialog<Team> {
 
     public AddFighterDialog(Skin skin, Stage stage, Core core, Team team) {
         super("Create new Fighter", skin, stage, core, team);
-
+        posButton = "Create";
     }
 
 
@@ -24,6 +24,6 @@ public class AddFighterDialog extends BaseDialog<Team> {
         Fighter fighter = new Fighter(inputText, -1, t.getId());
         viewModel.insertFighter(fighter);
         core.showTeamScreen(t);
-        posButton = "Create";
+
     }
 }

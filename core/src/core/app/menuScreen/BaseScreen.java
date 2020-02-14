@@ -17,6 +17,7 @@ import core.app.dialog.ChangeNameDialog;
 import core.app.dialog.DeleteDialog;
 import core.app.entity.Division;
 import core.app.entity.Identity;
+import core.fsdb.ViewModel;
 
 import java.util.stream.IntStream;
 
@@ -30,9 +31,11 @@ public abstract class BaseScreen<T extends Identity> extends ScreenAdapter {
     protected Skin uiSkin;
     protected TextField.TextFieldStyle textFieldStyle;
     protected Core core;
+    protected ViewModel viewModel;
     public static DesktopWorker desktopWorker;
     private int dragStartX, dragStartY;
     private int windowStartX, windowStartY;
+
 
     public static final float CELL_WIDTH = 150f;
     public static final float CELL_PADDING = 30f;
@@ -43,6 +46,7 @@ public abstract class BaseScreen<T extends Identity> extends ScreenAdapter {
         this.t = t;
         this.skin = core.getSkin();
         this.core = core;
+        this.viewModel = core.getViewModel();
         this.textFieldStyle = core.getTextFieldStyle();
         uiSkin = new Skin(Gdx.files.internal("default_skin/uiskin.json"));
     }
@@ -122,19 +126,37 @@ public abstract class BaseScreen<T extends Identity> extends ScreenAdapter {
         label.setAlignment(Align.center);
         table.add(label);
         table.row();
-        if (t != null) table.add(getDeleteButton());
+        if (t != null) {
+            table.add(getDeleteButton());
+        } else {
+            table.add(getSearchButton());
+        }
+        return table;
+    }
+
+    private Table getSearchButton() {
+        Table table = new Table();
+        TextButton textButton = new TextButton("Search", skin);
+        textButton.align(Align.center);
+        textButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                core.showSearchScreen();
+            }
+        });
+        table.add(textButton);
         return table;
     }
 
     protected abstract Table getFooter();
 
-    protected Table getTeamItem(Division division, int i){
-        Table listItemTable =  new Table();
+    protected Table getTeamItem(Division division, int i) {
+        Table listItemTable = new Table();
         listItemTable.defaults().growX();
-        Label itemLabel = new Label(division.getTeams().get(i).getName() ,skin);
+        Label itemLabel = new Label(division.getTeams().get(i).getName(), skin);
         itemLabel.setAlignment(Align.center);
         listItemTable.add(itemLabel).align(Align.center);
-        itemLabel = new Label(division.getTeams().get(i).getWins() +" - " + division.getTeams().get(i).getLosses() , skin);
+        itemLabel = new Label(division.getTeams().get(i).getWins() + " - " + division.getTeams().get(i).getLosses(), skin);
         itemLabel.setAlignment(Align.center);
         listItemTable.add(itemLabel).align(Align.center);
         return listItemTable;

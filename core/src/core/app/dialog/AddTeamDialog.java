@@ -17,7 +17,7 @@ public class AddTeamDialog extends BaseDialog<Division> {
 
     public AddTeamDialog(Skin skin, Stage stage, Core core, Division division) {
         super("Create new Team", skin, stage, core, division);
-
+        posButton = "Create";
     }
 
 
@@ -26,6 +26,6 @@ public class AddTeamDialog extends BaseDialog<Division> {
         Team team = new Team(inputText, -1, t.getId(), new ArrayList<>());
         viewModel.insertTeam(team);
         core.showDivisionScreen(t);
-        posButton = "Create";
+
     }
 }
