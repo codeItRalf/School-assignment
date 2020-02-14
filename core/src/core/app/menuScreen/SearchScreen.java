@@ -67,17 +67,63 @@ public class SearchScreen extends BaseScreen<Division> {
         headerTable.row();
         Table table = new Table();
         Label label = new Label("Name:", skin);
+        label.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                sortByName();
+            }
+        });
         label.setAlignment(Align.left);
         table.add(label).align(Align.center).width(CELL_WIDTH);
         label = new Label("Damage:", skin);
+        label.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                sortByDamage();
+            }
+        });
         label.setAlignment(Align.center);
         table.add(label).align(Align.center).width(CELL_WIDTH);
         label = new Label("Team:", skin);
+        label.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                sortByTeam();
+            }
+        });
         label.setAlignment(Align.right);
         table.add(label).align(Align.center).width(CELL_WIDTH);
         headerTable.add(table).growX();
         return headerTable;
     }
+
+    private void sortByTeam() {
+        filteredList = allFighters
+                .stream()
+                .parallel()
+                .sorted(Comparator.comparing(e -> viewModel.getTeamForFighter(e).getName()))
+                .collect(Collectors.toCollection(ArrayList::new));
+        getBody();
+    }
+
+    private void sortByDamage() {
+        filteredList = allFighters
+                .stream()
+                .parallel()
+                .sorted(Comparator.comparing(Fighter::getDmg))
+                .collect(Collectors.toCollection(ArrayList::new));
+        getBody();
+    }
+
+    private void sortByName() {
+        filteredList = allFighters
+                .stream()
+                .parallel()
+                .sorted(Comparator.comparing(Fighter::getName))
+                .collect(Collectors.toCollection(ArrayList::new));
+        getBody();
+    }
+
 
     private void filterList() {
         filteredList = allFighters
