@@ -12,8 +12,6 @@ public class GameWorkerThread implements Runnable {
     private Random r = new Random();
     private ViewModel viewModel;
     private int divIndex;
-    private int startIndexA = 0;
-    private int startIndexB = 1;
 
 
     private ArrayList<Fighter> teamA = new ArrayList<>();
@@ -32,9 +30,9 @@ public class GameWorkerThread implements Runnable {
 
     private void workCommand() {
         System.out.println(Thread.currentThread().getName() + " Start");
-        IntStream.range(startIndexA, viewModel.getDivision(divIndex).getTeams().size() - 1).forEach(indexA -> {
+        IntStream.range(0, viewModel.getDivision(divIndex).getTeams().size() - 1).forEach(indexA -> {
             deepCopyTeam(indexA, teamA);
-            IntStream.range(startIndexB, viewModel.getDivision(divIndex).getTeams().size()).forEach(indexB -> {
+            IntStream.range(indexA + 1, viewModel.getDivision(divIndex).getTeams().size()).forEach(indexB -> {
                 deepCopyTeam(indexB, teamB);
                 boolean isGameOver = false;
                 while (!isGameOver) {
@@ -44,7 +42,7 @@ public class GameWorkerThread implements Runnable {
                         isGameOver = gameMechanic(teamB, teamA);
                     }
                 }
-                deepCopyTeam(startIndexA, teamA);
+                deepCopyTeam(indexA, teamA);
             });
         });
         System.out.println(Thread.currentThread().getName() + " End.");

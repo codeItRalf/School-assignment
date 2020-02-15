@@ -17,9 +17,14 @@ import core.app.dialog.ChangeNameDialog;
 import core.app.dialog.DeleteDialog;
 import core.app.dialog.GameRoundDialog;
 import core.app.entity.Division;
+import core.app.entity.Fighter;
 import core.app.entity.Identity;
+import core.app.entity.Team;
 import core.fsdb.ViewModel;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public abstract class BaseScreen<T extends Identity> extends ScreenAdapter {
@@ -135,7 +140,7 @@ public abstract class BaseScreen<T extends Identity> extends ScreenAdapter {
         label.setAlignment(Align.center);
         column2.add(label).align(Align.center);
         if (isStartPage)
-            column3.add(new Label("Season " + (viewModel.getActualRoundCount() / 10 + 1), skin)).align(Align.right);
+            column3.add(new Label("Season " + viewModel.getActualRoundCount() / 10, skin)).align(Align.right);
         column2.row();
         if (!isStartPage) {
             column2.add(getDeleteButton()).colspan(2);
@@ -161,13 +166,13 @@ public abstract class BaseScreen<T extends Identity> extends ScreenAdapter {
 
     protected abstract Table getFooter();
 
-    protected Table getTeamItem(Division division, int i) {
+    protected Table getTeamListItem(Team team) {
         Table listItemTable = new Table();
         listItemTable.defaults().growX();
-        Label itemLabel = new Label(division.getTeams().get(i).getName(), skin);
+        Label itemLabel = new Label(team.getName(), skin);
         itemLabel.setAlignment(Align.center);
         listItemTable.add(itemLabel).align(Align.center);
-        itemLabel = new Label(division.getTeams().get(i).getWins() + " - " + division.getTeams().get(i).getLosses(), skin);
+        itemLabel = new Label(team.getWins() + " - " + team.getLosses(), skin);
         itemLabel.setAlignment(Align.center);
         listItemTable.add(itemLabel).align(Align.center);
         return listItemTable;
@@ -191,18 +196,20 @@ public abstract class BaseScreen<T extends Identity> extends ScreenAdapter {
             table = new Table();
             rootTable.add(table).growX();
             Table finalTable = table;
-            IntStream.range(0, division.getTeams().size()).forEach(i -> {
-                Table listItemTable = getTeamItem(division, i);
-                finalTable.add(listItemTable).growX();
-                finalTable.row();
-                listItemTable.addListener(new ClickListener() {
-                    @Override
-                    public void clicked(InputEvent event, float x, float y) {
-                        System.out.println(division.getTeams().get(i).getName() + " clicked! ");
-                        core.setScreen(new TeamScreen(division.getTeams().get(i), core));
-                    }
-                });
-            });
+            division.getTeams()
+                    .stream()
+                    .sorted(Comparator.comparing(Team::getWins).reversed())
+                    .forEach(e -> {
+                        Table listItemTable = getTeamListItem(e);
+                        finalTable.add(listItemTable).growX();
+                        finalTable.row();
+                        listItemTable.addListener(new ClickListener() {
+                            @Override
+                            public void clicked(InputEvent event, float x, float y) {
+                                core.setScreen(new TeamScreen(e, core));
+                            }
+                        });
+                    });
         }
 
         return rootTable;

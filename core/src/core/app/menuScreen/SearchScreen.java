@@ -110,7 +110,7 @@ public class SearchScreen extends BaseScreen<Division> {
         filteredList = allFighters
                 .stream()
                 .parallel()
-                .sorted(Comparator.comparing(Fighter::getDmg))
+                .sorted(Comparator.comparing(Fighter::getDmg).reversed())
                 .collect(Collectors.toCollection(ArrayList::new));
         getBody();
     }
