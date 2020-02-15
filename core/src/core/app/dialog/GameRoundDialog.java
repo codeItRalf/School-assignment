@@ -7,6 +7,10 @@ import core.app.Core;
 import core.app.game.GameWorkerThread;
 import core.app.entity.Identity;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.stream.IntStream;
+
 
 public class GameRoundDialog<T extends Identity> extends BaseDialog<T> {
 
@@ -36,6 +40,18 @@ public class GameRoundDialog<T extends Identity> extends BaseDialog<T> {
 
     @Override
     protected void actionRequest() {
-
+        int actualRound = viewModel.getActualRoundCount();
+        IntStream.range(actualRound, value).forEach(e -> {
+            ExecutorService executorService = Executors.newFixedThreadPool(viewModel.getAllDivisions().size());
+            IntStream.range(0, viewModel.getAllDivisions().size()).forEach(index -> {
+                Runnable worker = new GameWorkerThread(viewModel, index);
+                executorService.execute(worker);
+            });
+            executorService.shutdown();
+            while (!executorService.isTerminated()) {
+            }
+            viewModel.incrementRoundCount();
+        });
+        core.showStartScreen();
     }
 }

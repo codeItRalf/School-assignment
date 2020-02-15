@@ -10,7 +10,6 @@ import java.util.stream.IntStream;
 
 public class GameWorkerThread implements Runnable {
     private Random r = new Random();
-    private int gameRound;
     private ViewModel viewModel;
     private int divIndex;
     private int startIndexA = 0;
@@ -20,8 +19,7 @@ public class GameWorkerThread implements Runnable {
     private ArrayList<Fighter> teamA = new ArrayList<>();
     private ArrayList<Fighter> teamB = new ArrayList<>();
 
-    public GameWorkerThread(int gameRound, ViewModel viewModel, int divIndex) {
-        this.gameRound = gameRound;
+    public GameWorkerThread(ViewModel viewModel, int divIndex) {
         this.viewModel = viewModel;
         this.divIndex = divIndex;
     }
@@ -35,9 +33,9 @@ public class GameWorkerThread implements Runnable {
     private void workCommand() {
         System.out.println(Thread.currentThread().getName() + " Start");
         IntStream.range(startIndexA, viewModel.getDivision(divIndex).getTeams().size() - 1).forEach(indexA -> {
-            deepCopyTeam(startIndexA, teamA);
+            deepCopyTeam(indexA, teamA);
             IntStream.range(startIndexB, viewModel.getDivision(divIndex).getTeams().size()).forEach(indexB -> {
-                deepCopyTeam(startIndexB, teamB);
+                deepCopyTeam(indexB, teamB);
                 boolean isGameOver = false;
                 while (!isGameOver) {
                     if (r.nextBoolean()) {
