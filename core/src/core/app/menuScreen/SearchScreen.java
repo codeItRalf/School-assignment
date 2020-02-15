@@ -12,12 +12,9 @@ import com.badlogic.gdx.utils.Align;
 import core.app.Core;
 import core.app.entity.Division;
 import core.app.entity.Fighter;
-import core.app.entity.Identity;
-import core.app.entity.Team;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -27,7 +24,7 @@ public class SearchScreen extends BaseScreen<Division> {
     private String inputText;
     private final ArrayList<Fighter> allFighters;
     private ArrayList<Fighter> filteredList;
-    private Table scrollTable;
+    private final Table scrollTable;
 
     public SearchScreen(Core core) {
         super(null, core);
@@ -45,14 +42,11 @@ public class SearchScreen extends BaseScreen<Division> {
         Table headerTable = new Table();
         headerTable.align(Align.center);
         TextField textField = new TextField("", uiSkin);
-        textField.setTextFieldListener(new TextField.TextFieldListener() {
-            @Override
-            public void keyTyped(TextField textField, char c) {
-                if (c == '\n') {
-                    filterList();
-                }
-                inputText = textField.getText().trim();
+        textField.setTextFieldListener((textField1, c) -> {
+            if (c == '\n') {
+                filterList();
             }
+            inputText = textField1.getText().trim();
         });
         headerTable.add(textField);
         headerTable.row();
@@ -125,12 +119,12 @@ public class SearchScreen extends BaseScreen<Division> {
         getBody();
     }
 
+    @SuppressWarnings("DuplicatedCode")
     @Override
     protected Table getBody() {
         scrollTable.clearChildren();
         Table table = new Table();
         scrollTable.add(table).growX();
-        Table finalTable = table;
         if (filteredList != null && filteredList.size() > 0) {
             IntStream.range(0, filteredList.size()).forEach(i -> {
                 Table listItemTable = new Table();
@@ -143,8 +137,8 @@ public class SearchScreen extends BaseScreen<Division> {
                 itemLabel = new Label(viewModel.getTeamForFighter(filteredList.get(i)).getName(), skin);
                 itemLabel.setAlignment(Align.right);
                 listItemTable.add(itemLabel).align(Align.center).width(CELL_WIDTH);
-                finalTable.add(listItemTable).growX();
-                finalTable.row();
+                table.add(listItemTable).growX();
+                table.row();
                 listItemTable.addListener(new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {

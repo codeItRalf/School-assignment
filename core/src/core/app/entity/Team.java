@@ -22,7 +22,7 @@ public class Team extends Identity{
     private int losses;
 
     @Ignore
-   private ArrayList<Fighter> fighters;
+    private ArrayList<Fighter> fighters = new ArrayList<>();
 
     public Team() {
         super("undefined", -1);

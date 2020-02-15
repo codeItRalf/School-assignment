@@ -9,8 +9,8 @@ import java.util.Random;
 import java.util.stream.IntStream;
 
 public class GameWorkerThread implements Runnable {
-    protected Random r = new Random();
-    protected ViewModel viewModel;
+    protected final Random r = new Random();
+    protected final ViewModel viewModel;
     private int divIndex;
 
 

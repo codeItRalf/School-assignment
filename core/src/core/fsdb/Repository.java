@@ -18,9 +18,9 @@ import java.util.stream.IntStream;
 import static core.fsdb.FileSystem.generateId;
 
 
-public  class  Repository<T extends Identity> implements  RepositoryInterface<T> {
-    private String dbName = MyDatabase.class.getSimpleName();
-    private MyDatabase myDatabase = MyDatabase.getDatabase();
+public class Repository<T extends Identity> implements RepositoryInterface<T> {
+    private final String dbName = MyDatabase.class.getSimpleName();
+    private final MyDatabase myDatabase = MyDatabase.getDatabase();
 
 
     @Override
@@ -68,7 +68,7 @@ public  class  Repository<T extends Identity> implements  RepositoryInterface<T>
         List<Integer> ids = FileSystem.getAllIds(dbName + "/" + type);
         return ids.stream().map(e -> {
             E object = deserializeFile(type, e);
-            return get((E) object);
+            return get(object);
         }).collect(Collectors.toList());
     }
 
@@ -153,9 +153,9 @@ public  class  Repository<T extends Identity> implements  RepositoryInterface<T>
         IntStream.range(0, childList.size()).forEach(index -> {
             if (index != childList.size() - 1) {
                 removeFile(childList.get(index));
-            } else {
-                remove(childList.get(index));
             }
+                remove(childList.get(index));
+
         });
     }
 

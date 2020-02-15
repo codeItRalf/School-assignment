@@ -4,7 +4,7 @@ package core.app.entity;
 import core.annotation.Entity;
 import core.annotation.ForeignKey;
 
-import java.beans.PropertyChangeEvent;
+import java.util.Random;
 
 @Entity( primaryKey = "id", foreignKey = @ForeignKey(
         parent = Team.class,
@@ -12,7 +12,7 @@ import java.beans.PropertyChangeEvent;
 public class Fighter extends Identity  {
     private int teamId;
     private int hp = 10;
-    private int dmg = 2;
+    private int dmg = 3;
 
     public enum attribute {
         DMG,
@@ -69,9 +69,10 @@ public class Fighter extends Identity  {
 
 
     public void upgradeStats() {
+        Random r = new Random();
         int oldSum = this.hp + this.dmg;
-        this.hp++;
-        this.dmg++;
+        this.hp += r.nextInt(50) == 0 ? 50 : 3;
+        this.dmg += r.nextInt(50) == 0 ? 50 : 1;
         support.firePropertyChange("upgrade", oldSum, this.hp + this.dmg);
     }
 

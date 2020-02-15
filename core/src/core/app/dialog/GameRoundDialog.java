@@ -18,27 +18,32 @@ import java.util.stream.IntStream;
 public class GameRoundDialog<T extends Identity> extends BaseDialog<T> {
 
 
-    private int value = -1;
+    private int value;
 
     public GameRoundDialog(Skin skin, Stage stage, Core core) {
         super("Play rounds!", skin, stage, core, null);
-        this.text("Until what round do you want to play?");
+        this.text("How many rounds do you want to play?");
         posButton = "Play";
+        value = -1;
     }
 
 
     @Override
     protected void result(Object object) {
-        try {
-            value = Integer.parseInt(inputText);
-        } catch (NumberFormatException e) {
-            value = -1;
+        if ((int) object != RESULT_CANCEL && (int) object != RESULT_WARNING) {
+            try {
+                value = Integer.parseInt(inputText);
+                value += viewModel.getActualRoundCount();
+            } catch (NumberFormatException e) {
+                value = -1;
+            }
+            if (value != -1 && value > viewModel.getActualRoundCount()) {
+                actionRequest();
+            } else if (!object.equals(RESULT_CANCEL)) {
+                alertDialog();
+            }
         }
-        if (value != -1 && value > viewModel.getActualRoundCount()) {
-            actionRequest();
-        } else if (!object.equals(RESULT_CANCEL)) {
-            alertDialog();
-        }
+
     }
 
     @Override

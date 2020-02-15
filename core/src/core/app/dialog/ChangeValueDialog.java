@@ -11,7 +11,7 @@ import core.app.entity.Identity;
 public class ChangeValueDialog<T extends Identity> extends BaseDialog<T> {
 
 
-    private Fighter.attribute attribute;
+    private final Fighter.attribute attribute;
 
     public ChangeValueDialog(Skin skin, Stage stage, Core core, T t, Fighter.attribute attribute) {
         super("Change Value!", skin, stage, core, t);
@@ -34,16 +34,19 @@ public class ChangeValueDialog<T extends Identity> extends BaseDialog<T> {
 
     @Override
     protected void result(Object object) {
-        int value;
-        try {
-         value = Integer.parseInt(inputText);
-        }catch (NumberFormatException e){
-            value = -1;
+        if ((int) object != RESULT_CANCEL && (int) object != RESULT_WARNING) {
+            int value;
+            try {
+                value = Integer.parseInt(inputText);
+            } catch (NumberFormatException e) {
+                value = -1;
+            }
+            if (value != -1) {
+                super.result(object);
+            } else {
+                alertDialog();
+            }
         }
-        if(value != -1){
-            super.result(object);
-        }else {
-            alertDialog();
-        }
+
     }
 }

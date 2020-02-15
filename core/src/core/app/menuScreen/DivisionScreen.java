@@ -5,14 +5,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import core.app.Core;
-import core.app.dialog.AddDivisionDialog;
 import core.app.dialog.AddTeamDialog;
 import core.app.entity.Division;
 
 
 public class DivisionScreen extends BaseScreen<Division> {
 
-    private Division division;
+    private final Division division;
 
     public DivisionScreen(Division division, Core core ) {
         super(division, core);

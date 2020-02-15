@@ -11,7 +11,7 @@ abstract public class Identity implements Serializable {
     private int id;
     private String name;
 
-    protected PropertyChangeSupport support = new PropertyChangeSupport(this);
+    protected final PropertyChangeSupport support = new PropertyChangeSupport(this);
 
 
     public Identity() {

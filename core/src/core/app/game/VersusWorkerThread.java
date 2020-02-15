@@ -6,9 +6,7 @@ import core.app.entity.Team;
 import core.fsdb.ViewModel;
 
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class VersusWorkerThread extends GameWorkerThread implements Runnable {
 
@@ -50,8 +48,6 @@ public class VersusWorkerThread extends GameWorkerThread implements Runnable {
         super.updateDatabaseWithResult(winner, loser);
         Team winnerTeam = viewModel.getTeamForFighter(winner.get(0));
         Team loserTeam = viewModel.getTeamForFighter(loser.get(0));
-        System.out.println("winner team id: " + winnerTeam.getId() + " div id: " + winnerTeam.getDivisionId()
-                + "loser team id: " + loserTeam.getId() + " div id: " + loserTeam.getDivisionId());
         if (winnerTeam.getDivisionId() > loserTeam.getDivisionId()) {
             Division winnersDiv = viewModel.getDivisionForTeam(winnerTeam);
             int winnersIndex = winnersDiv.getTeams().indexOf(winnerTeam);

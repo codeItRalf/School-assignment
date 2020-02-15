@@ -17,27 +17,23 @@ import core.app.dialog.ChangeNameDialog;
 import core.app.dialog.DeleteDialog;
 import core.app.dialog.GameRoundDialog;
 import core.app.entity.Division;
-import core.app.entity.Fighter;
 import core.app.entity.Identity;
 import core.app.entity.Team;
 import core.fsdb.ViewModel;
 
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public abstract class BaseScreen<T extends Identity> extends ScreenAdapter {
 
 
-    protected T t;
+    protected final T t;
     protected Stage stage;
     protected Viewport viewport;
-    protected Skin skin;
-    protected Skin uiSkin;
-    protected TextField.TextFieldStyle textFieldStyle;
-    protected Core core;
-    protected ViewModel viewModel;
+    protected final Skin skin;
+    protected final Skin uiSkin;
+    protected final TextField.TextFieldStyle textFieldStyle;
+    protected final Core core;
+    protected final ViewModel viewModel;
     public static DesktopWorker desktopWorker;
     private int dragStartX, dragStartY;
     private int windowStartX, windowStartY;

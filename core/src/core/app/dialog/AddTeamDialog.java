@@ -3,8 +3,6 @@ package core.app.dialog;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import core.app.Core;
 import core.app.entity.Division;
 import core.app.entity.Team;

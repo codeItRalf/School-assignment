@@ -23,7 +23,7 @@ public class Core extends Game {
 
 
     //Logic and ViewModel
-    private ViewModel viewModel;
+    private final ViewModel viewModel;
 
     public Core(ViewModel viewModel) {
         this.viewModel = viewModel;
@@ -74,7 +74,7 @@ public class Core extends Game {
                 Json json = super.getJsonLoader(skinFile);
                 final Skin skin = this;
 
-                json.setSerializer(FreeTypeFontGenerator.class, new Json.ReadOnlySerializer<FreeTypeFontGenerator>() {
+                json.setSerializer(FreeTypeFontGenerator.class, new Json.ReadOnlySerializer<>() {
                     @Override
                     public FreeTypeFontGenerator read(Json json,
                                                       JsonValue jsonData, Class type) {

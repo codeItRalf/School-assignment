@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class MoveToTeamDialog<T extends Identity> extends BaseDialog<T> {
 
 
-    protected Division divisionDestination;
+    protected final Division divisionDestination;
     protected Team teamDestination;
     protected int parentIndex;
 
@@ -36,7 +36,7 @@ public class MoveToTeamDialog<T extends Identity> extends BaseDialog<T> {
     @Override
     public void createDialog() {
         getContentTable().row();
-        getContentTable().add(getListOfEntities((ArrayList<T>) divisionDestination.getTeams(), parentIndex)).space(10f).pad(10f);
+        getContentTable().add(getListOfEntities(divisionDestination.getTeams(), parentIndex)).space(10f).pad(10f);
         button("Cancel");
         show(stage);
     }

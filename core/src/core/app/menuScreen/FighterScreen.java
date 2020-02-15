@@ -15,7 +15,7 @@ import core.app.entity.Fighter;
 
 public class FighterScreen extends BaseScreen<Fighter> {
 
-    private Fighter fighter;
+    private final Fighter fighter;
 
     public FighterScreen(Fighter fighter, Core core ) {
         super(fighter, core);

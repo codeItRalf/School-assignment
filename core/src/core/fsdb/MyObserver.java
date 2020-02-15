@@ -10,8 +10,9 @@ import java.util.ArrayList;
 
 public class MyObserver implements PropertyChangeListener {
 
-    ArrayList<Division> divisions;
-    Repository<? extends  Identity> repository;
+    final ArrayList<Division> divisions;
+    final Repository<? extends Identity> repository;
+
     public MyObserver(ArrayList<Division> divisions, Repository<? extends Identity> repository) {
         this.divisions = divisions;
         this.repository = repository;
@@ -23,9 +24,7 @@ public class MyObserver implements PropertyChangeListener {
             division.addPropertyChangeListener(this);
             division.getTeams().forEach(team -> {
                 team.addPropertyChangeListener(this);
-                team.getFighters().forEach(fighter -> {
-                    fighter.addPropertyChangeListener(this);
-                });
+                team.getFighters().forEach(fighter -> fighter.addPropertyChangeListener(this));
             });
         });
     }

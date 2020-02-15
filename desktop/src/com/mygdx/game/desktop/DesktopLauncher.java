@@ -10,10 +10,6 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Window;
 import core.app.Core;
 import core.app.DesktopWorker;
 
-
-
-import java.awt.*;
-
 public class DesktopLauncher implements DesktopWorker {
 
 
@@ -44,11 +40,4 @@ public class DesktopLauncher implements DesktopWorker {
         return ((Lwjgl3Graphics) Gdx.graphics).getWindow().getPositionY();
     }
 
-    @Override
-    public void closeSplash() {
-        SplashScreen splash = SplashScreen.getSplashScreen();
-        if (splash != null) {
-            splash.close();
-        }
-    }
 }

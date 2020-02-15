@@ -22,15 +22,15 @@ public abstract class BaseDialog<T extends Identity> extends Dialog {
     protected static final int RESULT_WARNING = 2;
 
     protected String posButton;
-    protected String negButton = "Cancel";
+    protected final String negButton = "Cancel";
 
 
-    protected ViewModel viewModel;
-    protected Stage stage;
-    protected Skin skin;
+    protected final ViewModel viewModel;
+    protected final Stage stage;
+    protected final Skin skin;
     protected static String inputText = "";
-    protected Core core;
-    protected T t;
+    protected final Core core;
+    protected final T t;
 
     protected BaseDialog(String title, Skin skin, Stage stage, Core core, T t) {
         super(title, skin);
@@ -43,15 +43,12 @@ public abstract class BaseDialog<T extends Identity> extends Dialog {
 
 
     public void createDialog() {
-        TextField textField = new TextField("",skin);
-        textField.setTextFieldListener(new TextField.TextFieldListener() {
-            @Override
-            public void keyTyped(TextField textField, char c) {
-                if (c == '\n') {
-                    result(RESULT_OK);
-                }
-                inputText = textField.getText();
+        TextField textField = new TextField("", skin);
+        textField.setTextFieldListener((textField1, c) -> {
+            if (c == '\n') {
+                result(RESULT_OK);
             }
+            inputText = textField1.getText();
         });
         getContentTable().row();
         textField.setMessageText("Type name..");
@@ -73,17 +70,17 @@ public abstract class BaseDialog<T extends Identity> extends Dialog {
     @Override
     protected void result(Object object) {
         int result = (Integer) object;
-        if (inputText != null && inputText.length() > 0 && result == RESULT_OK) {
+        if (inputText == null || inputText.length() < 1 && result != RESULT_WARNING && result != RESULT_CANCEL) {
+            alertDialog();
+        } else if (result == RESULT_OK) {
             actionRequest();
             inputText = "";
-        } else if (result != RESULT_CANCEL && result != RESULT_WARNING) {
-            alertDialog();
         }
         inputText = "";
 
     }
 
-    protected Table getListOfEntities(ArrayList<T> list, int currentParentIndex) {
+    protected Table getListOfEntities(ArrayList<? extends Identity> list, int currentParentIndex) {
         Table table = new Table();
         list
                 .stream()

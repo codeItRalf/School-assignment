@@ -9,8 +9,6 @@ import core.app.entity.Fighter;
 import core.app.entity.Identity;
 import core.app.entity.Team;
 
-import java.util.ArrayList;
-
 
 public class DeleteDialog<T extends Identity> extends BaseDialog<T> {
 

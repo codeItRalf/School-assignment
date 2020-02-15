@@ -29,7 +29,7 @@ public class MoveToDivisionDialog<T extends Identity> extends BaseDialog<T> {
     @Override
     public void createDialog() {
         getContentTable().row();
-        getContentTable().add(getListOfEntities((ArrayList<T>) viewModel.getAllDivisions(), parentIndex)).space(10f).pad(10f);
+        getContentTable().add(getListOfEntities(viewModel.getAllDivisions(), parentIndex)).space(10f).pad(10f);
         button("Cancel");
         show(stage);
     }

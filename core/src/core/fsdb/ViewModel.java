@@ -14,9 +14,9 @@ import java.util.stream.Collectors;
 
 public class ViewModel {
 
-    private Repository<? extends Identity> repository;
-    private ArrayList<Division> divisions;
-    private MyObserver myObserver;
+    private final Repository<? extends Identity> repository;
+    private final ArrayList<Division> divisions;
+    private final MyObserver myObserver;
     private int roundCount = -1;
 
     public ViewModel() {

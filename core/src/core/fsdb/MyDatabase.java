@@ -16,7 +16,7 @@ import java.util.stream.IntStream;
 @Database(entities = {Division.class, Fighter.class, Team.class })
 public class MyDatabase {
 
-   private static String dbName = MyDatabase.class.getSimpleName();
+   private static final String dbName = MyDatabase.class.getSimpleName();
 
     private static MyDatabase INSTANCE = null;
 

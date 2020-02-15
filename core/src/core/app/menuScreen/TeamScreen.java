@@ -9,21 +9,23 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import core.app.Core;
 import core.app.dialog.AddFighterDialog;
-import core.app.dialog.AddTeamDialog;
 import core.app.dialog.MoveToDivisionDialog;
 import core.app.entity.Team;
 
 import java.util.stream.IntStream;
 
 
+@SuppressWarnings("DuplicatedCode")
 public class TeamScreen extends BaseScreen<Team> {
 
-     private  Team team;
+    private final Team team;
+
     public TeamScreen(Team team,  Core core ) {
         super(team, core);
         this.team = team;
     }
 
+    @SuppressWarnings("DuplicatedCode")
     @Override
     protected Table getBody() {
         Table rootTable = new Table();
@@ -111,7 +113,6 @@ public class TeamScreen extends BaseScreen<Team> {
         table.add(textButton);
         return table;
     }
-
 
 
 }

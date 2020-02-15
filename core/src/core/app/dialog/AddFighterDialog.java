@@ -7,8 +7,6 @@ import core.app.Core;
 import core.app.entity.Fighter;
 import core.app.entity.Team;
 
-import java.util.ArrayList;
-
 
 public class AddFighterDialog extends BaseDialog<Team> {
 
