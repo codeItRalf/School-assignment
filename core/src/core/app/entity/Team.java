@@ -65,8 +65,15 @@ public class Team extends Identity{
 
     }
 
+    public void resetStats() {
+        int oldValue = wins + losses;
+        this.wins = 0;
+        this.losses = 0;
+        support.firePropertyChange("resetStats", oldValue, this.losses + this.wins);
+    }
+
     public ArrayList<Fighter> getFighters() {
-        if(fighters == null){
+        if (fighters == null) {
             fighters = new ArrayList<>();
         }
         return fighters;

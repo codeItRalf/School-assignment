@@ -9,7 +9,7 @@ import core.app.entity.Team;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-
+import java.util.stream.Collectors;
 
 
 public class ViewModel {
@@ -34,10 +34,27 @@ public class ViewModel {
         return divisions;
     }
 
+    public ArrayList<Team> getAllTeams() {
+        return getAllDivisions()
+                .stream()
+                .parallel()
+                .map(Division::getTeams)
+                .flatMap(List::stream)
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    public ArrayList<Fighter> getAllFighters() {
+        return getAllTeams()
+                .stream()
+                .map(Team::getFighters)
+                .flatMap(List::stream)
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+
 
     public Team getTeamForFighter(Fighter fighter) {
         return divisions.stream().parallel()
-                 .map(Division::getTeams)
+                .map(Division::getTeams)
                 .flatMap(List::stream)
                 .filter(e -> e.getId() == fighter.getTeamId())
                 .findAny()
@@ -114,4 +131,6 @@ public class ViewModel {
                 .min(Comparator.comparing(Team::getWins))
                 .get();
     }
+
+
 }

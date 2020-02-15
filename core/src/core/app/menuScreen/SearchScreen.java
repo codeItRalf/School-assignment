@@ -31,21 +31,12 @@ public class SearchScreen extends BaseScreen<Division> {
 
     public SearchScreen(Core core) {
         super(null, core);
-        allFighters = getAllFighters();
+        allFighters = viewModel.getAllFighters().stream().
+                sorted(Comparator.comparing(Fighter::getName))
+                .collect(Collectors
+                        .toCollection(ArrayList::new));
         filteredList = new ArrayList<>(allFighters);
         scrollTable = new Table();
-    }
-
-    private ArrayList<Fighter> getAllFighters() {
-        return viewModel.getAllDivisions()
-                .stream()
-                .parallel()
-                .map(Division::getTeams)
-                .flatMap(List::stream)
-                .map(Team::getFighters)
-                .flatMap(List::stream)
-                .sorted(Comparator.comparing(Identity::getName))
-                .collect(Collectors.toCollection(ArrayList::new));
     }
 
 

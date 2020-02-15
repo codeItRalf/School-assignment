@@ -9,16 +9,20 @@ import java.util.Random;
 import java.util.stream.IntStream;
 
 public class GameWorkerThread implements Runnable {
-    private Random r = new Random();
-    private ViewModel viewModel;
+    protected Random r = new Random();
+    protected ViewModel viewModel;
     private int divIndex;
 
 
-    private ArrayList<Fighter> teamA = new ArrayList<>();
-    private ArrayList<Fighter> teamB = new ArrayList<>();
+    protected ArrayList<Fighter> teamA = new ArrayList<>();
+    protected ArrayList<Fighter> teamB = new ArrayList<>();
+
+    public GameWorkerThread(ViewModel viewModel) {
+        this.viewModel = viewModel;
+    }
 
     public GameWorkerThread(ViewModel viewModel, int divIndex) {
-        this.viewModel = viewModel;
+        this(viewModel);
         this.divIndex = divIndex;
     }
 
@@ -28,8 +32,7 @@ public class GameWorkerThread implements Runnable {
         workCommand();
     }
 
-    private void workCommand() {
-        System.out.println(Thread.currentThread().getName() + " Start");
+    protected void workCommand() {
         IntStream.range(0, viewModel.getDivision(divIndex).getTeams().size() - 1).forEach(indexA -> {
             deepCopyTeam(indexA, teamA);
             IntStream.range(indexA + 1, viewModel.getDivision(divIndex).getTeams().size()).forEach(indexB -> {
@@ -45,10 +48,9 @@ public class GameWorkerThread implements Runnable {
                 deepCopyTeam(indexA, teamA);
             });
         });
-        System.out.println(Thread.currentThread().getName() + " End.");
     }
 
-    private void updateDatabaseWithResult(ArrayList<Fighter> winner, ArrayList<Fighter> loser) {
+    protected void updateDatabaseWithResult(ArrayList<Fighter> winner, ArrayList<Fighter> loser) {
         Team winnerTeam = viewModel.getTeamForFighter(winner.get(0));
         winnerTeam.incrementWinCount();
         winner.forEach(e -> {
@@ -59,7 +61,7 @@ public class GameWorkerThread implements Runnable {
         loserTeam.incrementLossCount();
     }
 
-    private boolean gameMechanic(ArrayList<Fighter> team1, ArrayList<Fighter> team2) {
+    protected boolean gameMechanic(ArrayList<Fighter> team1, ArrayList<Fighter> team2) {
         int dmg = team1.get(r.nextInt(team1.size())).getDmg();
         Fighter fighter = team2.get(r.nextInt(team2.size()));
         fighter.setHp(fighter.getHp() - dmg);
@@ -74,7 +76,7 @@ public class GameWorkerThread implements Runnable {
         return false;
     }
 
-    private void deepCopyTeam(int index, ArrayList<Fighter> target) {
+    protected void deepCopyTeam(int index, ArrayList<Fighter> target) {
         target.clear();
         viewModel.getDivision(divIndex).getTeams().get(index).getFighters().forEach(a -> target.add(new Fighter(a)));
     }

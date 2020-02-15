@@ -1,0 +1,67 @@
+package core.app.game;
+
+import core.app.entity.Division;
+import core.app.entity.Fighter;
+import core.app.entity.Team;
+import core.fsdb.ViewModel;
+
+import java.util.ArrayList;
+import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+public class VersusWorkerThread extends GameWorkerThread implements Runnable {
+
+
+    public VersusWorkerThread(ViewModel viewModel, Team team1, Team team2) {
+        super(viewModel);
+        teamA = deepClone(team1);
+        teamB = deepClone(team2);
+
+    }
+
+
+    @Override
+    public void run() {
+        workCommand();
+    }
+
+    @Override
+    protected void workCommand() {
+        boolean isGameOver = false;
+        while (!isGameOver) {
+            if (r.nextBoolean()) {
+                isGameOver = gameMechanic(teamA, teamB);
+            } else {
+                isGameOver = gameMechanic(teamB, teamA);
+            }
+        }
+    }
+
+    private ArrayList<Fighter> deepClone(Team team) {
+        return team.getFighters()
+                .stream()
+                .map(Fighter::new)
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    @Override
+    protected void updateDatabaseWithResult(ArrayList<Fighter> winner, ArrayList<Fighter> loser) {
+        super.updateDatabaseWithResult(winner, loser);
+        Team winnerTeam = viewModel.getTeamForFighter(winner.get(0));
+        Team loserTeam = viewModel.getTeamForFighter(loser.get(0));
+        System.out.println("winner team id: " + winnerTeam.getId() + " div id: " + winnerTeam.getDivisionId()
+                + "loser team id: " + loserTeam.getId() + " div id: " + loserTeam.getDivisionId());
+        if (winnerTeam.getDivisionId() > loserTeam.getDivisionId()) {
+            Division winnersDiv = viewModel.getDivisionForTeam(winnerTeam);
+            int winnersIndex = winnersDiv.getTeams().indexOf(winnerTeam);
+            Division losersDiv = viewModel.getDivisionForTeam(loserTeam);
+            int losersIndex = losersDiv.getTeams().indexOf(loserTeam);
+            int winnersDivId = winnersDiv.getId();
+            winnerTeam.setDivisionId(loserTeam.getDivisionId());
+            loserTeam.setDivisionId(winnersDivId);
+            winnersDiv.getTeams().add(losersDiv.getTeams().remove(losersIndex));
+            losersDiv.getTeams().add(winnersDiv.getTeams().remove(winnersIndex));
+        }
+    }
+}
