@@ -10,10 +10,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import core.app.Core;
-import core.app.GameLogic;
 import core.app.dialog.AddDivisionDialog;
 import core.app.entity.Division;
-import core.fsdb.ViewModel;
 
 import java.util.stream.IntStream;
 

@@ -4,6 +4,8 @@ package core.app.entity;
 import core.annotation.Entity;
 import core.annotation.ForeignKey;
 
+import java.beans.PropertyChangeEvent;
+
 @Entity( primaryKey = "id", foreignKey = @ForeignKey(
         parent = Team.class,
         parentId = "teamId"))
@@ -63,6 +65,14 @@ public class Fighter extends Identity  {
         this.dmg = dmg;
         support.firePropertyChange("dmg", oldValue, this.dmg);
 
+    }
+
+
+    public void upgradeStats() {
+        int oldSum = this.hp + this.dmg;
+        this.hp++;
+        this.dmg++;
+        support.firePropertyChange("upgrade", oldSum, this.hp + this.dmg);
     }
 
 }

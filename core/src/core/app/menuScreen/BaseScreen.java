@@ -12,7 +12,6 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import core.app.Core;
 import core.app.DesktopWorker;
-import core.app.GameLogic;
 import core.app.GdxUtils;
 import core.app.dialog.ChangeNameDialog;
 import core.app.dialog.DeleteDialog;

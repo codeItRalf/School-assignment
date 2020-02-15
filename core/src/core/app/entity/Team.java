@@ -48,9 +48,9 @@ public class Team extends Identity{
         return wins;
     }
 
-    public void setWins(int wins) {
+    public void incrementWinCount() {
         int oldValue = this.wins;
-        this.wins = wins;
+        this.wins++;
         support.firePropertyChange("wins", oldValue, this.wins);
     }
 
@@ -58,9 +58,9 @@ public class Team extends Identity{
         return losses;
     }
 
-    public void setLosses(int losses) {
+    public void incrementLossCount() {
         int oldValue = this.losses;
-        this.losses = losses;
+        this.losses++;
         support.firePropertyChange("losses", oldValue, this.losses);
 
     }

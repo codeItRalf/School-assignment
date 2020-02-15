@@ -4,8 +4,7 @@ package core.app.dialog;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import core.app.Core;
-import core.app.GameLogic;
-import core.app.entity.Fighter;
+import core.app.game.GameWorkerThread;
 import core.app.entity.Identity;
 
 
@@ -37,6 +36,6 @@ public class GameRoundDialog<T extends Identity> extends BaseDialog<T> {
 
     @Override
     protected void actionRequest() {
-        new GameLogic(value, viewModel);
+
     }
 }
