@@ -50,6 +50,9 @@ public class GameRoundDialog<T extends Identity> extends BaseDialog<T> {
             executorService.shutdown();
             while (!executorService.isTerminated()) {
             }
+            if (viewModel.getActualRoundCount() % 10 == 0) {
+
+            }
             viewModel.incrementRoundCount();
         });
         core.showStartScreen();

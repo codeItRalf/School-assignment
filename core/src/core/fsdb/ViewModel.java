@@ -7,6 +7,7 @@ import core.app.entity.Identity;
 import core.app.entity.Team;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 
@@ -98,5 +99,19 @@ public class ViewModel {
     public void incrementRoundCount() {
         roundCount++;
         repository.updateRoundCount(roundCount);
+    }
+
+    public Team getTheBestTeamInDiv(Division division) {
+        return division.getTeams()
+                .stream()
+                .max(Comparator.comparing(Team::getWins))
+                .get();
+    }
+
+    public Team getTheWorstTeamInDiv(Division division) {
+        return division.getTeams()
+                .stream()
+                .min(Comparator.comparing(Team::getWins))
+                .get();
     }
 }
