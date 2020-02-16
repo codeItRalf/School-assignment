@@ -267,7 +267,7 @@ public abstract class BaseScreen<T extends Identity> extends ScreenAdapter imple
         label.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                new GameRoundDialog<>(uiSkin, stage, core, BaseScreen.this).createDialog();
+                new GameRoundDialog<>(uiSkin, stage, core).createDialog();
             }
         });
         return label;

@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.Align;
 import core.app.Core;
 import core.app.dialog.AddDivisionDialog;
 import core.app.entity.Division;
+import core.app.game.GameThreadPool;
 
 import java.util.stream.IntStream;
 
@@ -23,6 +24,10 @@ public class StartScreen extends BaseScreen<Division> {
 
     }
 
+    public StartScreen(Core core, int value) {
+        super(null, core);
+        new GameThreadPool(core, value, this).run();
+    }
 
 
     @Override

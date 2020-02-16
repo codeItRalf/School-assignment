@@ -7,17 +7,15 @@ import core.app.Core;
 import core.app.game.GameThreadPool;
 import core.app.entity.Identity;
 import core.app.menuScreen.BaseScreen;
+import core.app.menuScreen.StartScreen;
 
 
 public class GameRoundDialog<T extends Identity> extends BaseDialog<T> {
 
-
-    private final BaseScreen<? extends Identity> tBaseScreen;
     private int value;
 
-    public <T extends Identity> GameRoundDialog(Skin skin, Stage stage, Core core, BaseScreen<T> tBaseScreen) {
+    public <T extends Identity> GameRoundDialog(Skin skin, Stage stage, Core core) {
         super("Play rounds!", skin, stage, core, null);
-        this.tBaseScreen = tBaseScreen;
         this.text("How many rounds do you want to play?");
         posButton = "Play";
         value = -1;
@@ -49,6 +47,6 @@ public class GameRoundDialog<T extends Identity> extends BaseDialog<T> {
     }
 
     private void runGame() {
-        new GameThreadPool(core, value, tBaseScreen).run();
+        core.showStartScreen(value);
     }
 }
