@@ -19,11 +19,13 @@ import core.app.dialog.GameRoundDialog;
 import core.app.entity.Division;
 import core.app.entity.Identity;
 import core.app.entity.Team;
+import core.app.game.GameThreadPool;
+import core.app.game.GameThreadPool.RoundChangeListener;
 import core.fsdb.ViewModel;
 
 import java.util.Comparator;
 
-public abstract class BaseScreen<T extends Identity> extends ScreenAdapter {
+public abstract class BaseScreen<T extends Identity> extends ScreenAdapter implements RoundChangeListener {
 
 
     protected final T t;
@@ -136,7 +138,7 @@ public abstract class BaseScreen<T extends Identity> extends ScreenAdapter {
         label.setAlignment(Align.center);
         column2.add(label).align(Align.center);
         if (isStartPage)
-            column3.add(new Label("Season " + viewModel.getActualRoundCount() / 10, skin)).align(Align.right);
+            column3.add(getSeason()).align(Align.right);
         column2.row();
         if (!isStartPage) {
             column2.add(getDeleteButton()).colspan(2);
@@ -144,6 +146,10 @@ public abstract class BaseScreen<T extends Identity> extends ScreenAdapter {
             column2.add(getSearchButton()).colspan(2);
         }
         return table;
+    }
+
+    private Label getSeason() {
+        return new Label("Season " + viewModel.getActualRoundCount() / 10, skin);
     }
 
     private Table getSearchButton() {
@@ -261,9 +267,15 @@ public abstract class BaseScreen<T extends Identity> extends ScreenAdapter {
         label.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                new GameRoundDialog<>(uiSkin, stage, core).createDialog();
+                new GameRoundDialog<>(uiSkin, stage, core, BaseScreen.this).createDialog();
             }
         });
         return label;
     }
+
+    @Override
+    public void update() {
+        core.showStartScreen();
+    }
+
 }

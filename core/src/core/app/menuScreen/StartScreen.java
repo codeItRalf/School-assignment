@@ -31,7 +31,7 @@ public class StartScreen extends BaseScreen<Division> {
     }
 
 
-    private Table getAllDivisionTables() {
+    protected Table getAllDivisionTables() {
         Table table = new Table();
         table.defaults().growX();
         IntStream.range(0, viewModel.getAllDivisions().size()).forEach(i -> {
@@ -58,6 +58,7 @@ public class StartScreen extends BaseScreen<Division> {
         table.add(label);
         rootTable.add(table);
         rootTable.row();
+
         rootTable.add(getDivisionContent(division));
 
         return rootTable;
