@@ -1,6 +1,7 @@
 package core.app.dialog;
 
 
+import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import core.app.Core;
@@ -11,11 +12,11 @@ import core.app.menuScreen.BaseScreen;
 
 public class GameRoundDialog<T extends Identity> extends BaseDialog<T> {
 
-    private final BaseScreen<T> baseScreen;
+    private final BaseScreen<? extends Identity> baseScreen;
     private int value;
 
 
-    public <T extends Identity> GameRoundDialog(Skin skin, Stage stage, Core core, BaseScreen baseScreen) {
+    public <T extends Identity> GameRoundDialog(Skin skin, Stage stage, Core core, BaseScreen<T> baseScreen) {
         super("Play rounds!", skin, stage, core, null);
         this.text("How many rounds do you want to play?");
         posButton = "Play";
