@@ -14,6 +14,7 @@ public class GameWorkerThread implements Runnable {
     private int divIndex;
 
 
+
     protected ArrayList<Fighter> teamA = new ArrayList<>();
     protected ArrayList<Fighter> teamB = new ArrayList<>();
 
@@ -64,6 +65,7 @@ public class GameWorkerThread implements Runnable {
     protected boolean gameMechanic(ArrayList<Fighter> team1, ArrayList<Fighter> team2) {
         int dmg = team1.get(r.nextInt(team1.size())).getDmg();
         Fighter fighter = team2.get(r.nextInt(team2.size()));
+        if (isKnockOut()) dmg = fighter.getHp();
         fighter.setHp(fighter.getHp() - dmg);
         if (fighter.getHp() <= 0) {
             if (team2.size() == 1) {
@@ -74,6 +76,10 @@ public class GameWorkerThread implements Runnable {
             }
         }
         return false;
+    }
+
+    private boolean isKnockOut() {
+        return r.nextInt(20) == 1;
     }
 
     protected void deepCopyTeam(int index, ArrayList<Fighter> target) {

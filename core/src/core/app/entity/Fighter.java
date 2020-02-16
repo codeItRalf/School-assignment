@@ -11,7 +11,7 @@ import java.util.Random;
         parentId = "teamId"))
 public class Fighter extends Identity  {
     private int teamId;
-    private int hp = 10;
+    private int hp = 15;
     private int dmg = 3;
 
     public enum attribute {
@@ -71,7 +71,7 @@ public class Fighter extends Identity  {
     public void upgradeStats() {
         Random r = new Random();
         int oldSum = this.hp + this.dmg;
-        this.hp += r.nextInt(50) == 0 ? 50 : 3;
+        this.hp += r.nextInt(30) == 0 ? 150 : 3;
         this.dmg += r.nextInt(50) == 0 ? 50 : 1;
         support.firePropertyChange("upgrade", oldSum, this.hp + this.dmg);
     }
