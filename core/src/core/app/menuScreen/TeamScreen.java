@@ -115,4 +115,8 @@ public class TeamScreen extends BaseScreen<Team> {
     }
 
 
+    @Override
+    public void update() {
+
+    }
 }

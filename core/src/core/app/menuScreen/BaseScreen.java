@@ -273,9 +273,5 @@ public abstract class BaseScreen<T extends Identity> extends ScreenAdapter imple
         return label;
     }
 
-    @Override
-    public void update() {
-
-    }
 
 }

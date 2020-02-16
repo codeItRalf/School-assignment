@@ -81,4 +81,8 @@ public class FighterScreen extends BaseScreen<Fighter> {
         return table;
     }
 
+    @Override
+    public void update() {
+
+    }
 }

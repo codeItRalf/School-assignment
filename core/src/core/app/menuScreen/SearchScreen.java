@@ -165,4 +165,8 @@ public class SearchScreen extends BaseScreen<Division> {
         return table;
     }
 
+    @Override
+    public void update() {
+
+    }
 }
