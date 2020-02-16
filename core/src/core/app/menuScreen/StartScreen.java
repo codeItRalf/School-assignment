@@ -19,20 +19,11 @@ import java.util.stream.IntStream;
 public class StartScreen extends BaseScreen<Division> {
 
 
-    private boolean isGameWorker;
-    private int roundValue;
-
     public StartScreen(Core core) {
         super(null, core);
-        isGameWorker = false;
-    }
-
-    public StartScreen(Core core, int roundValue) {
-        super(null, core);
-        isGameWorker = true;
-        this.roundValue = roundValue;
 
     }
+
 
 
     @Override
@@ -98,17 +89,10 @@ public class StartScreen extends BaseScreen<Division> {
         return subTable;
     }
 
-    @Override
-    public void show() {
-        super.show();
-        if (isGameWorker) {
-            new GameThreadPool(core, roundValue, this).run();
-        }
 
-    }
 
     @Override
     public void update() {
-        core.showStartScreen();
+
     }
 }

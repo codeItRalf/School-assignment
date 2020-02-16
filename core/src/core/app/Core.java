@@ -40,10 +40,6 @@ public class Core extends Game {
         setScreen(new StartScreen(this));
     }
 
-    public void showStartScreen(int value) {
-        setScreen(new StartScreen(this, value));
-    }
-
     public void showSearchScreen() {
         setScreen(new SearchScreen(this));
     }
