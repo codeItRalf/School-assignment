@@ -79,6 +79,7 @@ public class GameWorkerThread implements Runnable {
     }
 
     private boolean isKnockOut() {
+        System.out.println("Knock out!");
         return r.nextInt(20) == 1;
     }
 
