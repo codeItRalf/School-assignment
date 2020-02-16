@@ -49,7 +49,7 @@ public class GameThreadPool {
             viewModel.incrementRoundCount();
             roundChangeListener.update();
         });
-        // core.showStartScreen();
+        core.showStartScreen();
     }
 
     private void runSeasonEnding() {

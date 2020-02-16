@@ -275,7 +275,7 @@ public abstract class BaseScreen<T extends Identity> extends ScreenAdapter imple
 
     @Override
     public void update() {
-        core.showStartScreen();
+
     }
 
 }
