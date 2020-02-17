@@ -9,6 +9,7 @@ import core.app.ViewModel;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.IntStream;
 
 
@@ -18,6 +19,7 @@ public class GameThreadPool {
     private ViewModel viewModel;
     private int value;
     private RoundChangeListener roundChangeListener;
+    private ReentrantLock lock = new ReentrantLock();
 
     public GameThreadPool(Core core, int round, BaseScreen<? extends Identity> tBaseScreen) {
         this.core = core;
@@ -27,7 +29,7 @@ public class GameThreadPool {
     }
 
     public interface RoundChangeListener {
-        void update();
+         void update();
     }
 
     public void run() {
@@ -47,7 +49,14 @@ public class GameThreadPool {
                 viewModel.getAllTeams().forEach(Team::resetStats);
             }
             viewModel.incrementRoundCount();
-            roundChangeListener.update();
+            lock.lock();
+            try {
+                roundChangeListener.update();
+            }finally {
+                lock.unlock();
+            }
+
+
         });
 
     }

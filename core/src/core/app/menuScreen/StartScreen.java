@@ -93,11 +93,15 @@ public class StartScreen extends BaseScreen<Division> {
 
     @Override
     public void update() {
-     upperLeftTable.clearChildren();
-     upperLeftTable.add(getRoundButton());
-     upperRightTable.clearChildren();
-     upperRightTable.add(getSeason());
-     bodyTable.clearChildren();
-     bodyTable.add(getAllDivisionTables()).growX();
+        if(isRenderReady){
+            upperLeftTable.clearChildren();
+            upperLeftTable.add(getRoundButton());
+            upperRightTable.clearChildren();
+            upperRightTable.add(getSeason());
+            bodyTable.clearChildren();
+            bodyTable.add(getAllDivisionTables()).growX();
+            isRenderReady = false;
+        }
+
     }
 }

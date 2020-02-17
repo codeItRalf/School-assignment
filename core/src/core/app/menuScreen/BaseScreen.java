@@ -42,6 +42,7 @@ public abstract class BaseScreen<T extends Identity> extends ScreenAdapter imple
     protected Table upperLeftTable;
     protected  Table upperRightTable;
     protected Table bodyTable;
+    protected boolean isRenderReady = false;
 
 
     public static final float CELL_WIDTH = 150f;
@@ -226,6 +227,8 @@ Logger logger  = new Logger("BaseScreen", Logger.DEBUG);
         GdxUtils.clearScreen();
         stage.act();
         stage.draw();
+        isRenderReady = true;
+
     }
 
     @Override

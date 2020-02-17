@@ -47,6 +47,7 @@ public class GameRoundDialog<T extends Identity> extends BaseDialog<T> {
         var b = new GameThreadPool(core, value, baseScreen);
         Thread the = new Thread(b::run,"thread");
         the.start();
+//        core.showStartScreen();
     }
 
 

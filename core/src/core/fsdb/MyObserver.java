@@ -37,7 +37,11 @@ public class MyObserver<T extends Identity> implements PropertyChangeListener {
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-      queuedEntities.add(evt.getSource());
+        if(queuedEntities.contains(evt.getSource()) && queuedEntities.size() > 30){
+            queuedEntities.remove(evt.getSource());
+            System.out.println("Object exist, replaces with new copy");
+        }
+        queuedEntities.offer(evt.getSource());
 //        repository.update((Identity) evt.getSource());
         if(queuedEntities.size() > 0 && !isWriting){
             isWriting = true;
@@ -48,7 +52,8 @@ public class MyObserver<T extends Identity> implements PropertyChangeListener {
 
     private void writeToFile(){
         while (queuedEntities.size() > 0){
-         //   repository.update((Identity) queuedEntities.remove(0));
+            System.out.println("queuedEntities.size()= " + queuedEntities.size());
+           repository.update((Identity) queuedEntities.poll());
         }
         isWriting = false;
     }
