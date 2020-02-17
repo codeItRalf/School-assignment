@@ -6,15 +6,18 @@ import core.app.entity.Identity;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class MyObserver<T extends Identity> implements PropertyChangeListener {
 
     final List<? extends Identity> listOfParentEntities;
     final Repository<? extends Identity> repository;
+    private ConcurrentLinkedQueue<Object> queuedEntities = new ConcurrentLinkedQueue<>();
 
-
+    private boolean isWriting = false;
 
     public MyObserver(List<Division> listOfParentEntities, Repository<? extends Identity> repository) {
         this.listOfParentEntities = listOfParentEntities;
@@ -34,7 +37,19 @@ public class MyObserver<T extends Identity> implements PropertyChangeListener {
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        System.out.println("Property changed!");
-        repository.update((Identity) evt.getSource());
+      queuedEntities.add(evt.getSource());
+//        repository.update((Identity) evt.getSource());
+        if(queuedEntities.size() > 0 && !isWriting){
+            isWriting = true;
+            Thread serializeQueueFiles = new Thread(this::writeToFile);
+            serializeQueueFiles.start();
+        }
+    }
+
+    private void writeToFile(){
+        while (queuedEntities.size() > 0){
+         //   repository.update((Identity) queuedEntities.remove(0));
+        }
+        isWriting = false;
     }
 }
