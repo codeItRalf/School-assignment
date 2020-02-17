@@ -174,7 +174,6 @@ Logger logger  = new Logger("BaseScreen", Logger.DEBUG);
     protected Table getTeamListItem(Team team) {
         Table listItemTable = new Table();
         listItemTable.defaults().growX();
-        System.out.println("NAME " + team.getName());
         Label itemLabel = new Label(team.getName(), skin);
         itemLabel.setAlignment(Align.center);
         listItemTable.add(itemLabel).align(Align.center);

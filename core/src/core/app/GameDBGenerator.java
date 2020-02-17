@@ -23,13 +23,13 @@ public class GameDBGenerator {
         var listOfNames = Util.getListOfNames();
         IntStream.range(0,divisionCount)
                 .forEach(index -> {
-                    FileSystem.serialize(MyDatabase.class.getSimpleName(), new Division("Division " + (index +1),index,new ArrayList<>()));
+                    FileSystem.serialize(new Division("Division " + (index +1),index,new ArrayList<>()));
                     IntStream.range(0,teamsInEachDiv)
                             .forEach(i -> {
-                                FileSystem.serialize(MyDatabase.class.getSimpleName(),  new Team("Team " + (teamId.get() +1), teamId.get(), index, new ArrayList<>()));
+                                FileSystem.serialize( new Team("Team " + (teamId.get() +1), teamId.get(), index, new ArrayList<>()));
                                 IntStream.range(0,fightersInEachTeam)
                                         .forEach(j -> {
-                                            FileSystem.serialize(MyDatabase.class.getSimpleName(),  new Fighter(listOfNames.remove(0), fighterId.getAndIncrement(), teamId.get()));
+                                            FileSystem.serialize( new Fighter(listOfNames.remove(0), fighterId.getAndIncrement(), teamId.get()));
                                             System.out.printf("Index: %d, teamId: %d, fighterId %d\n",index,teamId.get(),fighterId.get());
                                         });
                                 teamId.incrementAndGet();

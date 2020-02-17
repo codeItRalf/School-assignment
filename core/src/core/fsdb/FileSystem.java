@@ -20,7 +20,7 @@ public class FileSystem {
      * @param fileName Path of the file to read from.
      * @return Returns string with the data read, or null if something went wrong.
      */
-     static String readFile(String fileName) {
+     public static String readFile(String fileName) {
         try {
             return new String(Files.readAllBytes(Paths.get(fileName)));
         } catch (IOException e) {
@@ -35,7 +35,7 @@ public class FileSystem {
      * @param fileName Path of the file to write to.
      * @param data     The data to be written into the file.
      */
-     static void writeFile(String fileName, String data) {
+     public static void writeFile(String fileName, String data) {
         try {
             BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName));
             bufferedWriter.write(data);
@@ -51,7 +51,7 @@ public class FileSystem {
      * @param filePath Path to check.
      * @return Returns true if the path exists, else returns false.
      */
-     static boolean exists(String filePath) {
+     public static boolean exists(String filePath) {
         return Files.exists(Paths.get(filePath));
     }
 
@@ -109,14 +109,35 @@ public class FileSystem {
         }
     }
 
-   public synchronized   static void serialize(String dbName, Identity obj){
-        String path = dbName + "/" + obj.getClass().getSimpleName() + "/" + obj.getId();
-        try (var out = new ObjectOutputStream(new FileOutputStream(path))) {
+
+    static <E extends Identity> Object deserialize(String path, int id){
+        String rootPath = MyDatabase.class.getSimpleName() + "/" + path +  "/" + id;
+        Object o = null;
+        try(var in = new ObjectInputStream(new FileInputStream(rootPath))){
+            o = in.readObject();
+        }
+        catch(IOException ex )
+        {
+            System.out.println("IOException is caught");
+        }
+        catch(ClassNotFoundException ex)
+        {
+            System.out.println("ClassNotFoundException is caught");
+        }
+        return o;
+    }
+
+    public static void serialize(Identity obj){
+        String path = MyDatabase.class.getSimpleName() + "/" + obj.getClass().getSimpleName() + "/" + obj.getId();
+        try (var out = new ObjectOutputStream(new FileOutputStream(path,false))) {
             out.writeObject(obj);
+
         } catch (IOException e) {
+            System.out.println("serialize un-sucessfull!");
             e.printStackTrace();
         }
     }
+
 
 
     public   static File[] getSubFolders(String databasePath){

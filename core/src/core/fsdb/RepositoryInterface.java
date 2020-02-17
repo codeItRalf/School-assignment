@@ -11,5 +11,4 @@ public interface RepositoryInterface<T extends Identity> {
     <O extends Identity> void insert(O entity);
     <O extends Identity> void remove(O entity);
     <O extends Identity> void update(O entity);
-    <O extends Identity> List<O> getAllOf(String type);
 }

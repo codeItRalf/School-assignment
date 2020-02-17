@@ -54,32 +54,6 @@ public class MyDatabase {
                 FileSystem.createDir(dbName + "/" + e.getSimpleName()));
     }
 
-     void serialize( Identity obj){
-        String path = dbName + "/" + obj.getClass().getSimpleName() + "/" + obj.getId();
-        try (var out = new ObjectOutputStream(new FileOutputStream(path,false))) {
-            out.writeObject(obj);
 
-        } catch (IOException e) {
-            System.out.println("serialize un-sucessfull!");
-            e.printStackTrace();
-        }
-    }
-
-     Object deserialize(String path, int id){
-        String rootPath = dbName + "/" + path +  "/" + id;
-        Object o = null;
-        try(var in = new ObjectInputStream(new FileInputStream(rootPath))){
-            o = in.readObject();
-        }
-        catch(IOException ex )
-        {
-            System.out.println("IOException is caught");
-        }
-        catch(ClassNotFoundException ex)
-        {
-            System.out.println("ClassNotFoundException is caught");
-        }
-        return o;
-    }
 
 }

@@ -11,21 +11,21 @@ import core.app.entity.NoClass;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static core.fsdb.FileSystem.generateId;
 
 
-public  class Repository<T extends Identity> implements RepositoryInterface<T> {
+
+public abstract class Repository<T extends Identity> implements RepositoryInterface<T> {
     private final String dbName = MyDatabase.class.getSimpleName();
     private final MyDatabase myDatabase = MyDatabase.getDatabase();
 
 
     @Override
     public <E extends Identity> E get(String entityType, int id) {
-        E e = deserializeFile(entityType, id);
+        E e = (E) FileSystem.deserialize(entityType, id);
         String child = getChildName(e);
         if (child != null) {
             e = addChildrenToParent(e);
@@ -45,7 +45,7 @@ public  class Repository<T extends Identity> implements RepositoryInterface<T> {
                 list.forEach(this::insert);
                 setIgnoreFieldsToNull(entity);
             }
-            myDatabase.serialize(entity);
+            FileSystem.serialize(entity);
         }
     }
 
@@ -60,25 +60,11 @@ public  class Repository<T extends Identity> implements RepositoryInterface<T> {
 
     @Override
     public <E extends Identity> void update(E entity) {
-        myDatabase.serialize(entity);
+        FileSystem.serialize(entity);
     }
 
-    @Override
-    public <E extends Identity> List<E> getAllOf(String type) {
-        List<Integer> ids = FileSystem.getAllIds(dbName + "/" + type);
-        return ids.stream().map(e -> {
-            E object = deserializeFile(type, e);
-            return get(object);
-        }).collect(Collectors.toList());
-    }
 
-    private <E extends Identity> E get(E e) {
-        String child = getChildName(e);
-        if (child != null) {
-            e = addChildrenToParent(e);
-        }
-        return e;
-    }
+
 
     private <E extends Identity> List<E> extractChildrenFromParent(E entity) {
         String fieldName = entity.getClass().getAnnotation(Entity.class).foreignKey()[0].listOfChildren();
@@ -97,23 +83,7 @@ public  class Repository<T extends Identity> implements RepositoryInterface<T> {
         return list;
     }
 
-    private <E extends Identity> E addChildrenToParent(E entity) {
-        List<E> listOfChildren = getListOfChildren(entity).stream().map(this::get).collect(Collectors.toList());
-        String fieldName = entity.getClass().getAnnotation(Entity.class).foreignKey()[0].listOfChildren();
-        return updateField(fieldName, listOfChildren, entity);
-    }
 
-    private <E extends Identity> E updateField(String fieldName, List<E> list, E entity) {
-        Field field;
-        try {
-            field = entity.getClass().getDeclaredField(fieldName);
-            field.setAccessible(true);
-            field.set(entity, list);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        return entity;
-    }
 
     private <E extends Identity> void setIgnoreFieldsToNull(E entity) {
 
@@ -130,14 +100,8 @@ public  class Repository<T extends Identity> implements RepositoryInterface<T> {
         });
     }
 
-    private <E extends Identity> E deserializeFile(String path, int id) {
-        return (E) myDatabase.deserialize(path, id);
-    }
 
-    private <E extends Identity> String getChildName(E entity) {
-        String child = entity.getClass().getAnnotation(Entity.class).foreignKey()[0].child().getSimpleName();
-        return child.equals(NoClass.class.getSimpleName()) ? null : child;
-    }
+
 
     private <E extends Identity> void removeFile(E entity) {
         String path = dbName + "/" + entity.getClass().getSimpleName() + "/" + entity.getId();
@@ -149,7 +113,7 @@ public  class Repository<T extends Identity> implements RepositoryInterface<T> {
     }
 
     private <E extends Identity> void removeChildren(E entity) {
-        List<E> childList = getListOfChildren(entity);
+        List<E> childList = deserializeChildrenToList(entity);
         IntStream.range(0, childList.size()).forEach(index -> {
             if (index != childList.size() - 1) {
                 removeFile(childList.get(index));
@@ -159,11 +123,11 @@ public  class Repository<T extends Identity> implements RepositoryInterface<T> {
         });
     }
 
-    private <E extends Identity> List<E> getListOfChildren(E entity) {
+    public  <E extends  Identity>  List<E> deserializeChildrenToList(E entity) {
         return (List<E>) getAllOf(getChildName(entity)).stream().filter(e -> ifParentIdMatchesChild(entity, e)).collect(Collectors.toList());
     }
 
-    private <E extends Identity> boolean ifParentIdMatchesChild(E parent, E child) {
+    private   <E extends Identity> boolean ifParentIdMatchesChild(E parent, E child) {
         String parentId = child.getClass().getAnnotation(Entity.class).foreignKey()[0].parentId();
         if (parentId.length() < 1) {
             return false;
@@ -180,20 +144,38 @@ public  class Repository<T extends Identity> implements RepositoryInterface<T> {
         return fieldValue == parent.getId();
     }
 
+      <E extends Identity> String getChildName(E entity) {
+        String child = entity.getClass().getAnnotation(Entity.class).foreignKey()[0].child().getSimpleName();
+        return child.equals(NoClass.class.getSimpleName()) ? null : child;
+    }
+
     public <E extends Identity> void setNewId(Identity identity) {
         identity.setId(generateId(MyDatabase.class.getSimpleName() + "/" + identity.getClass().getSimpleName()));
     }
 
-    public int getRoundCount() {
-        String path = MyDatabase.class.getSimpleName() + "/fightCount";
-        if (!FileSystem.exists(path)) {
-            FileSystem.writeFile(path, "1");
+
+    public <E extends Identity> E get(E e) {
+        String child = getChildName(e);
+        if (child != null) {
+            e = addChildrenToParent(e);
         }
-        return Integer.parseInt(Objects.requireNonNull(FileSystem.readFile(path)));
+        return e;
     }
 
-    public void updateRoundCount(int fightCount) {
-        String path = MyDatabase.class.getSimpleName() + "/fightCount";
-        FileSystem.writeFile(path, String.valueOf(fightCount));
+    public   <E extends Identity> List<E> getAllOf(String type) {
+        List<Integer> ids = FileSystem.getAllIds(MyDatabase.class.getSimpleName() + "/" + type);
+        return ids.stream().map(e -> {
+            E object = (E) FileSystem.deserialize(type, e);
+            return get(object);
+        }).collect(Collectors.toList());
     }
+
+
+
+    <E extends Identity> E addChildrenToParent(E entity) {
+        List<E> listOfChildren = deserializeChildrenToList(entity).stream().map(this::get).collect(Collectors.toList());
+        String fieldName = entity.getClass().getAnnotation(Entity.class).foreignKey()[0].listOfChildren();
+        return ReflectionUtil.updateField(fieldName, listOfChildren, entity);
+    }
+
 }

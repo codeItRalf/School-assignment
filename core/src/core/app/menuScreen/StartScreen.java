@@ -99,6 +99,5 @@ public class StartScreen extends BaseScreen<Division> {
      upperRightTable.add(getSeason());
      bodyTable.clearChildren();
      bodyTable.add(getAllDivisionTables()).growX();
-        System.out.println("banan");
     }
 }
