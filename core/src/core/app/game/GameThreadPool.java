@@ -4,7 +4,7 @@ import core.app.Core;
 import core.app.entity.Identity;
 import core.app.entity.Team;
 import core.app.menuScreen.BaseScreen;
-import core.fsdb.ViewModel;
+import core.app.ViewModel;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;

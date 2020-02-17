@@ -12,6 +12,8 @@ public class MyObserver implements PropertyChangeListener {
 
     final ArrayList<Division> divisions;
     final Repository<? extends Identity> repository;
+    private ArrayList<? extends Identity> writeQueue = new ArrayList<>();
+
 
     public MyObserver(ArrayList<Division> divisions, Repository<? extends Identity> repository) {
         this.divisions = divisions;
@@ -32,6 +34,5 @@ public class MyObserver implements PropertyChangeListener {
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         repository.update((Identity) evt.getSource());
-       // System.out.println("Listener fired! Bean= " +  identity.getName());
     }
 }

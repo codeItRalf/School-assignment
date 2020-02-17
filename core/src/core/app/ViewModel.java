@@ -1,10 +1,12 @@
-package core.fsdb;
+package core.app;
 
 
 import core.app.entity.Division;
 import core.app.entity.Fighter;
 import core.app.entity.Identity;
 import core.app.entity.Team;
+import core.fsdb.MyObserver;
+import core.fsdb.Repository;
 
 import java.util.ArrayList;
 import java.util.Comparator;

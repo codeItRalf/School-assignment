@@ -15,7 +15,6 @@ import core.app.entity.Division;
 import core.app.entity.Fighter;
 import core.app.entity.Team;
 import core.app.menuScreen.*;
-import core.fsdb.ViewModel;
 
 public class Core extends Game {
     private Skin skin;

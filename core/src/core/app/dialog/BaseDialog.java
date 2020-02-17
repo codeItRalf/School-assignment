@@ -7,7 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import core.app.Core;
 import core.app.entity.Identity;
-import core.fsdb.ViewModel;
+import core.app.ViewModel;
 
 import java.util.ArrayList;
 import java.util.Comparator;

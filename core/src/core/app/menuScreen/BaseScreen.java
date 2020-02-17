@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Logger;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import core.app.Core;
@@ -19,9 +20,8 @@ import core.app.dialog.GameRoundDialog;
 import core.app.entity.Division;
 import core.app.entity.Identity;
 import core.app.entity.Team;
-import core.app.game.GameThreadPool;
 import core.app.game.GameThreadPool.RoundChangeListener;
-import core.fsdb.ViewModel;
+import core.app.ViewModel;
 
 import java.util.Comparator;
 
@@ -39,12 +39,15 @@ public abstract class BaseScreen<T extends Identity> extends ScreenAdapter imple
     public static DesktopWorker desktopWorker;
     private int dragStartX, dragStartY;
     private int windowStartX, windowStartY;
+    protected Table upperLeftTable;
+    protected  Table upperRightTable;
+    protected Table bodyTable;
 
 
     public static final float CELL_WIDTH = 150f;
     public static final float CELL_PADDING = 30f;
 
-
+Logger logger  = new Logger("BaseScreen", Logger.DEBUG);
 
     public BaseScreen(T t, Core core) {
         this.t = t;
@@ -71,16 +74,16 @@ public abstract class BaseScreen<T extends Identity> extends ScreenAdapter imple
         root.row();
 
 
-        Table table = new Table();
-        table.defaults().padRight(CELL_PADDING).padLeft(CELL_PADDING);
-        ScrollPane scrollPane = new ScrollPane(table);
+        bodyTable = new Table();
+        bodyTable.defaults().padRight(CELL_PADDING).padLeft(CELL_PADDING);
+        ScrollPane scrollPane = new ScrollPane(bodyTable);
         scrollPane.setScrollY(0);
 
         root.add(scrollPane).growX().growY().align(Align.top);
 
-        table.row();
-        table.add(getBody()).growX();
-        table.row();
+        bodyTable.row();
+        bodyTable.add(getBody()).growX();
+        bodyTable.row();
 
         root.row();
         root.add(getFooter()).align(Align.bottom).growX().align(Align.bottom);
@@ -126,19 +129,19 @@ public abstract class BaseScreen<T extends Identity> extends ScreenAdapter imple
         boolean isStartPage = this.getClass() == StartScreen.class;
         String headerTitle = isStartPage ? "The Arena" : t.getClass().getSimpleName();
         Table table = new Table();
-        Table column1 = new Table();
-        table.add(column1).expandX();
+        upperLeftTable = new Table();
+        table.add(upperLeftTable).expandX();
         Table column2 = new Table();
         table.add(column2).expandX();
-        Table column3 = new Table();
-        table.add(column3).expandX();
-        if (isStartPage) column1.add(getRoundButton()).align(Align.left);
+        upperRightTable = new Table();
+        table.add(upperRightTable).expandX();
+        if (isStartPage) upperLeftTable.add(getRoundButton()).align(Align.left);
         Label label = new Label(headerTitle, skin, "bg");
         label.setTouchable(Touchable.disabled);
         label.setAlignment(Align.center);
         column2.add(label).align(Align.center);
         if (isStartPage)
-            column3.add(getSeason()).align(Align.right);
+            upperRightTable.add(getSeason()).align(Align.right);
         column2.row();
         if (!isStartPage) {
             column2.add(getDeleteButton()).colspan(2);
@@ -148,7 +151,7 @@ public abstract class BaseScreen<T extends Identity> extends ScreenAdapter imple
         return table;
     }
 
-    private Label getSeason() {
+    protected Label getSeason() {
         return new Label("Season " + viewModel.getActualRoundCount() / 10, skin);
     }
 
@@ -171,6 +174,7 @@ public abstract class BaseScreen<T extends Identity> extends ScreenAdapter imple
     protected Table getTeamListItem(Team team) {
         Table listItemTable = new Table();
         listItemTable.defaults().growX();
+        System.out.println("NAME " + team.getName());
         Label itemLabel = new Label(team.getName(), skin);
         itemLabel.setAlignment(Align.center);
         listItemTable.add(itemLabel).align(Align.center);

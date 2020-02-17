@@ -1,7 +1,6 @@
 package core.app.dialog;
 
 
-import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import core.app.Core;
@@ -45,9 +44,11 @@ public class GameRoundDialog<T extends Identity> extends BaseDialog<T> {
 
     @Override
     protected void actionRequest() {
-        runGame();
-        core.showStartScreen();
+        var b = new GameThreadPool(core, value, baseScreen);
+        Thread the = new Thread(b::run,"thread");
+        the.start();
     }
+
 
     private void runGame() {
         new GameThreadPool(core, value, baseScreen).run();

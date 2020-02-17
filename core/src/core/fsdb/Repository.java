@@ -18,7 +18,7 @@ import java.util.stream.IntStream;
 import static core.fsdb.FileSystem.generateId;
 
 
-public class Repository<T extends Identity> implements RepositoryInterface<T> {
+public  class Repository<T extends Identity> implements RepositoryInterface<T> {
     private final String dbName = MyDatabase.class.getSimpleName();
     private final MyDatabase myDatabase = MyDatabase.getDatabase();
 
@@ -180,7 +180,7 @@ public class Repository<T extends Identity> implements RepositoryInterface<T> {
         return fieldValue == parent.getId();
     }
 
-    <E extends Identity> void setNewId(Identity identity) {
+    public <E extends Identity> void setNewId(Identity identity) {
         identity.setId(generateId(MyDatabase.class.getSimpleName() + "/" + identity.getClass().getSimpleName()));
     }
 

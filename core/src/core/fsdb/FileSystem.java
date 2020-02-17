@@ -109,7 +109,7 @@ public class FileSystem {
         }
     }
 
-   synchronized   static void serialize(String dbName, Identity obj){
+   public synchronized   static void serialize(String dbName, Identity obj){
         String path = dbName + "/" + obj.getClass().getSimpleName() + "/" + obj.getId();
         try (var out = new ObjectOutputStream(new FileOutputStream(path))) {
             out.writeObject(obj);
