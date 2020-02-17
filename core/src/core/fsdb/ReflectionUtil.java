@@ -15,7 +15,27 @@ public class ReflectionUtil<E extends  Identity> {
         return entity.getClass().getAnnotation(Entity.class).foreignKey()[0].child() != NoClass.class;
     }
 
+    static public <E extends Identity> List<E> getChildrenFromParent(E entity) {
+        String fieldName = entity.getClass().getAnnotation(Entity.class).foreignKey()[0].listOfChildren();
+        if (fieldName.length() < 1) {
+            return null;
+        }
+        Field field;
+        List<E> list = null;
+        try {
+            field = entity.getClass().getDeclaredField(fieldName);
+            field.setAccessible(true);
+            list = (List<E>) field.get(entity);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 
+    static  <E extends Identity> String getChildClassName(E entity) {
+        String child = entity.getClass().getAnnotation(Entity.class).foreignKey()[0].child().getSimpleName();
+        return child.equals(NoClass.class.getSimpleName()) ? null : child;
+    }
 
     static <E extends Identity> E updateField(String fieldName, List<E> list, E entity) {
         Field field;
@@ -28,4 +48,6 @@ public class ReflectionUtil<E extends  Identity> {
         }
         return entity;
     }
+
+
 }

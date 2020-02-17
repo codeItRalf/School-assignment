@@ -6,7 +6,6 @@ import core.annotation.Entity;
 import core.annotation.ForeignKey;
 import core.annotation.Ignore;
 import core.app.entity.Identity;
-import core.app.entity.NoClass;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -15,7 +14,8 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static core.fsdb.FileSystem.generateId;
-
+import static core.fsdb.ReflectionUtil.getChildrenFromParent;
+import static core.fsdb.ReflectionUtil.getChildClassName;
 
 
 public abstract class Repository<T extends Identity> implements RepositoryInterface<T> {
@@ -26,7 +26,7 @@ public abstract class Repository<T extends Identity> implements RepositoryInterf
     @Override
     public <E extends Identity> E get(String entityType, int id) {
         E e = (E) FileSystem.deserialize(entityType, id);
-        String child = getChildName(e);
+        String child = getChildClassName(e);
         if (child != null) {
             e = addChildrenToParent(e);
         }
@@ -40,7 +40,7 @@ public abstract class Repository<T extends Identity> implements RepositoryInterf
             setNewId(entity);
         }
         if (!FileSystem.exists(dbName + "/" + entity.getClass().getSimpleName() + "/" + entity.getId())) {
-            List<E> list = extractChildrenFromParent(entity);
+            List<E> list =  getChildrenFromParent(entity);
             if (list != null) {
                 list.forEach(this::insert);
                 setIgnoreFieldsToNull(entity);
@@ -51,7 +51,7 @@ public abstract class Repository<T extends Identity> implements RepositoryInterf
 
     @Override
     public <E extends Identity> void remove(E entity) {
-        if (getChildName(entity) != null && deepRemove(entity)) {
+        if (getChildClassName(entity) != null && deepRemove(entity)) {
             removeChildren(entity);
         }
         removeFile(entity);
@@ -66,22 +66,7 @@ public abstract class Repository<T extends Identity> implements RepositoryInterf
 
 
 
-    private <E extends Identity> List<E> extractChildrenFromParent(E entity) {
-        String fieldName = entity.getClass().getAnnotation(Entity.class).foreignKey()[0].listOfChildren();
-        if (fieldName.length() < 1) {
-            return null;
-        }
-        Field field;
-        List<E> list = null;
-        try {
-            field = entity.getClass().getDeclaredField(fieldName);
-            field.setAccessible(true);
-            list = (List<E>) field.get(entity);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        return list;
-    }
+
 
 
 
@@ -124,7 +109,7 @@ public abstract class Repository<T extends Identity> implements RepositoryInterf
     }
 
     public  <E extends  Identity>  List<E> deserializeChildrenToList(E entity) {
-        return (List<E>) getAllOf(getChildName(entity)).stream().filter(e -> ifParentIdMatchesChild(entity, e)).collect(Collectors.toList());
+        return (List<E>) getAllOf(getChildClassName(entity)).stream().filter(e -> ifParentIdMatchesChild(entity, e)).collect(Collectors.toList());
     }
 
     private   <E extends Identity> boolean ifParentIdMatchesChild(E parent, E child) {
@@ -144,10 +129,7 @@ public abstract class Repository<T extends Identity> implements RepositoryInterf
         return fieldValue == parent.getId();
     }
 
-      <E extends Identity> String getChildName(E entity) {
-        String child = entity.getClass().getAnnotation(Entity.class).foreignKey()[0].child().getSimpleName();
-        return child.equals(NoClass.class.getSimpleName()) ? null : child;
-    }
+
 
     public <E extends Identity> void setNewId(Identity identity) {
         identity.setId(generateId(MyDatabase.class.getSimpleName() + "/" + identity.getClass().getSimpleName()));
@@ -155,7 +137,7 @@ public abstract class Repository<T extends Identity> implements RepositoryInterf
 
 
     public <E extends Identity> E get(E e) {
-        String child = getChildName(e);
+        String child = getChildClassName(e);
         if (child != null) {
             e = addChildrenToParent(e);
         }

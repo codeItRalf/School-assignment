@@ -7,6 +7,7 @@ import core.app.entity.Identity;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
+import java.util.Objects;
 
 public class MyObserver<T extends Identity> implements PropertyChangeListener {
 
@@ -26,7 +27,7 @@ public class MyObserver<T extends Identity> implements PropertyChangeListener {
             entity.addPropertyChangeListener(this);
             System.out.println("entity = " + entity.getClass().getSimpleName());
             if(ReflectionUtil.childrenExist(entity)){
-                addListeners(ReflectionUtil.deserializeChildrenToList(entity));
+                addListeners(Objects.requireNonNull(ReflectionUtil.getChildrenFromParent(entity)));
             }
         });
     }
