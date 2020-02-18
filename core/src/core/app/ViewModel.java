@@ -1,10 +1,12 @@
-package core.fsdb;
+package core.app;
 
 
 import core.app.entity.Division;
 import core.app.entity.Fighter;
 import core.app.entity.Identity;
 import core.app.entity.Team;
+import core.fsdb.MyObserver;
+import core.fsdb.Repository;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -14,15 +16,15 @@ import java.util.stream.Collectors;
 
 public class ViewModel {
 
-    private final Repository<? extends Identity> repository;
+    private final GameRepository<? extends Identity> repository;
     private final ArrayList<Division> divisions;
-    private final MyObserver myObserver;
+    private final MyObserver<? extends Identity> myObserver;
     private int roundCount = -1;
 
     public ViewModel() {
-        repository = new Repository<>();
-        divisions = new ArrayList<>(repository.getAllOf(Division.class.getSimpleName()));
-        myObserver = new MyObserver(divisions, repository);
+        repository = new GameRepository<>();
+        divisions = new ArrayList<Division>(repository.getAllOf(Division.class.getSimpleName()));
+        myObserver = new MyObserver<>(divisions, repository);
     }
 
 

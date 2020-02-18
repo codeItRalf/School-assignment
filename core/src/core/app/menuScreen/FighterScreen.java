@@ -82,7 +82,7 @@ public class FighterScreen extends BaseScreen<Fighter> {
     }
 
     @Override
-    public void update() {
+    public void update(boolean update) {
 
     }
 }

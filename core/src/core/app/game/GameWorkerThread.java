@@ -2,7 +2,7 @@ package core.app.game;
 
 import core.app.entity.Fighter;
 import core.app.entity.Team;
-import core.fsdb.ViewModel;
+import core.app.ViewModel;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -79,7 +79,6 @@ public class GameWorkerThread implements Runnable {
     }
 
     private boolean isKnockOut() {
-        System.out.println("Knock out!");
         return r.nextInt(20) == 1;
     }
 

@@ -4,11 +4,12 @@ import core.app.Core;
 import core.app.entity.Identity;
 import core.app.entity.Team;
 import core.app.menuScreen.BaseScreen;
-import core.fsdb.ViewModel;
+import core.app.ViewModel;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.IntStream;
 
 
@@ -19,6 +20,7 @@ public class GameThreadPool {
     private int value;
     private RoundChangeListener roundChangeListener;
 
+
     public GameThreadPool(Core core, int round, BaseScreen<? extends Identity> tBaseScreen) {
         this.core = core;
         this.value = round;
@@ -27,10 +29,11 @@ public class GameThreadPool {
     }
 
     public interface RoundChangeListener {
-        void update();
+         void update(boolean update);
     }
 
     public void run() {
+        roundChangeListener.update(true);
         int actualRound = viewModel.getActualRoundCount();
         IntStream.range(actualRound, value).forEach(e -> {
             ExecutorService executorService = Executors.newFixedThreadPool(viewModel.getAllDivisions().size());
@@ -47,9 +50,13 @@ public class GameThreadPool {
                 viewModel.getAllTeams().forEach(Team::resetStats);
             }
             viewModel.incrementRoundCount();
-            roundChangeListener.update();
         });
-
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        roundChangeListener.update(false);
     }
 
     private void runSeasonEnding() {

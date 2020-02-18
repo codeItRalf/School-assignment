@@ -12,16 +12,17 @@ import com.badlogic.gdx.utils.Align;
 import core.app.Core;
 import core.app.dialog.AddDivisionDialog;
 import core.app.entity.Division;
-import core.app.game.GameThreadPool;
 
 import java.util.stream.IntStream;
 
 public class StartScreen extends BaseScreen<Division> {
 
 
+    private boolean updateList;
+
     public StartScreen(Core core) {
         super(null, core);
-
+        updateList = false;
     }
 
 
@@ -65,6 +66,18 @@ public class StartScreen extends BaseScreen<Division> {
         return rootTable;
     }
 
+    @Override
+    public void render(float delta) {
+        super.render(delta);
+        if(updateList){
+            upperLeftTable.clearChildren();
+            upperLeftTable.add(getRoundButton());
+            upperRightTable.clearChildren();
+            upperRightTable.add(getSeason());
+            bodyTable.clearChildren();
+            bodyTable.add(getAllDivisionTables()).growX();
+        }
+    }
 
     @Override
     protected Table getFooter() {
@@ -92,7 +105,7 @@ public class StartScreen extends BaseScreen<Division> {
 
 
     @Override
-    public void update() {
-
+    public void update(boolean update) {
+       updateList = update;
     }
 }
