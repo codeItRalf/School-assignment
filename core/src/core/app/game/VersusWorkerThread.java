@@ -3,7 +3,7 @@ package core.app.game;
 import core.app.entity.Division;
 import core.app.entity.Fighter;
 import core.app.entity.Team;
-import core.app.ViewModel;
+import core.app.GameViewModel;
 
 import java.util.ArrayList;
 import java.util.stream.Collectors;
@@ -11,8 +11,8 @@ import java.util.stream.Collectors;
 public class VersusWorkerThread extends GameWorkerThread implements Runnable {
 
 
-    public VersusWorkerThread(ViewModel viewModel, Team team1, Team team2) {
-        super(viewModel);
+    public VersusWorkerThread(GameViewModel gameViewModel, Team team1, Team team2) {
+        super(gameViewModel);
         teamA = deepClone(team1);
         teamB = deepClone(team2);
 
@@ -46,12 +46,12 @@ public class VersusWorkerThread extends GameWorkerThread implements Runnable {
     @Override
     protected void updateDatabaseWithResult(ArrayList<Fighter> winner, ArrayList<Fighter> loser) {
         super.updateDatabaseWithResult(winner, loser);
-        Team winnerTeam = viewModel.getTeamForFighter(winner.get(0));
-        Team loserTeam = viewModel.getTeamForFighter(loser.get(0));
+        Team winnerTeam = gameViewModel.getTeamForFighter(winner.get(0));
+        Team loserTeam = gameViewModel.getTeamForFighter(loser.get(0));
         if (winnerTeam.getDivisionId() > loserTeam.getDivisionId()) {
-            Division winnersDiv = viewModel.getDivisionForTeam(winnerTeam);
+            Division winnersDiv = gameViewModel.getDivisionForTeam(winnerTeam);
             int winnersIndex = winnersDiv.getTeams().indexOf(winnerTeam);
-            Division losersDiv = viewModel.getDivisionForTeam(loserTeam);
+            Division losersDiv = gameViewModel.getDivisionForTeam(loserTeam);
             int losersIndex = losersDiv.getTeams().indexOf(loserTeam);
             int winnersDivId = winnersDiv.getId();
             winnerTeam.setDivisionId(loserTeam.getDivisionId());

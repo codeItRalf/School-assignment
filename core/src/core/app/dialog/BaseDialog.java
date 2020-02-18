@@ -7,7 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import core.app.Core;
 import core.app.entity.Identity;
-import core.app.ViewModel;
+import core.app.GameViewModel;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -25,7 +25,7 @@ public abstract class BaseDialog<T extends Identity> extends Dialog {
     protected final String negButton = "Cancel";
 
 
-    protected final ViewModel viewModel;
+    protected final GameViewModel gameViewModel;
     protected final Stage stage;
     protected final Skin skin;
     protected static String inputText = "";
@@ -35,7 +35,7 @@ public abstract class BaseDialog<T extends Identity> extends Dialog {
     protected BaseDialog(String title, Skin skin, Stage stage, Core core, T t) {
         super(title, skin);
         this.stage = stage;
-        this.viewModel = core.getViewModel();
+        this.gameViewModel = core.getGameViewModel();
         this.skin = skin;
         this.core = core;
         this.t = t;

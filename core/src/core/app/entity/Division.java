@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 import static core.annotation.ForeignKey.CASCADE;
 
-@Entity(primaryKey = "id", foreignKey = @ForeignKey(
+@Entity( primaryKey = "id", foreignKey = @ForeignKey(
         child = Team.class,
         listOfChildren = "teams",
         onDelete = CASCADE))

@@ -34,7 +34,7 @@ public class TeamScreen extends BaseScreen<Team> {
         table.add(setNameLabel());
         rootTable.add(table);
         rootTable.row();
-        Label label = new Label("Division: " + core.getViewModel().getDivisionForTeam(team).getName(), skin);
+        Label label = new Label("Division: " + core.getGameViewModel().getDivisionForTeam(team).getName(), skin);
         label.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {

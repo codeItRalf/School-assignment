@@ -19,7 +19,7 @@ public class MyObserver<T extends Identity> implements PropertyChangeListener {
 
     private boolean isWriting = false;
 
-    public MyObserver(List<Division> listOfParentEntities, Repository<? extends Identity> repository) {
+    public MyObserver(List<? extends Identity> listOfParentEntities, Repository<? extends Identity> repository) {
         this.listOfParentEntities = listOfParentEntities;
         this.repository = repository;
         addListeners(listOfParentEntities);

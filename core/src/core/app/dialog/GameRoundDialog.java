@@ -29,11 +29,11 @@ public class GameRoundDialog<T extends Identity> extends BaseDialog<T> {
         if ((int) object != RESULT_CANCEL && (int) object != RESULT_WARNING) {
             try {
                 value = Integer.parseInt(inputText);
-                value += viewModel.getActualRoundCount();
+                value += gameViewModel.getActualRoundCount();
             } catch (NumberFormatException e) {
                 value = -1;
             }
-            if (value != -1 && value > viewModel.getActualRoundCount()) {
+            if (value != -1 && value > gameViewModel.getActualRoundCount()) {
                 actionRequest();
             } else if (!object.equals(RESULT_CANCEL)) {
                 alertDialog();

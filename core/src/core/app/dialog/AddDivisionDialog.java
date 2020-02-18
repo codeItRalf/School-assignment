@@ -21,7 +21,7 @@ public class AddDivisionDialog<T extends Identity> extends BaseDialog<T> {
 
     @Override
     protected void actionRequest() {
-        viewModel.insertDivision(new Division(inputText, -1, new ArrayList<>()));
+        gameViewModel.insertDivision(new Division(inputText, -1, new ArrayList<>()));
         core.showStartScreen();
 
     }

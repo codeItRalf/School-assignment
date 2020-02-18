@@ -22,10 +22,10 @@ public class Core extends Game {
 
 
     //Logic and ViewModel
-    private final ViewModel viewModel;
+    private final GameViewModel gameViewModel;
 
-    public Core(ViewModel viewModel) {
-        this.viewModel = viewModel;
+    public Core(GameViewModel gameViewModel) {
+        this.gameViewModel = gameViewModel;
     }
 
     @Override
@@ -127,8 +127,8 @@ public class Core extends Game {
                 null);
     }
 
-    public ViewModel getViewModel() {
-        return viewModel;
+    public GameViewModel getGameViewModel() {
+        return gameViewModel;
     }
 
 

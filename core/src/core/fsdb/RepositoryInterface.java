@@ -7,8 +7,15 @@ import core.app.entity.Identity;
 import java.util.List;
 
 public interface RepositoryInterface<T extends Identity> {
-    <O extends Identity> O get(String entity, int id);
-    <O extends Identity> void insert(O entity);
-    <O extends Identity> void remove(O entity);
-    <O extends Identity> void update(O entity);
+    <E extends Identity> E get(String entity, int id);
+    <E extends Identity> void insert(E entity);
+    <E extends Identity> void remove(E entity);
+    <E extends Identity> void update(E entity);
+    <E extends Identity> List<E> getAll();
+    <E extends Identity> List<E> getWithIntFieldEqual(String field, int i);
+    <E extends Identity> List<E> getWithIntFieldLessOrEqual(String field, int i);
+    <E extends Identity> List<E> getWithIntFieldMoreOrEqual(String field, int i);
+    <E extends Identity> List<E> getWithStringFieldContains(String field, String value);
+    <E extends Identity> void removeFile(E entity);
+
 }

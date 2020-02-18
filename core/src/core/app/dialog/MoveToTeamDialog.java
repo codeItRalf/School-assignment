@@ -9,8 +9,6 @@ import core.app.entity.Fighter;
 import core.app.entity.Identity;
 import core.app.entity.Team;
 
-import java.util.ArrayList;
-
 
 public class MoveToTeamDialog<T extends Identity> extends BaseDialog<T> {
 
@@ -23,7 +21,7 @@ public class MoveToTeamDialog<T extends Identity> extends BaseDialog<T> {
     public MoveToTeamDialog(Skin skin, Stage stage, Core core, T t) {
         super("Move to!", skin, stage, core, t);
         if (t.getClass().equals(Fighter.class)) parentIndex = ((Fighter) t).getTeamId();
-        this.divisionDestination = viewModel.getDivisionForFighter((Fighter) t);
+        this.divisionDestination = gameViewModel.getDivisionForFighter((Fighter) t);
     }
 
     public MoveToTeamDialog(Skin skin, Stage stage, Core core, T t, Division divisionDestination) {
@@ -58,7 +56,7 @@ public class MoveToTeamDialog<T extends Identity> extends BaseDialog<T> {
     private void moveToTeam() {
         Team currentTeam;
         int currentIndex;
-            currentTeam = viewModel.getTeamForFighter((Fighter) t);
+            currentTeam = gameViewModel.getTeamForFighter((Fighter) t);
             currentIndex = currentTeam.getFighters().indexOf(t);
             teamDestination.getFighters().add(currentTeam.getFighters().remove(currentIndex));
             ((Fighter) t).setTeamId(teamDestination.getId());
