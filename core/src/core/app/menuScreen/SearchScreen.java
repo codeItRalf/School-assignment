@@ -166,7 +166,7 @@ public class SearchScreen extends BaseScreen<Division> {
     }
 
     @Override
-    public void update() {
+    public void update(boolean update) {
 
     }
 }

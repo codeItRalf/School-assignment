@@ -19,7 +19,7 @@ public class GameThreadPool {
     private ViewModel viewModel;
     private int value;
     private RoundChangeListener roundChangeListener;
-    private ReentrantLock lock = new ReentrantLock();
+
 
     public GameThreadPool(Core core, int round, BaseScreen<? extends Identity> tBaseScreen) {
         this.core = core;
@@ -29,10 +29,11 @@ public class GameThreadPool {
     }
 
     public interface RoundChangeListener {
-         void update();
+         void update(boolean update);
     }
 
     public void run() {
+        roundChangeListener.update(true);
         int actualRound = viewModel.getActualRoundCount();
         IntStream.range(actualRound, value).forEach(e -> {
             ExecutorService executorService = Executors.newFixedThreadPool(viewModel.getAllDivisions().size());
@@ -49,16 +50,13 @@ public class GameThreadPool {
                 viewModel.getAllTeams().forEach(Team::resetStats);
             }
             viewModel.incrementRoundCount();
-            lock.lock();
-            try {
-                roundChangeListener.update();
-            }finally {
-                lock.unlock();
-            }
-
-
         });
-
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        roundChangeListener.update(false);
     }
 
     private void runSeasonEnding() {
