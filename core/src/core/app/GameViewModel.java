@@ -11,6 +11,7 @@ import core.app.entity.Identity;
 import core.app.entity.Team;
 import core.fsdb.FileSystem;
 import core.fsdb.MyDatabase;
+import core.fsdb.RepositoryInterface;
 import core.fsdb.ViewModel;
 
 import java.util.ArrayList;
@@ -41,47 +42,28 @@ public class GameViewModel extends ViewModel {
 
 
     public Division getDivision(int id) {
-        return  getRepository(this,Division.class).get(id);
+        return (Division) getRepository(this,Division.class).get(id);
     }
 
-    public ArrayList<Division> getAllDivisions() {
-        return divisions;
+    public List<Division> getAllDivisions() {
+        return (List<Division>) getRepository(this,Division.class).getAll();
     }
 
-    public ArrayList<Team> getAllTeams() {
-        return getAllDivisions()
-                .stream()
-                .parallel()
-                .map(Division::getTeams)
-                .flatMap(List::stream)
-                .collect(Collectors.toCollection(ArrayList::new));
+    public List<Team> getAllTeams() {
+        return (List<Team>) getRepository(this,Team.class).getAll();
     }
 
-    public ArrayList<Fighter> getAllFighters() {
-        return getAllTeams()
-                .stream()
-                .map(Team::getFighters)
-                .flatMap(List::stream)
-                .collect(Collectors.toCollection(ArrayList::new));
+    public List<Fighter> getAllFighters() {
+        return (List<Fighter>) getRepository(this,Fighter.class).getAll();
     }
 
 
     public Team getTeamForFighter(Fighter fighter) {
-        return divisions.stream().parallel()
-                .map(Division::getTeams)
-                .flatMap(List::stream)
-                .filter(e -> e.getId() == fighter.getTeamId())
-                .findAny()
-                .get();
-
+        return (Team) getRepository(this,Team.class).get(fighter.getTeamId());
     }
 
     public Division getDivisionForTeam(Team team) {
-        return divisions.stream()
-                .parallel()
-                .filter(div -> div.getId() == team.getDivisionId())
-                .findAny()
-                .get();
+        return (Division) getRepository(this,Division.class).get(team.getDivisionId());
     }
 
     public Division getDivisionForFighter(Fighter fighter) {
@@ -89,35 +71,19 @@ public class GameViewModel extends ViewModel {
     }
 
     public void insertDivision(Division division) {
-        repository.setNewId(division);
-        division.addPropertyChangeListener(myObserver);
-        divisions.add(division);
-        repository.insert(division);
+        getRepository(this, division.getClass()).insert(division);
     }
 
     public void insertTeam(Team team) {
-        repository.setNewId(team);
-        team.addPropertyChangeListener(myObserver);
-        getDivisionForTeam(team).getTeams().add(team);
-        repository.insert(team);
+        getRepository(this, team.getClass()).insert(team);
     }
 
     public void insertFighter(Fighter fighter) {
-        repository.setNewId(fighter);
-        fighter.addPropertyChangeListener(myObserver);
-        getTeamForFighter(fighter).getFighters().add(fighter);
-        repository.insert(fighter);
+        getRepository(this, fighter.getClass()).insert(fighter);
     }
 
     public void deleteEntity(Identity entity) {
-        if (entity.getClass().equals(Fighter.class)) {
-            Team team = getTeamForFighter((Fighter) entity);
-            team.getFighters().remove(entity);
-        } else if (entity.getClass().equals(Team.class)) {
-            Division division = getDivisionForTeam((Team) entity);
-            division.getTeams().remove(entity);
-        } else divisions.remove(entity);
-        repository.remove(entity);
+        getRepository(this,entity.getClass()).remove(entity);
     }
 
     public int getActualRoundCount() {

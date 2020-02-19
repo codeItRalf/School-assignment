@@ -26,8 +26,8 @@ public abstract class Repository<T extends Identity> implements RepositoryInterf
     }
 
     @Override
-    public <E extends Identity> E get(String entityType, int id) {
-        return (E) FileSystem.deserialize(entityType, id);
+    public <E extends Identity> E get(int id) {
+        return (E) entities.get(id);
     }
 
 
@@ -114,8 +114,8 @@ public abstract class Repository<T extends Identity> implements RepositoryInterf
 
 
 
-    public <E extends Identity> void setNewId(Identity identity) {
-        identity.setId(generateId(MyDatabase.class.getSimpleName() + "/" + identity.getClass().getSimpleName()));
+    public <E extends Identity> void setNewId(E entity) {
+        entity.setId(generateId(MyDatabase.class.getSimpleName() + "/" + entity.getClass().getSimpleName()));
     }
 
 

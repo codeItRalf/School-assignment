@@ -10,14 +10,14 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 
-public abstract class ViewModel<T extends Identity> {
+public abstract class  ViewModel<T extends Identity> {
 
 
 
 
     <E extends Identity> E addChildrenToParent(E entity) {
         List<E> listOfChildren = getChildrenToParent(entity);
-        String fieldName = entity.getClass().getAnnotation(Entity.class).foreignKey()[0].listOfChildren();
+        String fieldName = ReflectionUtil.getNameOfChildrenList(entity);
         return ReflectionUtil.updateField(fieldName, listOfChildren, entity);
     }
 
@@ -57,7 +57,7 @@ public abstract class ViewModel<T extends Identity> {
     }
 
 
-    protected <E extends  RepositoryInterface> E getRepository(ViewModel<T> classInstance, Class<?>  table){
+    protected <E extends  RepositoryInterface<T>> E getRepository(ViewModel<T> classInstance, Class<?>  table){
         return ReflectionUtil.getRepository(classInstance, table);
     }
 

@@ -91,6 +91,8 @@ public class ReflectionUtil<E extends  Identity> {
         return  repository;
     }
 
-
+  static <E extends Identity> String getNameOfChildrenList(E entity){
+      return entity.getClass().getAnnotation(Entity.class).foreignKey()[0].listOfChildren();
+  }
 
 }
