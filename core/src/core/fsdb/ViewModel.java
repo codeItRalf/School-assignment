@@ -33,26 +33,14 @@ public abstract class ViewModel<T extends Identity> {
        }
     }
 
-    public ArrayList<Division> getAllDivisions() {
-        return entities;
+    public <E extends Identity> ArrayList<E> getAll(Class<?> entityClass) {
+        if(ReflectionUtil.getParentClassName(entityClass) == null && entities.get(0).getClass().equals(entityClass)){
+            return (ArrayList<E>) entities;
+        }else {
+            return (ArrayList<E>) ReflectionUtil.findAllEntities(entities,entityClass);
+        }
     }
 
-    public ArrayList<Team> getAllTeams() {
-        return getAllDivisions()
-                .stream()
-                .parallel()
-                .map(Division::getTeams)
-                .flatMap(List::stream)
-                .collect(Collectors.toCollection(ArrayList::new));
-    }
-
-    public ArrayList<Fighter> getAllFighters() {
-        return getAllTeams()
-                .stream()
-                .map(Team::getFighters)
-                .flatMap(List::stream)
-                .collect(Collectors.toCollection(ArrayList::new));
-    }
 
 
     public Team getTeamForFighter(Fighter fighter) {

@@ -5,6 +5,7 @@ import core.app.entity.NoClass;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -101,7 +102,19 @@ public class ReflectionUtil<E extends  Identity> {
           }
           return null;
       });
-
   }
+
+    static <E extends Identity> List<E> findAllEntities(List<? extends Identity> entities, Class<?> entityClass){
+        List<E> listOfEntities = new ArrayList<>();
+        entities.forEach(e->{
+            var children = ReflectionUtil.getChildrenFromParent(e);
+            if (children != null && children.get(0).getClass().equals(entityClass)){
+               listOfEntities.addAll((Collection<? extends E>) children);
+            }else {
+                listOfEntities.addAll(findAllEntities(children,entityClass));
+            }
+        });
+        return listOfEntities;
+    }
 
 }
