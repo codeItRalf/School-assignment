@@ -28,7 +28,7 @@ public class SearchScreen extends BaseScreen<Division> {
 
     public SearchScreen(Core core) {
         super(null, core);
-        allFighters = viewModel.getAllFighters().stream().
+        allFighters = gameViewModel.getAllFighters().stream().
                 sorted(Comparator.comparing(Fighter::getName))
                 .collect(Collectors
                         .toCollection(ArrayList::new));
@@ -86,7 +86,7 @@ public class SearchScreen extends BaseScreen<Division> {
         filteredList = allFighters
                 .stream()
                 .parallel()
-                .sorted(Comparator.comparing(e -> viewModel.getTeamForFighter(e).getName()))
+                .sorted(Comparator.comparing(e -> gameViewModel.getTeamForFighter(e).getName()))
                 .collect(Collectors.toCollection(ArrayList::new));
         getBody();
     }
@@ -134,7 +134,7 @@ public class SearchScreen extends BaseScreen<Division> {
                 itemLabel = new Label(filteredList.get(i).getDmg() + "", skin);
                 itemLabel.setAlignment(Align.center);
                 listItemTable.add(itemLabel).align(Align.center).width(CELL_WIDTH);
-                itemLabel = new Label(viewModel.getTeamForFighter(filteredList.get(i)).getName(), skin);
+                itemLabel = new Label(gameViewModel.getTeamForFighter(filteredList.get(i)).getName(), skin);
                 itemLabel.setAlignment(Align.right);
                 listItemTable.add(itemLabel).align(Align.center).width(CELL_WIDTH);
                 table.add(listItemTable).growX();

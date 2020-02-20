@@ -36,7 +36,7 @@ public class StartScreen extends BaseScreen<Division> {
     protected Table getAllDivisionTables() {
         Table table = new Table();
         table.defaults().growX();
-        IntStream.range(0, viewModel.getAllDivisions().size()).forEach(i -> {
+        IntStream.range(0, gameViewModel.getAllDivisions().size()).forEach(i -> {
             table.add(getDivisionTable(i));
             table.row();
         });
@@ -44,7 +44,7 @@ public class StartScreen extends BaseScreen<Division> {
     }
 
     private Table getDivisionTable(int divIndex) {
-        Division division = viewModel.getDivision(divIndex);
+        Division division = gameViewModel.getDivision(divIndex);
         Table rootTable = new Table();
         rootTable.defaults().growX();
         Table table = new Table();

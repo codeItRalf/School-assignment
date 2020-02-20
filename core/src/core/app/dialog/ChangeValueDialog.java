@@ -5,7 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import core.app.Core;
 import core.app.entity.Fighter;
-import core.app.entity.Identity;
+import core.fsdb.Identity;
 
 
 public class ChangeValueDialog<T extends Identity> extends BaseDialog<T> {

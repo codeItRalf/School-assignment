@@ -1,4 +1,4 @@
-package core.app.entity;
+package core.fsdb;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;

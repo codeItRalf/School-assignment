@@ -1,13 +1,11 @@
 package core.fsdb;
 
 
-import core.annotation.Database;
+import core.fsdb.annotation.Database;
 import core.app.entity.Division;
 import core.app.entity.Fighter;
-import core.app.entity.Identity;
 import core.app.entity.Team;
 
-import java.io.*;
 import java.util.Arrays;
 
 

@@ -1,13 +1,15 @@
 package core.app.entity;
 
 
-import core.annotation.Entity;
-import core.annotation.ForeignKey;
-import core.annotation.Ignore;
+import core.fsdb.annotation.Entity;
+import core.fsdb.annotation.ForeignKey;
+import core.fsdb.annotation.Ignore;
+import core.fsdb.Identity;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import static core.annotation.ForeignKey.CASCADE;
+import static core.fsdb.annotation.ForeignKey.CASCADE;
 
 
 @Entity( primaryKey = "id", foreignKey = @ForeignKey(
@@ -16,19 +18,19 @@ import static core.annotation.ForeignKey.CASCADE;
         listOfChildren = "fighters",
         child = Fighter.class,
         onDelete = CASCADE))
-public class Team extends Identity{
+public class Team extends Identity {
     private int divisionId;
     private int wins;
     private int losses;
 
     @Ignore
-    private ArrayList<Fighter> fighters = new ArrayList<>();
+    private List<Fighter> fighters = new ArrayList<>();
 
     public Team() {
         super("undefined", -1);
     }
 
-    public Team(String name, int id, int divisionId, ArrayList<Fighter> fighters) {
+    public Team(String name, int id, int divisionId, List<Fighter> fighters) {
         super(name, id);
         this.divisionId = divisionId;
         this.fighters = fighters;
@@ -72,7 +74,7 @@ public class Team extends Identity{
         support.firePropertyChange("resetStats", oldValue, this.losses + this.wins);
     }
 
-    public ArrayList<Fighter> getFighters() {
+    public List<Fighter> getFighters() {
         if (fighters == null) {
             fighters = new ArrayList<>();
         }

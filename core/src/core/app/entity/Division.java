@@ -2,13 +2,15 @@ package core.app.entity;
 
 
 
-import core.annotation.Entity;
-import core.annotation.ForeignKey;
-import core.annotation.Ignore;
+import core.fsdb.annotation.Entity;
+import core.fsdb.annotation.ForeignKey;
+import core.fsdb.annotation.Ignore;
+import core.fsdb.Identity;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import static core.annotation.ForeignKey.CASCADE;
+import static core.fsdb.annotation.ForeignKey.CASCADE;
 
 @Entity(primaryKey = "id", foreignKey = @ForeignKey(
         child = Team.class,
@@ -17,7 +19,7 @@ import static core.annotation.ForeignKey.CASCADE;
 public class Division extends Identity {
 
   @Ignore
-  private ArrayList<Team> teams = new ArrayList<>();
+  private List<Team> teams = new ArrayList<>();
 
     public Division() {
         super("undefined");
@@ -32,7 +34,7 @@ public class Division extends Identity {
         this.teams = teams;
     }
 
-    public ArrayList<Team> getTeams() {
+    public List<Team> getTeams() {
         if(teams == null){
             teams = new ArrayList<>();
         }

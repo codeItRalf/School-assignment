@@ -18,10 +18,10 @@ import core.app.dialog.ChangeNameDialog;
 import core.app.dialog.DeleteDialog;
 import core.app.dialog.GameRoundDialog;
 import core.app.entity.Division;
-import core.app.entity.Identity;
+import core.fsdb.Identity;
 import core.app.entity.Team;
 import core.app.game.GameThreadPool.RoundChangeListener;
-import core.fsdb.ViewModel;
+import core.app.GameViewModel;
 
 import java.util.Comparator;
 
@@ -35,7 +35,7 @@ public abstract class BaseScreen<T extends Identity> extends ScreenAdapter imple
     protected final Skin uiSkin;
     protected final TextField.TextFieldStyle textFieldStyle;
     protected final Core core;
-    protected final ViewModel viewModel;
+    protected final GameViewModel gameViewModel;
     public static DesktopWorker desktopWorker;
     private int dragStartX, dragStartY;
     private int windowStartX, windowStartY;
@@ -54,7 +54,7 @@ Logger logger  = new Logger("BaseScreen", Logger.DEBUG);
         this.t = t;
         this.skin = core.getSkin();
         this.core = core;
-        this.viewModel = core.getViewModel();
+        this.gameViewModel = core.getGameViewModel();
         this.textFieldStyle = core.getTextFieldStyle();
         uiSkin = new Skin(Gdx.files.internal("default_skin/uiskin.json"));
     }
@@ -153,7 +153,7 @@ Logger logger  = new Logger("BaseScreen", Logger.DEBUG);
     }
 
     protected Label getSeason() {
-        return new Label("Season " + viewModel.getActualRoundCount() / 10, skin);
+        return new Label("Season " + gameViewModel.getActualRoundCount() / 10, skin);
     }
 
     private Table getSearchButton() {
@@ -267,7 +267,7 @@ Logger logger  = new Logger("BaseScreen", Logger.DEBUG);
     }
 
     protected Label getRoundButton() {
-        Label label = new Label("Round: " + viewModel.getActualRoundCount(), skin);
+        Label label = new Label("Round: " + gameViewModel.getActualRoundCount(), skin);
         label.setAlignment(Align.left);
         label.addListener(new ClickListener() {
             @Override

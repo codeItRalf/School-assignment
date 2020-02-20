@@ -2,10 +2,9 @@ package core.fsdb;
 
 
 
-import core.annotation.Entity;
-import core.annotation.ForeignKey;
-import core.annotation.Ignore;
-import core.app.entity.Identity;
+import core.fsdb.annotation.Entity;
+import core.fsdb.annotation.ForeignKey;
+import core.fsdb.annotation.Ignore;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -18,7 +17,7 @@ import static core.fsdb.ReflectionUtil.getChildrenFromParent;
 import static core.fsdb.ReflectionUtil.getChildClassName;
 
 
-public abstract class Repository<T extends Identity> implements RepositoryInterface<T> {
+public  class Repository<T extends Identity> implements RepositoryInterface<T> {
     private final String dbName = MyDatabase.class.getSimpleName();
     private final MyDatabase myDatabase = MyDatabase.getDatabase();
 
@@ -64,11 +63,6 @@ public abstract class Repository<T extends Identity> implements RepositoryInterf
     public <E extends Identity> void update(E entity) {
         FileSystem.serialize(entity);
     }
-
-
-
-
-
 
 
 
@@ -159,7 +153,7 @@ public abstract class Repository<T extends Identity> implements RepositoryInterf
     <E extends Identity> E addChildrenToParent(E entity) {
         List<E> listOfChildren = deserializeChildrenToList(entity).stream().map(this::get).collect(Collectors.toList());
         String fieldName = entity.getClass().getAnnotation(Entity.class).foreignKey()[0].listOfChildren();
-        return ReflectionUtil.updateField(fieldName, listOfChildren, entity);
+        return ReflectionUtil.setField(fieldName, listOfChildren, entity);
     }
 
 }

@@ -46,7 +46,7 @@ public class FighterScreen extends BaseScreen<Fighter> {
         });
         table.add(label);
         table.row();
-        label = new Label("Team: " + core.getViewModel().getTeamForFighter(fighter).getName(), skin);
+        label = new Label("Team: " + core.getGameViewModel().getTeamForFighter(fighter).getName(), skin);
         label.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -55,7 +55,7 @@ public class FighterScreen extends BaseScreen<Fighter> {
         });
         table.add(label);
         table.row();
-        label = new Label("Division: " + core.getViewModel().getDivisionForFighter(fighter).getName(), skin);
+        label = new Label("Division: " + core.getGameViewModel().getDivisionForFighter(fighter).getName(), skin);
         label.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -74,7 +74,7 @@ public class FighterScreen extends BaseScreen<Fighter> {
         textButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                core.showTeamScreen(core.getViewModel().getTeamForFighter(fighter));
+                core.showTeamScreen(core.getGameViewModel().getTeamForFighter(fighter));
             }
         });
         table.add(textButton);

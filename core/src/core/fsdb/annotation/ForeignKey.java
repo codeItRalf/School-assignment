@@ -1,4 +1,4 @@
-package core.annotation;
+package core.fsdb.annotation;
 
 
 
@@ -9,9 +9,9 @@ import java.lang.annotation.Retention;
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 
 public @interface ForeignKey {
-    Class parent() default NoClass.class;
+    Class<?> parent() default NoClass.class;
     String parentId() default "";
-    Class child() default NoClass.class;
+    Class<?> child() default NoClass.class;
     String listOfChildren() default "";
     @Action int onUpdate() default NO_ACTION;
 

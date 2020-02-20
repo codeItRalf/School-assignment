@@ -20,7 +20,7 @@ public class AddFighterDialog extends BaseDialog<Team> {
     @Override
     protected void actionRequest() {
         Fighter fighter = new Fighter(inputText, -1, t.getId());
-        viewModel.insertFighter(fighter);
+        gameViewModel.insertFighter(fighter);
         core.showTeamScreen(t);
 
     }

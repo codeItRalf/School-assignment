@@ -1,12 +1,8 @@
 package core.fsdb;
 
 
-import core.app.entity.Division;
-import core.app.entity.Identity;
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -19,7 +15,7 @@ public class MyObserver<T extends Identity> implements PropertyChangeListener {
 
     private boolean isWriting = false;
 
-    public MyObserver(List<Division> listOfParentEntities, Repository<? extends Identity> repository) {
+    public MyObserver(List<? extends Identity> listOfParentEntities, Repository<? extends Identity> repository) {
         this.listOfParentEntities = listOfParentEntities;
         this.repository = repository;
         addListeners(listOfParentEntities);

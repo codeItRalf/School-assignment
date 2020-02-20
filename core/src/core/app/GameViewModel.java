@@ -3,27 +3,26 @@ package core.app;
 
 import core.app.entity.Division;
 import core.app.entity.Fighter;
-import core.app.entity.Identity;
+import core.fsdb.Identity;
 import core.app.entity.Team;
-import core.fsdb.MyObserver;
+import core.fsdb.FileSystem;
+import core.fsdb.MyDatabase;
+import core.fsdb.ViewModel;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 
-public class GameViewModel {
+public class GameViewModel  extends ViewModel<Identity> {
 
-    private final GameRepository<? extends Identity> repository;
-    private final ArrayList<Division> divisions;
-    private final MyObserver<? extends Identity> myObserver;
+
     private int roundCount = -1;
 
     public GameViewModel() {
-        repository = new GameRepository<>();
-        divisions = new ArrayList<Division>(repository.getAllOf(Division.class.getSimpleName()));
-        myObserver = new MyObserver<>(divisions, repository);
+      super(Division.class);
     }
 
 
@@ -108,16 +107,19 @@ public class GameViewModel {
     }
 
     public int getActualRoundCount() {
-        if (roundCount == -1) {
-            roundCount = repository.getRoundCount();
+        String path = MyDatabase.class.getSimpleName() + "/fightCount";
+        if (!FileSystem.exists(path)) {
+            FileSystem.writeFile(path, "1");
         }
-        return roundCount;
+        return Integer.parseInt(Objects.requireNonNull(FileSystem.readFile(path)));
     }
 
     public void incrementRoundCount() {
-        roundCount++;
-        repository.updateRoundCount(roundCount);
+        String path = MyDatabase.class.getSimpleName() + "/fightCount";
+        FileSystem.writeFile(path, String.valueOf(roundCount++));
     }
+
+
 
     public Team getTheBestTeamInDiv(Division division) {
         return division.getTeams()

@@ -2,7 +2,7 @@ package core.app.game;
 
 import core.app.entity.Fighter;
 import core.app.entity.Team;
-import core.fsdb.ViewModel;
+import core.app.GameViewModel;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -10,7 +10,7 @@ import java.util.stream.IntStream;
 
 public class GameWorkerThread implements Runnable {
     protected final Random r = new Random();
-    protected final ViewModel viewModel;
+    protected final GameViewModel gameViewModel;
     private int divIndex;
 
 
@@ -18,12 +18,12 @@ public class GameWorkerThread implements Runnable {
     protected ArrayList<Fighter> teamA = new ArrayList<>();
     protected ArrayList<Fighter> teamB = new ArrayList<>();
 
-    public GameWorkerThread(ViewModel viewModel) {
-        this.viewModel = viewModel;
+    public GameWorkerThread(GameViewModel gameViewModel) {
+        this.gameViewModel = gameViewModel;
     }
 
-    public GameWorkerThread(ViewModel viewModel, int divIndex) {
-        this(viewModel);
+    public GameWorkerThread(GameViewModel gameViewModel, int divIndex) {
+        this(gameViewModel);
         this.divIndex = divIndex;
     }
 
@@ -34,9 +34,9 @@ public class GameWorkerThread implements Runnable {
     }
 
     protected void workCommand() {
-        IntStream.range(0, viewModel.getDivision(divIndex).getTeams().size() - 1).forEach(indexA -> {
+        IntStream.range(0, gameViewModel.getDivision(divIndex).getTeams().size() - 1).forEach(indexA -> {
             deepCopyTeam(indexA, teamA);
-            IntStream.range(indexA + 1, viewModel.getDivision(divIndex).getTeams().size()).forEach(indexB -> {
+            IntStream.range(indexA + 1, gameViewModel.getDivision(divIndex).getTeams().size()).forEach(indexB -> {
                 deepCopyTeam(indexB, teamB);
                 boolean isGameOver = false;
                 while (!isGameOver) {
@@ -52,13 +52,13 @@ public class GameWorkerThread implements Runnable {
     }
 
     protected void updateDatabaseWithResult(ArrayList<Fighter> winner, ArrayList<Fighter> loser) {
-        Team winnerTeam = viewModel.getTeamForFighter(winner.get(0));
+        Team winnerTeam = gameViewModel.getTeamForFighter(winner.get(0));
         winnerTeam.incrementWinCount();
         winner.forEach(e -> {
             int fighterIndex = winnerTeam.getFighters().indexOf(e);
             winnerTeam.getFighters().get(fighterIndex).upgradeStats();
         });
-        Team loserTeam = viewModel.getTeamForFighter(loser.get(0));
+        Team loserTeam = gameViewModel.getTeamForFighter(loser.get(0));
         loserTeam.incrementLossCount();
     }
 
@@ -84,6 +84,6 @@ public class GameWorkerThread implements Runnable {
 
     protected void deepCopyTeam(int index, ArrayList<Fighter> target) {
         target.clear();
-        viewModel.getDivision(divIndex).getTeams().get(index).getFighters().forEach(a -> target.add(new Fighter(a)));
+        gameViewModel.getDivision(divIndex).getTeams().get(index).getFighters().forEach(a -> target.add(new Fighter(a)));
     }
 }

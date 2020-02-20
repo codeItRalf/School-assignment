@@ -1,40 +1,40 @@
 package core.fsdb;
 
 
-import core.app.GameRepository;
 import core.app.entity.Division;
 import core.app.entity.Fighter;
-import core.app.entity.Identity;
 import core.app.entity.Team;
-import core.fsdb.MyObserver;
-import core.fsdb.Repository;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
-public class ViewModel {
+public abstract class ViewModel<T extends Identity> {
 
-    private final GameRepository<? extends Identity> repository;
-    private final ArrayList<Division> divisions;
-    private final MyObserver<? extends Identity> myObserver;
-    private int roundCount = -1;
+    private  Repository<? extends Identity> repository;
+    private  List<? extends  Identity> entities;
+    private  MyObserver<? extends Identity> myObserver;
 
-    public ViewModel() {
-        repository = new GameRepository<>();
-        divisions = new ArrayList<Division>(repository.getAllOf(Division.class.getSimpleName()));
-        myObserver = new MyObserver<>(divisions, repository);
+    public ViewModel(Class<?> SuperParentClass) {
+        repository = new Repository<>();
+        entities = new ArrayList<>(repository.getAllOf(SuperParentClass.getSimpleName()));
+        myObserver = new MyObserver<T>(entities, repository);
     }
 
 
-    public Division getDivision(int id) {
-        return divisions.get(id);
+    public T get(int id, Class<?> entityClass) {
+       if(ReflectionUtil.getParentClassName(entityClass) == null && entities.get(id).getClass().equals(entityClass)){
+            return (T) entities.get(id);
+       }else {
+           return (T) ReflectionUtil.findNextEntity(entities,entityClass,id);
+       }
     }
 
     public ArrayList<Division> getAllDivisions() {
-        return divisions;
+        return entities;
     }
 
     public ArrayList<Team> getAllTeams() {
@@ -56,7 +56,7 @@ public class ViewModel {
 
 
     public Team getTeamForFighter(Fighter fighter) {
-        return divisions.stream().parallel()
+        return entities.stream().parallel()
                 .map(Division::getTeams)
                 .flatMap(List::stream)
                 .filter(e -> e.getId() == fighter.getTeamId())
@@ -66,7 +66,7 @@ public class ViewModel {
     }
 
     public Division getDivisionForTeam(Team team) {
-        return divisions.stream()
+        return entities.stream()
                 .parallel()
                 .filter(div -> div.getId() == team.getDivisionId())
                 .findAny()
@@ -80,7 +80,7 @@ public class ViewModel {
     public void insertDivision(Division division) {
         repository.setNewId(division);
         division.addPropertyChangeListener(myObserver);
-        divisions.add(division);
+        entities.add(division);
         repository.insert(division);
     }
 
@@ -105,21 +105,11 @@ public class ViewModel {
         } else if (entity.getClass().equals(Team.class)) {
             Division division = getDivisionForTeam((Team) entity);
             division.getTeams().remove(entity);
-        } else divisions.remove(entity);
+        } else entities.remove(entity);
         repository.remove(entity);
     }
 
-    public int getActualRoundCount() {
-        if (roundCount == -1) {
-            roundCount = repository.getRoundCount();
-        }
-        return roundCount;
-    }
 
-    public void incrementRoundCount() {
-        roundCount++;
-        repository.updateRoundCount(roundCount);
-    }
 
     public Team getTheBestTeamInDiv(Division division) {
         return division.getTeams()
