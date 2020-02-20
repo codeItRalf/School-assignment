@@ -11,6 +11,7 @@ import core.app.GameViewModel;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -80,7 +81,7 @@ public abstract class BaseDialog<T extends Identity> extends Dialog {
 
     }
 
-    protected Table getListOfEntities(ArrayList<? extends Identity> list, int currentParentIndex) {
+    protected Table getListOfEntities(List<? extends Identity> list, int currentParentIndex) {
         Table table = new Table();
         list
                 .stream()

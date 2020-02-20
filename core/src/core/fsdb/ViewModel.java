@@ -4,9 +4,9 @@ package core.fsdb;
 import core.annotation.Entity;
 import core.annotation.ForeignKey;
 import core.app.entity.Identity;
+import core.app.entity.NoClass;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 
@@ -15,25 +15,31 @@ public abstract class  ViewModel<T extends Identity> {
 
 
 
-    <E extends Identity> E addChildrenToParent(E entity) {
-        List<E> listOfChildren = getChildrenToParent(entity);
-        String fieldName = ReflectionUtil.getNameOfChildrenList(entity);
-        return ReflectionUtil.updateField(fieldName, listOfChildren, entity);
+//    <E extends Identity> E addChildrenToParent(E entity) {
+//        List<E> listOfChildren = getChildrenToParent(entity);
+//        String fieldName = ReflectionUtil.getNameOfChildrenList(entity);
+//        return ReflectionUtil.updateField(fieldName, listOfChildren, entity);
+//    }
+
+
+
+
+    public  <E extends  Identity>  void setChildrenToParent(E entity, ViewModel<?> viewModel) {
+        var child =  getChildClass(entity);
+        if(child != null && !child.equals(NoClass.class)){
+            String parentID = getParentIdVariableName(child);
+           List<E> listOfChildren =  getRepository(viewModel,child).getWithIntFieldEqual(parentID,entity.getId());
+           listOfChildren.forEach(e -> setChildrenToParent(e,viewModel));
+           ReflectionUtil.setField(ReflectionUtil.getNameOfChildrenList(entity),listOfChildren,entity);
+        }
     }
 
-
-
-
-    public  <E extends  Identity>  List<E> getChildrenToParent(E entity) {
-        return (List<E>) getRepository(this, ReflectionUtil.getChildClass(entity))
-                .getAll()
-                .stream()
-                .filter(e -> ifParentIdMatchesChild(entity, (E) e))
-                .collect(Collectors.toList());
+    private <E extends Identity> String getParentIdVariableName(Class<?> clazz){
+        return clazz.getAnnotation(Entity.class).foreignKey()[0].parentId();
     }
 
     private   <E extends Identity> boolean ifParentIdMatchesChild(E parent, E child) {
-        String parentId = child.getClass().getAnnotation(Entity.class).foreignKey()[0].parentId();
+        String parentId = getParentIdVariableName(child.getClass());
         if (parentId.length() < 1) {
             return false;
         }
@@ -47,18 +53,23 @@ public abstract class  ViewModel<T extends Identity> {
     }
 
     private <E extends Identity> void removeChildren(E entity) {
-        List<E> childList = getChildrenToParent(entity);
-        IntStream.range(0, childList.size()).forEach(index -> {
-            if (index != childList.size() - 1) {
-                getRepository(this, entity.getClass()).removeFile(childList.get(index));
-            }
-            removeChildren(childList.get(index));
-        });
+//        List<E> childList = getChildrenToParent(entity);
+//        IntStream.range(0, childList.size()).forEach(index -> {
+//            if (index != childList.size() - 1) {
+//                getRepository(this, entity.getClass()).removeFile(childList.get(index));
+//            }
+//            removeChildren(childList.get(index));
+//        });
+    }
+
+     protected   <E extends Identity> Class<?> getChildClass(E entity) {
+
+        return entity.getClass().getAnnotation(Entity.class).foreignKey()[0].child();
     }
 
 
-    protected <E extends  RepositoryInterface<T>> E getRepository(ViewModel<T> classInstance, Class<?>  table){
-        return ReflectionUtil.getRepository(classInstance, table);
+    protected <E extends  RepositoryInterface<T>> E getRepository(ViewModel<?> viewModel, Class<?>  table){
+        return ReflectionUtil.getRepository(viewModel, table);
     }
 
 }

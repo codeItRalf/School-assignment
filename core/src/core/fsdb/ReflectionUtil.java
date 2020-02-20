@@ -36,11 +36,9 @@ public class ReflectionUtil<E extends  Identity> {
         return list;
     }
 
-    static  <E extends Identity> Class getChildClass(E entity) {
-        return entity.getClass().getAnnotation(Entity.class).foreignKey()[0].child();
-    }
 
-    static <E extends Identity> E updateField(String fieldName, List<E> list, E entity) {
+
+    static <E extends Identity> E setField(String fieldName, List<E> list, E entity) {
         Field field;
         try {
             field = entity.getClass().getDeclaredField(fieldName);

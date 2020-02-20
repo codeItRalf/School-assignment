@@ -11,14 +11,11 @@ import core.app.entity.Identity;
 import core.app.entity.Team;
 import core.fsdb.FileSystem;
 import core.fsdb.MyDatabase;
-import core.fsdb.RepositoryInterface;
 import core.fsdb.ViewModel;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 
 public class GameViewModel extends ViewModel {
@@ -42,15 +39,21 @@ public class GameViewModel extends ViewModel {
 
 
     public Division getDivision(int id) {
-        return (Division) getRepository(this,Division.class).get(id);
+         Division division = (Division) getRepository(this,Division.class).get(id);
+         setChildrenToParent(division, this);
+         return division;
     }
 
     public List<Division> getAllDivisions() {
-        return (List<Division>) getRepository(this,Division.class).getAll();
+        List<Division> allDivisions = getRepository(this,Division.class).getAll();
+        allDivisions.forEach(e -> setChildrenToParent(e,this));
+        return allDivisions;
     }
 
     public List<Team> getAllTeams() {
-        return (List<Team>) getRepository(this,Team.class).getAll();
+        List<Team> allTeams = getRepository(this,Team.class).getAll();
+        allTeams.forEach(e-> setChildrenToParent(e,this));
+        return allTeams;
     }
 
     public List<Fighter> getAllFighters() {
