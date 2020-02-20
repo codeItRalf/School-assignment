@@ -56,6 +56,7 @@ public abstract class Repository<T extends Identity> implements RepositoryInterf
 
     @Override
     public <E extends Identity> void update(E entity) {
+        setIgnoreFieldsToNull(entity);
         FileSystem.serialize(entity);
     }
 
