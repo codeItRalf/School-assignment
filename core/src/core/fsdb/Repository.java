@@ -20,7 +20,6 @@ public abstract class Repository<T extends Identity> implements RepositoryInterf
     private final MyObserver<T> myObserver;
 
     public Repository(String entityName) {
-        new MyDatabase();
         this.entities =  initEntityList(entityName);
         this.myObserver = new MyObserver<T>(entities,this);
     }

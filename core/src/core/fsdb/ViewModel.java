@@ -7,15 +7,16 @@ import core.app.entity.Identity;
 import core.app.entity.NoClass;
 
 import java.util.List;
-import java.util.stream.IntStream;
 
 
 public abstract class  ViewModel<T extends Identity> {
 
+    public ViewModel() {
+        new MyDatabase();
+    }
 
 
-
-//    <E extends Identity> E addChildrenToParent(E entity) {
+    //    <E extends Identity> E addChildrenToParent(E entity) {
 //        List<E> listOfChildren = getChildrenToParent(entity);
 //        String fieldName = ReflectionUtil.getNameOfChildrenList(entity);
 //        return ReflectionUtil.updateField(fieldName, listOfChildren, entity);

@@ -1,6 +1,7 @@
 package core.app;
 
 
+import core.annotation.Database;
 import core.annotation.Table;
 import core.app.Repositary.DivisionRepository;
 import core.app.Repositary.FighterRepository;
@@ -32,7 +33,7 @@ public class GameViewModel extends ViewModel {
     private int roundCount = -1;
 
     public GameViewModel() {
-       divRepo = new DivisionRepository<>(Division.class.getSimpleName());
+        divRepo = new DivisionRepository<>(Division.class.getSimpleName());
        teamRep = new TeamRepository<>(Team.class.getSimpleName());
        fighterRepo = new FighterRepository<>(Fighter.class.getSimpleName());
     }
