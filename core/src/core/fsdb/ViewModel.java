@@ -1,6 +1,7 @@
-package core.app;
+package core.fsdb;
 
 
+import core.app.GameRepository;
 import core.app.entity.Division;
 import core.app.entity.Fighter;
 import core.app.entity.Identity;

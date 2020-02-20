@@ -3,7 +3,7 @@ package core.app.game;
 import core.app.entity.Division;
 import core.app.entity.Fighter;
 import core.app.entity.Team;
-import core.app.ViewModel;
+import core.fsdb.ViewModel;
 
 import java.util.ArrayList;
 import java.util.stream.Collectors;

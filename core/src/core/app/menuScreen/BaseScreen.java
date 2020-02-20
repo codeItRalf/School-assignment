@@ -21,7 +21,7 @@ import core.app.entity.Division;
 import core.app.entity.Identity;
 import core.app.entity.Team;
 import core.app.game.GameThreadPool.RoundChangeListener;
-import core.app.ViewModel;
+import core.fsdb.ViewModel;
 
 import java.util.Comparator;
 
