@@ -1,20 +1,24 @@
 package core.fsdb;
 
+import core.app.entity.Division;
 import core.fsdb.annotation.Entity;
 import core.app.entity.NoClass;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 public class ReflectionUtil<E extends  Identity> {
 
 
-     static  <E extends Identity> boolean childrenExist(E entity) {
-        return entity.getClass().getAnnotation(Entity.class).foreignKey()[0].child() != NoClass.class;
+     static  <E extends Identity> boolean childrenExist(Class<?> clazz) {
+        return clazz.getAnnotation(Entity.class).foreignKey()[0].child() != NoClass.class;
+    }
+
+    static  <E extends Identity> boolean parentExist(Class<?> clazz) {
+        return clazz.getAnnotation(Entity.class).foreignKey()[0].parent() != NoClass.class;
     }
 
     static <E extends Identity> String getParentIdVariableName(E entity){
@@ -25,7 +29,7 @@ public class ReflectionUtil<E extends  Identity> {
         return  entity.getClass().getAnnotation(Entity.class).foreignKey()[0].listOfChildren();
     }
 
-    static  <E extends Identity> List<E> getChildrenFromParent(E entity) {
+    static  <E extends Identity> ArrayList<E> getChildrenFromParent(E entity) {
         String fieldName = getChildVariableName(entity);
         if (fieldName.length() < 1) {
             return null;
@@ -44,16 +48,16 @@ public class ReflectionUtil<E extends  Identity> {
 
     static  <E extends Identity> Class<?> getChildClass(E entity) {
         Class<?> child = entity.getClass().getAnnotation(Entity.class).foreignKey()[0].child();
-        return child.equals(NoClass.class.getSimpleName()) ? null : child;
+        return child;
     }
 
     static  <E extends Identity> Class<?> getParentClass(Class<?> entity) {
         Class<?> parent = entity.getAnnotation(Entity.class).foreignKey()[0].parent();
-        return parent.equals(NoClass.class.getSimpleName()) ? null : parent;
+        return parent;
     }
     static  <E extends Identity> Class<?> getChildClass(Class<?> entity) {
         Class<?> child = entity.getAnnotation(Entity.class).foreignKey()[0].child();
-        return child.equals(NoClass.class.getSimpleName()) ? null : child;
+        return child;
     }
 
     static <E extends Identity> E setField(String fieldName, List<E> list, E entity) {
@@ -92,34 +96,34 @@ public class ReflectionUtil<E extends  Identity> {
         return fieldValue;
     }
 
-  static <E extends Identity> E findNextEntity(List<? extends Identity> entities, Class<?> entityClass, int id){
-     return (E) entities.stream().map(e->{
-          var children = ReflectionUtil.getChildrenFromParent(e);
-          if (children != null && children.get(0).getClass().equals(entityClass)){
-              Optional<? extends Identity> child = children.stream()
-                      .parallel()
-                      .filter(o-> o.getId() == id)
-                      .findAny();
-              if(child.isPresent()){
-                  return child.get();
-              }
-          }else {
-            return findNextEntity(children,entityClass,id);
-          }
-          return null;
-      });
+     static <E extends Identity> E findNextEntity(List<? extends Identity> entities, Class<?> entityClass, int id){
+        return (E) entities.stream().map(e->{
+            if(e.getClass().getSimpleName().equals(Division.class.getSimpleName())){
+                System.out.println("Division id: " + e.getId());
+            }
+            E entity = null;
+            if(!e.getClass().getSimpleName().equals(entityClass.getSimpleName())){
+                var children = getChildrenFromParent(e);
+                entity = findNextEntity(children,entityClass,id);
+            }else {
+                if(e.getId() == id){
+                    entity = (E) e;
+                }
+            }
+            return  entity;
+        }).collect(Collectors.toList()).stream().filter(Objects::nonNull).findAny().get();
   }
 
-    static <E extends Identity> List<E> findAllEntities(List<? extends Identity> entities, Class<?> entityClass){
-        List<E> listOfEntities = new ArrayList<>();
-        entities.forEach(e->{
-            var children = ReflectionUtil.getChildrenFromParent(e);
-            if (children != null && children.get(0).getClass().equals(entityClass)){
-               listOfEntities.addAll((Collection<? extends E>) children);
-            }else {
-                listOfEntities.addAll(findAllEntities(children,entityClass));
-            }
-        });
+    static <E extends Identity> ArrayList<E> findAllEntities(ArrayList<E> entities, Class<?> entityClass){
+        ArrayList<E> listOfEntities = new ArrayList<>();
+             entities.forEach(e->{
+                    if(entityClass.getSimpleName().equals(e.getClass().getSimpleName())){
+                        listOfEntities.addAll(entities);
+                    }else if (childrenExist(e.getClass())) {
+                        var children = ReflectionUtil.getChildrenFromParent(e);
+                        listOfEntities.addAll(findAllEntities(children,entityClass));
+                    }
+             });
         return listOfEntities;
     }
 

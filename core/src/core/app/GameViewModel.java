@@ -16,7 +16,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 
-public class GameViewModel  extends ViewModel<Identity> {
+public class GameViewModel  extends ViewModel {
 
 
     private int roundCount = -1;
@@ -27,96 +27,66 @@ public class GameViewModel  extends ViewModel<Identity> {
 
 
     public Division getDivision(int id) {
-        return divisions.get(id);
+      return (Division) get(id,Division.class);
     }
 
     public ArrayList<Division> getAllDivisions() {
-        return divisions;
+        return (ArrayList<Division>) getAll(Division.class);
     }
 
     public ArrayList<Team> getAllTeams() {
-        return getAllDivisions()
-                .stream()
-                .parallel()
-                .map(Division::getTeams)
-                .flatMap(List::stream)
-                .collect(Collectors.toCollection(ArrayList::new));
+        return  getAll(Team.class);
     }
 
     public ArrayList<Fighter> getAllFighters() {
-        return getAllTeams()
-                .stream()
-                .map(Team::getFighters)
-                .flatMap(List::stream)
-                .collect(Collectors.toCollection(ArrayList::new));
+        return getAll(Fighter.class);
     }
 
 
     public Team getTeamForFighter(Fighter fighter) {
-        return divisions.stream().parallel()
-                .map(Division::getTeams)
-                .flatMap(List::stream)
-                .filter(e -> e.getId() == fighter.getTeamId())
-                .findAny()
-                .get();
+        return (Team) getParent(fighter);
 
     }
 
     public Division getDivisionForTeam(Team team) {
-        return divisions.stream()
-                .parallel()
-                .filter(div -> div.getId() == team.getDivisionId())
-                .findAny()
-                .get();
+        return (Division) getParent(team);
     }
 
     public Division getDivisionForFighter(Fighter fighter) {
-        return getDivisionForTeam(getTeamForFighter(fighter));
+        return (Division) getParent(getParent(fighter));
     }
 
     public void insertDivision(Division division) {
-        repository.setNewId(division);
-        division.addPropertyChangeListener(myObserver);
-        divisions.add(division);
-        repository.insert(division);
+      insertEntity(division);
     }
 
     public void insertTeam(Team team) {
-        repository.setNewId(team);
-        team.addPropertyChangeListener(myObserver);
-        getDivisionForTeam(team).getTeams().add(team);
-        repository.insert(team);
+       insertEntity(team);
     }
 
     public void insertFighter(Fighter fighter) {
-        repository.setNewId(fighter);
-        fighter.addPropertyChangeListener(myObserver);
-        getTeamForFighter(fighter).getFighters().add(fighter);
-        repository.insert(fighter);
+     insertEntity(fighter);
     }
 
     public void deleteEntity(Identity entity) {
-        if (entity.getClass().equals(Fighter.class)) {
-            Team team = getTeamForFighter((Fighter) entity);
-            team.getFighters().remove(entity);
-        } else if (entity.getClass().equals(Team.class)) {
-            Division division = getDivisionForTeam((Team) entity);
-            division.getTeams().remove(entity);
-        } else divisions.remove(entity);
-        repository.remove(entity);
+     deleteEntity(entity);
     }
 
     public int getActualRoundCount() {
-        String path = MyDatabase.class.getSimpleName() + "/fightCount";
-        if (!FileSystem.exists(path)) {
-            FileSystem.writeFile(path, "1");
+        if(roundCount == -1){
+            String path = MyDatabase.class.getSimpleName() + "/fightCount";
+            if (!FileSystem.exists(path)) {
+                FileSystem.writeFile(path, "1");
+            }
+            roundCount = Integer.parseInt(FileSystem.readFile(path));
         }
-        return Integer.parseInt(Objects.requireNonNull(FileSystem.readFile(path)));
+        return roundCount;
     }
 
     public void incrementRoundCount() {
         String path = MyDatabase.class.getSimpleName() + "/fightCount";
-        FileSystem.writeFile(path, String.valueOf(roundCount++));
+        roundCount++;
+        FileSystem.writeFile(path, String.valueOf(roundCount));
     }
 
 

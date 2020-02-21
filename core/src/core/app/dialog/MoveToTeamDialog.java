@@ -9,6 +9,8 @@ import core.app.entity.Fighter;
 import core.fsdb.Identity;
 import core.app.entity.Team;
 
+import java.util.ArrayList;
+
 
 public class MoveToTeamDialog<T extends Identity> extends BaseDialog<T> {
 
@@ -34,7 +36,7 @@ public class MoveToTeamDialog<T extends Identity> extends BaseDialog<T> {
     @Override
     public void createDialog() {
         getContentTable().row();
-        getContentTable().add(getListOfEntities(divisionDestination.getTeams(), parentIndex)).space(10f).pad(10f);
+        getContentTable().add(getListOfEntities((ArrayList<? extends Identity>) divisionDestination.getTeams(), parentIndex)).space(10f).pad(10f);
         button("Cancel");
         show(stage);
     }

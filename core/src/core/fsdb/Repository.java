@@ -2,7 +2,6 @@ package core.fsdb;
 
 
 
-import core.app.entity.NoClass;
 import core.fsdb.annotation.Entity;
 import core.fsdb.annotation.ForeignKey;
 import core.fsdb.annotation.Ignore;
@@ -10,16 +9,15 @@ import core.fsdb.annotation.Ignore;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static core.fsdb.FileSystem.generateId;
 import static core.fsdb.ReflectionUtil.getChildrenFromParent;
-import static core.fsdb.ReflectionUtil.getChildClass;
 
 
-public  class Repository<T extends Identity> implements RepositoryInterface<T> {
+
+public  class Repository<E extends Identity> implements RepositoryInterface<E> {
     private final String dbName = MyDatabase.class.getSimpleName();
     private final MyDatabase myDatabase = MyDatabase.getDatabase();
 
@@ -27,10 +25,9 @@ public  class Repository<T extends Identity> implements RepositoryInterface<T> {
 
 
     @Override
-    public <E extends Identity> E get(String entityType, int id) {
+    public  E get(String entityType, int id) {
         E e = (E) FileSystem.deserialize(entityType, id);
-        String child = Objects.requireNonNull(ReflectionUtil.getChildClass(e)).getSimpleName();
-        if (child != null) {
+        if (ReflectionUtil.childrenExist(e.getClass())) {
             e = addChildrenToParent(e);
         }
         return e;
@@ -38,7 +35,7 @@ public  class Repository<T extends Identity> implements RepositoryInterface<T> {
 
 
     @Override
-    public <E extends Identity> void insert(E entity) {
+    public  void insert(E entity) {
         if (entity.getId() == -1) {
             setNewId(entity);
         }
@@ -53,8 +50,8 @@ public  class Repository<T extends Identity> implements RepositoryInterface<T> {
     }
 
     @Override
-    public <E extends Identity> void remove(E entity) {
-        if (ReflectionUtil.getChildClass(entity) != NoClass.class && deepRemove(entity)) {
+    public void remove(E entity) {
+        if (ReflectionUtil.childrenExist(entity.getClass()) && deepRemove(entity)) {
             removeChildren(entity);
         }
         removeFile(entity);
@@ -62,13 +59,13 @@ public  class Repository<T extends Identity> implements RepositoryInterface<T> {
 
 
     @Override
-    public <E extends Identity> void update(E entity) {
+    public void update(E entity) {
         FileSystem.serialize(entity);
     }
 
 
 
-    private <E extends Identity> void setIgnoreFieldsToNull(E entity) {
+    private void setIgnoreFieldsToNull(E entity) {
 
         Arrays.stream(entity.getClass().getDeclaredFields()).forEach(e -> {
             if (e.getAnnotation(Ignore.class) != null) {
@@ -86,16 +83,16 @@ public  class Repository<T extends Identity> implements RepositoryInterface<T> {
 
 
 
-    private <E extends Identity> void removeFile(E entity) {
+    private  void removeFile(E entity) {
         String path = dbName + "/" + entity.getClass().getSimpleName() + "/" + entity.getId();
         FileSystem.delete(path);
     }
 
-    private <E extends Identity> boolean deepRemove(E entity) {
+    private boolean deepRemove(E entity) {
         return entity.getClass().getAnnotation(Entity.class).foreignKey()[0].onDelete() == ForeignKey.CASCADE;
     }
 
-    private <E extends Identity> void removeChildren(E entity) {
+    private  void removeChildren(E entity) {
         List<E> childList = deserializeChildrenToList(entity);
         IntStream.range(0, childList.size()).forEach(index -> {
             if (index != childList.size() - 1) {
@@ -106,11 +103,11 @@ public  class Repository<T extends Identity> implements RepositoryInterface<T> {
         });
     }
 
-    public  <E extends  Identity>  List<E> deserializeChildrenToList(E entity) {
-        return (List<E>) getAllOf(ReflectionUtil.getChildClass(entity).getSimpleName()).stream().filter(e -> ifParentIdMatchesChild(entity, e)).collect(Collectors.toList());
+    public   List<E> deserializeChildrenToList(E entity) {
+        return  getAllOf(ReflectionUtil.getChildClass(entity).getSimpleName()).stream().filter(e -> ifParentIdMatchesChild(entity,  e)).collect(Collectors.toList());
     }
 
-    private   <E extends Identity> boolean ifParentIdMatchesChild(E parent, E child) {
+    private   boolean ifParentIdMatchesChild(E parent, E child) {
         String parentId = child.getClass().getAnnotation(Entity.class).foreignKey()[0].parentId();
         if (parentId.length() < 1) {
             return false;
@@ -129,33 +126,33 @@ public  class Repository<T extends Identity> implements RepositoryInterface<T> {
 
 
 
-    public <E extends Identity> void setNewId(Identity identity) {
+    public void setNewId(Identity identity) {
         identity.setId(generateId(MyDatabase.class.getSimpleName() + "/" + identity.getClass().getSimpleName()));
     }
 
 
-    public <E extends Identity> E get(E e) {
-        String child = Objects.requireNonNull(ReflectionUtil.getChildClass(e)).getSimpleName();
-        if (child != null) {
+    public  E getChildren(E e) {
+        if (ReflectionUtil.childrenExist(e.getClass())) {
             e = addChildrenToParent(e);
         }
         return e;
     }
 
-    public   <E extends Identity> List<E> getAllOf(String type) {
+    public   List<E> getAllOf(String type) {
         List<Integer> ids = FileSystem.getAllIds(MyDatabase.class.getSimpleName() + "/" + type);
         return ids.stream().map(e -> {
             E object = (E) FileSystem.deserialize(type, e);
-            return get(object);
+            return getChildren(object);
         }).collect(Collectors.toList());
     }
 
 
 
-    <E extends Identity> E addChildrenToParent(E entity) {
-        List<E> listOfChildren = deserializeChildrenToList(entity).stream().map(this::get).collect(Collectors.toList());
-        String fieldName = entity.getClass().getAnnotation(Entity.class).foreignKey()[0].listOfChildren();
+      E addChildrenToParent(E entity) {
+        List<E> listOfChildren = deserializeChildrenToList(entity).stream().map(this::getChildren).collect(Collectors.toList());
+        String fieldName = ReflectionUtil.getChildVariableName(entity);
         return ReflectionUtil.setField(fieldName, listOfChildren, entity);
     }
+
 
 }

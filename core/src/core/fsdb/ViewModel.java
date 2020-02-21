@@ -20,12 +20,12 @@ public abstract class ViewModel<E extends Identity> {
     public ViewModel(Class<?> SuperParentClass) {
         repository = new Repository<>();
         entities = new ArrayList<>(repository.getAllOf(SuperParentClass.getSimpleName()));
-        myObserver = new MyObserver<>(entities, repository);
+        myObserver = new MyObserver<E>(entities, (Repository<Identity>) repository);
     }
 
 
     protected E get(int id, Class<?> entityClass) {
-       if(ReflectionUtil.getParentClass(entityClass) != NoClass.class && entities.get(id).getClass().equals(entityClass)){
+       if(!ReflectionUtil.parentExist(entityClass)){
             return entities.get(id);
        }else {
            return (E) ReflectionUtil.findNextEntity(entities,entityClass,id);
@@ -33,10 +33,12 @@ public abstract class ViewModel<E extends Identity> {
     }
 
     protected  ArrayList<E> getAll(Class<?> entityClass) {
-        if(ReflectionUtil.getParentClass(entityClass) != NoClass.class && entities.get(0).getClass().equals(entityClass)){
+        if(!ReflectionUtil.parentExist(entityClass)){
             return (ArrayList<E>) entities;
         }else {
-            return (ArrayList<E>) ReflectionUtil.findAllEntities(entities,entityClass);
+            return   ReflectionUtil.findAllEntities( (ArrayList<E>) entities,entityClass);
+
+
         }
     }
 
@@ -51,7 +53,7 @@ public abstract class ViewModel<E extends Identity> {
 
 
 
-    public void insertEntity(E entity) {
+    protected void insertEntity(E entity) {
         Class<E> parentClass = (Class<E>) ReflectionUtil.getParentClass(entity.getClass());
         assert parentClass != null;
         if(parentClass.getSimpleName().equals(NoClass.class.getSimpleName())) {
@@ -67,7 +69,7 @@ public abstract class ViewModel<E extends Identity> {
         repository.insert(entity);
     }
 
-    public void deleteEntity(E entity) {
+    protected void deleteEntity(E entity) {
         Class<E> parentClass = (Class<E>) ReflectionUtil.getParentClass(entity.getClass());
         assert parentClass != null;
         if(parentClass.getSimpleName().equals(NoClass.class.getSimpleName())) {

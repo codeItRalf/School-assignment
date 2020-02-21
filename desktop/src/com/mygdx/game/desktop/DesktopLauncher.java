@@ -9,6 +9,7 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Graphics;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Window;
 import core.app.Core;
 import core.app.DesktopWorker;
+import core.fsdb.Identity;
 
 public class DesktopLauncher implements DesktopWorker {
 
