@@ -9,7 +9,7 @@ import core.app.entity.NoClass;
 import java.util.List;
 
 
-public abstract class  ViewModel<T extends Identity> {
+public abstract class  ViewModel<E extends Identity> {
 
     public ViewModel() {
         new MyDatabase();
@@ -25,7 +25,7 @@ public abstract class  ViewModel<T extends Identity> {
 
 
 
-    public  <E extends  Identity>  void setChildrenToParent(E entity, ViewModel<?> viewModel) {
+    public    void setChildrenToParent(E entity, ViewModel<?> viewModel) {
         var child =  getChildClass(entity);
         if(child != null && !child.equals(NoClass.class)){
             String parentID = getParentIdVariableName(child);
@@ -35,11 +35,11 @@ public abstract class  ViewModel<T extends Identity> {
         }
     }
 
-    private <E extends Identity> String getParentIdVariableName(Class<?> clazz){
+    private String getParentIdVariableName(Class<?> clazz){
         return clazz.getAnnotation(Entity.class).foreignKey()[0].parentId();
     }
 
-    private   <E extends Identity> boolean ifParentIdMatchesChild(E parent, E child) {
+    private   boolean ifParentIdMatchesChild(E parent, E child) {
         String parentId = getParentIdVariableName(child.getClass());
         if (parentId.length() < 1) {
             return false;
@@ -49,11 +49,11 @@ public abstract class  ViewModel<T extends Identity> {
         return fieldValue == parent.getId();
     }
 
-    private <E extends Identity> boolean deepRemove(E entity) {
+    private boolean deepRemove(E entity) {
         return entity.getClass().getAnnotation(Entity.class).foreignKey()[0].onDelete() == ForeignKey.CASCADE;
     }
 
-    private <E extends Identity> void removeChildren(E entity) {
+    private  void removeChildren(E entity) {
 //        List<E> childList = getChildrenToParent(entity);
 //        IntStream.range(0, childList.size()).forEach(index -> {
 //            if (index != childList.size() - 1) {
@@ -63,13 +63,13 @@ public abstract class  ViewModel<T extends Identity> {
 //        });
     }
 
-     protected   <E extends Identity> Class<?> getChildClass(E entity) {
+     protected    Class<?> getChildClass(E entity) {
 
         return entity.getClass().getAnnotation(Entity.class).foreignKey()[0].child();
     }
 
 
-    protected <E extends  RepositoryInterface<T>> E getRepository(ViewModel<?> viewModel, Class<?>  table){
+    protected <T extends RepositoryInterface<E>> T getRepository(ViewModel<?> viewModel, Class<?>  table){
         return ReflectionUtil.getRepository(viewModel, table);
     }
 

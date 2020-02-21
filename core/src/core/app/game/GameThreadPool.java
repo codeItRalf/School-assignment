@@ -35,7 +35,7 @@ public class GameThreadPool {
         roundChangeListener.update(true);
         int actualRound = gameViewModel.getActualRoundCount();
         IntStream.range(actualRound, value).forEach(e -> {
-            ExecutorService executorService = Executors.newFixedThreadPool(gameViewModel.getAllDivisions().size());
+            ExecutorService executorService = Executors.newFixedThreadPool(1);
             IntStream.range(0, gameViewModel.getAllDivisions().size()).forEach(index -> {
                 Runnable worker = new GameWorkerThread(gameViewModel, index);
                 executorService.execute(worker);

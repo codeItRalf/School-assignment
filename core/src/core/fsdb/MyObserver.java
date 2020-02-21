@@ -1,48 +1,42 @@
 package core.fsdb;
 
 
-import core.app.entity.Division;
+
 import core.app.entity.Identity;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ConcurrentHashMap;
+
 
 public class MyObserver<T extends Identity> implements PropertyChangeListener {
 
-    final List<? extends Identity> listOfParentEntities;
-    final Repository<? extends Identity> repository;
-    private ConcurrentLinkedQueue<Object> queuedEntities = new ConcurrentLinkedQueue<>();
+    final List<T> entities;
+    final Repository<T> repository;
+    private ConcurrentHashMap<Integer,T> queuedEntities = new ConcurrentHashMap<>();
 
     private boolean isWriting = false;
 
-    public MyObserver(List<? extends Identity> listOfParentEntities, Repository<? extends Identity> repository) {
-        this.listOfParentEntities = listOfParentEntities;
+    public MyObserver(List<T> entities, Repository<T> repository) {
+        this.entities = entities;
         this.repository = repository;
-        addListeners(listOfParentEntities);
+        addListeners(entities);
     }
 
     private void addListeners(List<? extends Identity> entities) {
         entities.forEach(entity -> {
             entity.addPropertyChangeListener(this);
             System.out.println("entity = " + entity.getClass().getSimpleName());
-            if(ReflectionUtil.childrenExist(entity)){
-                addListeners(Objects.requireNonNull(ReflectionUtil.getChildrenFromParent(entity)));
-            }
+
         });
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if(queuedEntities.contains(evt.getSource()) && queuedEntities.size() > 30){
-            queuedEntities.remove(evt.getSource());
-            System.out.println("Object exist, replaces with new copy");
-        }
-        queuedEntities.offer(evt.getSource());
-//        repository.update((Identity) evt.getSource());
+        T updatedEntity = (T) evt.getSource();
+        queuedEntities.put(updatedEntity.getId(),updatedEntity);
         if(queuedEntities.size() > 0 && !isWriting){
             isWriting = true;
             Thread serializeQueueFiles = new Thread(this::writeToFile);
@@ -53,7 +47,8 @@ public class MyObserver<T extends Identity> implements PropertyChangeListener {
     private void writeToFile(){
         while (queuedEntities.size() > 0){
             System.out.println("queuedEntities.size()= " + queuedEntities.size());
-           repository.update((Identity) queuedEntities.poll());
+            queuedEntities.forEach((k,v)-> repository.update(queuedEntities.remove(k)));
+
         }
         isWriting = false;
     }
