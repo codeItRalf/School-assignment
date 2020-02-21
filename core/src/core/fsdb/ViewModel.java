@@ -3,38 +3,37 @@ package core.fsdb;
 
 import core.app.entity.Division;
 import core.app.entity.Fighter;
+import core.app.entity.NoClass;
 import core.app.entity.Team;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 
-public abstract class ViewModel<T extends Identity> {
+public abstract class ViewModel<E extends Identity> {
 
-    private  Repository<? extends Identity> repository;
-    private  List<? extends  Identity> entities;
-    private  MyObserver<? extends Identity> myObserver;
+    private  Repository<E> repository;
+    private  List<E> entities;
+    private  MyObserver<E> myObserver;
 
     public ViewModel(Class<?> SuperParentClass) {
         repository = new Repository<>();
         entities = new ArrayList<>(repository.getAllOf(SuperParentClass.getSimpleName()));
-        myObserver = new MyObserver<T>(entities, repository);
+        myObserver = new MyObserver<>(entities, repository);
     }
 
 
-    public T get(int id, Class<?> entityClass) {
-       if(ReflectionUtil.getParentClassName(entityClass) == null && entities.get(id).getClass().equals(entityClass)){
-            return (T) entities.get(id);
+    protected E get(int id, Class<?> entityClass) {
+       if(ReflectionUtil.getParentClass(entityClass) != NoClass.class && entities.get(id).getClass().equals(entityClass)){
+            return entities.get(id);
        }else {
-           return (T) ReflectionUtil.findNextEntity(entities,entityClass,id);
+           return (E) ReflectionUtil.findNextEntity(entities,entityClass,id);
        }
     }
 
-    public <E extends Identity> ArrayList<E> getAll(Class<?> entityClass) {
-        if(ReflectionUtil.getParentClassName(entityClass) == null && entities.get(0).getClass().equals(entityClass)){
+    protected  ArrayList<E> getAll(Class<?> entityClass) {
+        if(ReflectionUtil.getParentClass(entityClass) != NoClass.class && entities.get(0).getClass().equals(entityClass)){
             return (ArrayList<E>) entities;
         }else {
             return (ArrayList<E>) ReflectionUtil.findAllEntities(entities,entityClass);
@@ -43,75 +42,45 @@ public abstract class ViewModel<T extends Identity> {
 
 
 
-    public Team getTeamForFighter(Fighter fighter) {
-        return entities.stream().parallel()
-                .map(Division::getTeams)
-                .flatMap(List::stream)
-                .filter(e -> e.getId() == fighter.getTeamId())
-                .findAny()
-                .get();
-
+    protected E getParent(E entity) {
+        Class<?> parentClass = ReflectionUtil.getParentClass(entity.getClass());
+        String parentVariableName = ReflectionUtil.getParentIdVariableName(entity);
+        int parentId = (int) ReflectionUtil.getField(entity,parentVariableName);
+        return  get(parentId,parentClass);
     }
 
-    public Division getDivisionForTeam(Team team) {
-        return entities.stream()
-                .parallel()
-                .filter(div -> div.getId() == team.getDivisionId())
-                .findAny()
-                .get();
+
+
+    public void insertEntity(E entity) {
+        Class<E> parentClass = (Class<E>) ReflectionUtil.getParentClass(entity.getClass());
+        assert parentClass != null;
+        if(parentClass.getSimpleName().equals(NoClass.class.getSimpleName())) {
+            entities.add(entity);
+        }else {
+            E parent = getParent(entity);
+            List<E> listOfChildren = ReflectionUtil.getChildrenFromParent(parent);
+            assert listOfChildren != null;
+            listOfChildren.add(entity);
+        }
+        repository.setNewId(entity);
+        entity.addPropertyChangeListener(myObserver);
+        repository.insert(entity);
     }
 
-    public Division getDivisionForFighter(Fighter fighter) {
-        return getDivisionForTeam(getTeamForFighter(fighter));
-    }
-
-    public void insertDivision(Division division) {
-        repository.setNewId(division);
-        division.addPropertyChangeListener(myObserver);
-        entities.add(division);
-        repository.insert(division);
-    }
-
-    public void insertTeam(Team team) {
-        repository.setNewId(team);
-        team.addPropertyChangeListener(myObserver);
-        getDivisionForTeam(team).getTeams().add(team);
-        repository.insert(team);
-    }
-
-    public void insertFighter(Fighter fighter) {
-        repository.setNewId(fighter);
-        fighter.addPropertyChangeListener(myObserver);
-        getTeamForFighter(fighter).getFighters().add(fighter);
-        repository.insert(fighter);
-    }
-
-    public void deleteEntity(Identity entity) {
-        if (entity.getClass().equals(Fighter.class)) {
-            Team team = getTeamForFighter((Fighter) entity);
-            team.getFighters().remove(entity);
-        } else if (entity.getClass().equals(Team.class)) {
-            Division division = getDivisionForTeam((Team) entity);
-            division.getTeams().remove(entity);
-        } else entities.remove(entity);
+    public void deleteEntity(E entity) {
+        Class<E> parentClass = (Class<E>) ReflectionUtil.getParentClass(entity.getClass());
+        assert parentClass != null;
+        if(parentClass.getSimpleName().equals(NoClass.class.getSimpleName())) {
+            entities.remove(entity);
+        }else {
+            E parent = getParent(entity);
+            List<E> listOfChildren = ReflectionUtil.getChildrenFromParent(parent);
+            assert listOfChildren != null;
+            listOfChildren.remove(entity);
+        }
         repository.remove(entity);
     }
 
-
-
-    public Team getTheBestTeamInDiv(Division division) {
-        return division.getTeams()
-                .stream()
-                .max(Comparator.comparing(Team::getWins))
-                .get();
-    }
-
-    public Team getTheWorstTeamInDiv(Division division) {
-        return division.getTeams()
-                .stream()
-                .min(Comparator.comparing(Team::getWins))
-                .get();
-    }
 
 
 }

@@ -2,6 +2,7 @@ package core.fsdb;
 
 
 
+import core.app.entity.NoClass;
 import core.fsdb.annotation.Entity;
 import core.fsdb.annotation.ForeignKey;
 import core.fsdb.annotation.Ignore;
@@ -9,12 +10,13 @@ import core.fsdb.annotation.Ignore;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static core.fsdb.FileSystem.generateId;
 import static core.fsdb.ReflectionUtil.getChildrenFromParent;
-import static core.fsdb.ReflectionUtil.getChildClassName;
+import static core.fsdb.ReflectionUtil.getChildClass;
 
 
 public  class Repository<T extends Identity> implements RepositoryInterface<T> {
@@ -27,7 +29,7 @@ public  class Repository<T extends Identity> implements RepositoryInterface<T> {
     @Override
     public <E extends Identity> E get(String entityType, int id) {
         E e = (E) FileSystem.deserialize(entityType, id);
-        String child = getChildClassName(e);
+        String child = Objects.requireNonNull(ReflectionUtil.getChildClass(e)).getSimpleName();
         if (child != null) {
             e = addChildrenToParent(e);
         }
@@ -52,7 +54,7 @@ public  class Repository<T extends Identity> implements RepositoryInterface<T> {
 
     @Override
     public <E extends Identity> void remove(E entity) {
-        if (getChildClassName(entity) != null && deepRemove(entity)) {
+        if (ReflectionUtil.getChildClass(entity) != NoClass.class && deepRemove(entity)) {
             removeChildren(entity);
         }
         removeFile(entity);
@@ -105,7 +107,7 @@ public  class Repository<T extends Identity> implements RepositoryInterface<T> {
     }
 
     public  <E extends  Identity>  List<E> deserializeChildrenToList(E entity) {
-        return (List<E>) getAllOf(getChildClassName(entity)).stream().filter(e -> ifParentIdMatchesChild(entity, e)).collect(Collectors.toList());
+        return (List<E>) getAllOf(ReflectionUtil.getChildClass(entity).getSimpleName()).stream().filter(e -> ifParentIdMatchesChild(entity, e)).collect(Collectors.toList());
     }
 
     private   <E extends Identity> boolean ifParentIdMatchesChild(E parent, E child) {
@@ -133,7 +135,7 @@ public  class Repository<T extends Identity> implements RepositoryInterface<T> {
 
 
     public <E extends Identity> E get(E e) {
-        String child = getChildClassName(e);
+        String child = Objects.requireNonNull(ReflectionUtil.getChildClass(e)).getSimpleName();
         if (child != null) {
             e = addChildrenToParent(e);
         }

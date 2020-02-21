@@ -13,14 +13,20 @@ import java.util.Optional;
 public class ReflectionUtil<E extends  Identity> {
 
 
-    public static  <E extends Identity> boolean childrenExist(E entity) {
+     static  <E extends Identity> boolean childrenExist(E entity) {
         return entity.getClass().getAnnotation(Entity.class).foreignKey()[0].child() != NoClass.class;
     }
 
+    static <E extends Identity> String getParentIdVariableName(E entity){
+        return  entity.getClass().getAnnotation(Entity.class).foreignKey()[0].parentId();
+    }
 
+    static <E extends Identity> String getChildVariableName(E entity){
+        return  entity.getClass().getAnnotation(Entity.class).foreignKey()[0].listOfChildren();
+    }
 
-    static public <E extends Identity> List<E> getChildrenFromParent(E entity) {
-        String fieldName = entity.getClass().getAnnotation(Entity.class).foreignKey()[0].listOfChildren();
+    static  <E extends Identity> List<E> getChildrenFromParent(E entity) {
+        String fieldName = getChildVariableName(entity);
         if (fieldName.length() < 1) {
             return null;
         }
@@ -36,17 +42,17 @@ public class ReflectionUtil<E extends  Identity> {
         return list;
     }
 
-    static  <E extends Identity> String getChildClassName(E entity) {
-        String child = entity.getClass().getAnnotation(Entity.class).foreignKey()[0].child().getSimpleName();
+    static  <E extends Identity> Class<?> getChildClass(E entity) {
+        Class<?> child = entity.getClass().getAnnotation(Entity.class).foreignKey()[0].child();
         return child.equals(NoClass.class.getSimpleName()) ? null : child;
     }
 
-    static  <E extends Identity> String getParentClassName(Class<?> entity) {
-        String parent = entity.getAnnotation(Entity.class).foreignKey()[0].parent().getSimpleName();
+    static  <E extends Identity> Class<?> getParentClass(Class<?> entity) {
+        Class<?> parent = entity.getAnnotation(Entity.class).foreignKey()[0].parent();
         return parent.equals(NoClass.class.getSimpleName()) ? null : parent;
     }
-    static  <E extends Identity> String getChildClassName(Class<?> entity) {
-        String child = entity.getAnnotation(Entity.class).foreignKey()[0].child().getSimpleName();
+    static  <E extends Identity> Class<?> getChildClass(Class<?> entity) {
+        Class<?> child = entity.getAnnotation(Entity.class).foreignKey()[0].child();
         return child.equals(NoClass.class.getSimpleName()) ? null : child;
     }
 
