@@ -51,12 +51,13 @@ public class GameWorkerThread implements Runnable {
         });
     }
 
-    protected void updateDatabaseWithResult(ArrayList<Fighter> winner, ArrayList<Fighter> loser) {
+  synchronized   protected void updateDatabaseWithResult(ArrayList<Fighter> winner, ArrayList<Fighter> loser) {
         Team winnerTeam = gameViewModel.getTeamForFighter(winner.get(0));
         winnerTeam.incrementWinCount();
         winner.forEach(e -> {
-            int fighterIndex = winnerTeam.getFighters().indexOf(e);
-            winnerTeam.getFighters().get(fighterIndex).upgradeStats();
+            gameViewModel.getFighter(e.getId()).upgradeStats();
+//            int fighterIndex = winnerTeam.getFighters().indexOf(e);
+//            winnerTeam.getFighters().get(fighterIndex).upgradeStats();
         });
         Team loserTeam = gameViewModel.getTeamForFighter(loser.get(0));
         loserTeam.incrementLossCount();

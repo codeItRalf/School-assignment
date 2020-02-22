@@ -25,7 +25,7 @@ public abstract class Repository<E extends Identity> implements RepositoryInterf
     }
 
     @Override
-     public E get(int id) {
+    public E get(int id) {
         return (E) entities.parallelStream()
                 .filter(e -> e.getId() == id)
                 .findAny()
@@ -110,14 +110,14 @@ public abstract class Repository<E extends Identity> implements RepositoryInterf
     }
 
     @Override
-    public   void removeFile(E entity) {
+    public void removeFile(E entity) {
         String path = dbName + "/" + entity.getClass().getSimpleName() + "/" + entity.getId();
         FileSystem.delete(path);
     }
 
 
 
-    public  void setNewId(E entity) {
+    protected   void setNewId(E entity) {
         entity.setId(generateId(MyDatabase.class.getSimpleName() + "/" + entity.getClass().getSimpleName()));
     }
 

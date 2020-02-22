@@ -7,6 +7,7 @@ import core.app.entity.Identity;
 import core.app.entity.NoClass;
 
 import java.util.List;
+import java.util.stream.IntStream;
 
 
 public abstract class  ViewModel<E extends Identity> {
@@ -49,18 +50,18 @@ public abstract class  ViewModel<E extends Identity> {
         return fieldValue == parent.getId();
     }
 
-    private boolean deepRemove(E entity) {
+    protected boolean deepRemove(E entity) {
         return entity.getClass().getAnnotation(Entity.class).foreignKey()[0].onDelete() == ForeignKey.CASCADE;
     }
 
-    private  void removeChildren(E entity) {
-//        List<E> childList = getChildrenToParent(entity);
-//        IntStream.range(0, childList.size()).forEach(index -> {
-//            if (index != childList.size() - 1) {
-//                getRepository(this, entity.getClass()).removeFile(childList.get(index));
-//            }
-//            removeChildren(childList.get(index));
-//        });
+    protected   void removeChildren(E entity) {
+        List<E> childList = ReflectionUtil.getChildrenFromParent(entity);
+        IntStream.range(0, childList != null ? childList.size() : 0).forEach(index -> {
+                getRepository(this, entity.getClass()).removeFile(childList.get(index));
+            if (index != childList.size() - 1 && ReflectionUtil.childrenExist(childList.get(index))) {
+                removeChildren(childList.get(index));
+            }
+        });
     }
 
      protected    Class<?> getChildClass(E entity) {

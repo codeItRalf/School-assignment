@@ -1,7 +1,6 @@
 package core.app;
 
 
-import core.annotation.Database;
 import core.annotation.Table;
 import core.app.Repositary.DivisionRepository;
 import core.app.Repositary.FighterRepository;
@@ -19,7 +18,7 @@ import java.util.List;
 import java.util.Objects;
 
 
-public class GameViewModel extends ViewModel {
+public class GameViewModel extends ViewModel{
 
     @Table(entity = Division.class)
     private  DivisionRepository<Division> divRepo;
@@ -43,6 +42,17 @@ public class GameViewModel extends ViewModel {
          Division division = (Division) getRepository(this,Division.class).get(id);
          setChildrenToParent(division, this);
          return division;
+    }
+
+    public Team getTeam(int id) {
+        Team team = (Team) getRepository(this,Team.class).get(id);
+        setChildrenToParent(team, this);
+        return team;
+    }
+
+    public Fighter getFighter(int id) {
+        Fighter fighter = (Fighter) getRepository(this,Fighter.class).get(id);
+        return fighter;
     }
 
     public List<Division> getAllDivisions() {
@@ -87,6 +97,9 @@ public class GameViewModel extends ViewModel {
     }
 
     public void deleteEntity(Identity entity) {
+        if(deepRemove(entity)){
+            removeChildren(entity);
+        }
         getRepository(this,entity.getClass()).remove(entity);
     }
 
