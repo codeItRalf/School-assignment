@@ -46,6 +46,7 @@ public class GameWorkerThread implements Runnable {
                         isGameOver = gameMechanic(teamB, teamA);
                     }
                 }
+
                 deepCopyTeam(indexA, teamA);
             });
         });

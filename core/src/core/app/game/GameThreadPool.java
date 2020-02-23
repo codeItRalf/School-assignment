@@ -46,6 +46,13 @@ public class GameThreadPool {
             //If end of season, match worst and best teams of division and reset stats.
             if (gameViewModel.getActualRoundCount() % 10 == 0) {
                 runSeasonEnding();
+                if(gameViewModel.teamHasChangedDivision()){
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException ex) {
+                        ex.printStackTrace();
+                    }
+                }
                 gameViewModel.getAllTeams().forEach(Team::resetStats);
             }
             gameViewModel.incrementRoundCount();

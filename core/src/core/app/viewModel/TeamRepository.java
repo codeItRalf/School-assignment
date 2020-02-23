@@ -29,4 +29,9 @@ class TeamRepository extends Repository<Team> {
                 .min(Comparator.comparing((Team::getWins)))
                 .get();
     }
+
+    boolean teamsHasChangedDivision(){
+      return getAll().parallelStream()
+              .anyMatch(e-> e.getDivStatus() != Team.DivStatus.UNCHANGED);
+    }
 }

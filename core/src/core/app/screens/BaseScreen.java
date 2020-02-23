@@ -2,11 +2,13 @@ package core.app.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
+import com.badlogic.gdx.scenes.scene2d.utils.*;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Logger;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -205,6 +207,7 @@ Logger logger  = new Logger("BaseScreen", Logger.DEBUG);
             division.getTeams()
                     .stream()
                     .sorted(Comparator.comparing(Team::getWins).reversed())
+                    .sorted(Comparator.comparing(Team::getDivStatus))
                     .forEach(e -> {
                         Table listItemTable = getTeamListItem(e);
                         finalTable.add(listItemTable).growX();
@@ -215,10 +218,22 @@ Logger logger  = new Logger("BaseScreen", Logger.DEBUG);
                                 core.setScreen(new TeamScreen(e, core));
                             }
                         });
+                        if(e.getDivStatus() != Team.DivStatus.UNCHANGED){
+                            listItemTable.setBackground(getBackground(e.getDivStatus()));
+                        }
                     });
         }
 
         return rootTable;
+    }
+
+    private Drawable getBackground(Team.DivStatus divStatus) {
+        Pixmap bgPixmap = new Pixmap(1,1, Pixmap.Format.RGB565);
+        if (divStatus.equals(Team.DivStatus.UP))
+            bgPixmap.setColor(Color.GREEN);
+            else bgPixmap.setColor(Color.RED);
+        bgPixmap.fill();
+        return  new TextureRegionDrawable(new TextureRegion(new Texture(bgPixmap)));
     }
 
 

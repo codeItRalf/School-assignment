@@ -21,6 +21,14 @@ public class Team extends Identity {
     private int divisionId;
     private int wins;
     private int losses;
+    private DivStatus divStatus = DivStatus.UNCHANGED;
+
+
+    public enum DivStatus {
+        DOWN,
+        UNCHANGED,
+        UP,
+    }
 
     @Ignore
     private ArrayList<Fighter> fighters = new ArrayList<>();
@@ -70,6 +78,7 @@ public class Team extends Identity {
         int oldValue = wins + losses;
         this.wins = 0;
         this.losses = 0;
+        divStatus = DivStatus.UNCHANGED;
         support.firePropertyChange("resetStats", oldValue, this.losses + this.wins);
     }
 
@@ -84,4 +93,11 @@ public class Team extends Identity {
         this.fighters = fighters;
     }
 
+    public DivStatus getDivStatus() {
+        return divStatus;
+    }
+
+    public void setDivStatus(DivStatus divStatus) {
+        this.divStatus = divStatus;
+    }
 }

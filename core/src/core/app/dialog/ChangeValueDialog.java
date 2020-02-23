@@ -11,9 +11,9 @@ import core.database.Identity;
 public class ChangeValueDialog<T extends Identity> extends BaseDialog<T> {
 
 
-    private final Fighter.attribute attribute;
+    private final Fighter.Attribute attribute;
 
-    public ChangeValueDialog(Skin skin, Stage stage, Core core, T t, Fighter.attribute attribute) {
+    public ChangeValueDialog(Skin skin, Stage stage, Core core, T t, Fighter.Attribute attribute) {
         super("Change Value!", skin, stage, core, t);
         this.attribute = attribute;
         posButton = "Change";
@@ -24,9 +24,9 @@ public class ChangeValueDialog<T extends Identity> extends BaseDialog<T> {
     @Override
     protected void actionRequest() {
         Fighter fighter = (Fighter) t;
-        if(attribute.equals(Fighter.attribute.DMG)){
+        if(attribute.equals(Fighter.Attribute.DMG)){
             fighter.setDmg(Integer.parseInt(inputText));
-        }else if(attribute.equals(Fighter.attribute.HP)){
+        }else if(attribute.equals(Fighter.Attribute.HP)){
             fighter.setHp(Integer.parseInt(inputText));
         }
         core.showFighterScreen(fighter);

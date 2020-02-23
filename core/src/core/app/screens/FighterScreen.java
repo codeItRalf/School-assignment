@@ -32,7 +32,7 @@ public class FighterScreen extends BaseScreen<Fighter> {
         label.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-             new ChangeValueDialog<>(uiSkin,stage,core,fighter, Fighter.attribute.DMG).createDialog();
+             new ChangeValueDialog<>(uiSkin,stage,core,fighter, Fighter.Attribute.DMG).createDialog();
             }
         });
         table.add(label);
@@ -41,7 +41,7 @@ public class FighterScreen extends BaseScreen<Fighter> {
         label.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                new ChangeValueDialog<>(uiSkin, stage, core, fighter, Fighter.attribute.HP).createDialog();
+                new ChangeValueDialog<>(uiSkin, stage, core, fighter, Fighter.Attribute.HP).createDialog();
             }
         });
         table.add(label);

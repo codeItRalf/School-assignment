@@ -58,6 +58,8 @@ public class VersusWorkerThread extends GameWorkerThread implements Runnable {
             loserTeam.setDivisionId(winnersDivId);
             winnersDiv.getTeams().add(losersDiv.getTeams().remove(losersIndex));
             losersDiv.getTeams().add(winnersDiv.getTeams().remove(winnersIndex));
+            winnerTeam.setDivStatus(Team.DivStatus.UP);
+            loserTeam.setDivStatus(Team.DivStatus.DOWN);
         }
     }
 }

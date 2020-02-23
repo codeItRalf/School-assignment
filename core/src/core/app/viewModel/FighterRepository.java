@@ -50,4 +50,6 @@ class FighterRepository extends Repository<Fighter> {
          return (ArrayList<Fighter>) getWithStringFieldContains(ReflectionUtil.getSearchVariableName(Identity.class)[0],subString);
 
     }
+
+
 }

@@ -96,6 +96,10 @@ public class GameViewModel extends ViewModel{
         return (Team) teamRep.get(fighter.getTeamId());
     }
 
+    public boolean teamHasChangedDivision(){
+      return   teamRep.teamsHasChangedDivision();
+    }
+
     public Division getDivisionForTeam(Team team) {
         return (Division)divRepo.get(team.getDivisionId());
     }

@@ -15,10 +15,13 @@ public class Fighter extends Identity {
     private int hp = 15;
     private int dmg = 3;
 
-    public enum attribute {
+
+    public enum Attribute {
         DMG,
         HP
     }
+
+
 
     public Fighter() {
     }
@@ -76,5 +79,6 @@ public class Fighter extends Identity {
         this.dmg += r.nextInt(50) == 0 ? 50 : 1;
         support.firePropertyChange("upgrade", oldSum, this.hp + this.dmg);
     }
+
 
 }
