@@ -4,6 +4,7 @@ package core.app.entity;
 import core.annotation.Entity;
 import core.annotation.ForeignKey;
 import core.annotation.Ignore;
+import core.database.Identity;
 
 import java.util.ArrayList;
 
@@ -16,7 +17,7 @@ import static core.annotation.ForeignKey.CASCADE;
         listOfChildren = "fighters",
         child = Fighter.class,
         onDelete = CASCADE))
-public class Team extends Identity{
+public class Team extends Identity {
     private int divisionId;
     private int wins;
     private int losses;

@@ -1,10 +1,10 @@
 package core.app.game;
 
 import core.app.Core;
-import core.app.entity.Identity;
+import core.database.Identity;
 import core.app.entity.Team;
-import core.app.menuScreen.BaseScreen;
-import core.app.GameViewModel;
+import core.app.screens.BaseScreen;
+import core.app.viewModel.GameViewModel;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
@@ -35,7 +35,7 @@ public class GameThreadPool {
         roundChangeListener.update(true);
         int actualRound = gameViewModel.getActualRoundCount();
         IntStream.range(actualRound, value).forEach(e -> {
-            ExecutorService executorService = Executors.newFixedThreadPool(1);
+            ExecutorService executorService = Executors.newFixedThreadPool(gameViewModel.getAllDivisions().size());
             IntStream.range(0, gameViewModel.getAllDivisions().size()).forEach(index -> {
                 Runnable worker = new GameWorkerThread(gameViewModel, index);
                 executorService.execute(worker);
@@ -63,9 +63,9 @@ public class GameThreadPool {
         ExecutorService executorService = Executors.newFixedThreadPool(1);
         IntStream.range(0, gameViewModel.getAllDivisions().size()).forEach(index -> {
             if (index != 0) {
-                teams.add(gameViewModel.getTheBestTeamInDiv(gameViewModel.getDivision(index)));
+                teams.add(gameViewModel.getTheBestTeamInDiv(index));
             }
-            teams.add(gameViewModel.getTheWorstTeamInDiv(gameViewModel.getDivision(index)));
+            teams.add(gameViewModel.getTheWorstTeamInDiv(index));
             if (teams.size() > 1) {
                 Runnable worker = new VersusWorkerThread(gameViewModel, teams.remove(0), teams.remove(0));
                 executorService.execute(worker);

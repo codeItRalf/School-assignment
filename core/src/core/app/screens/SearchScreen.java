@@ -1,4 +1,4 @@
-package core.app.menuScreen;
+package core.app.screens;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -15,6 +15,7 @@ import core.app.entity.Fighter;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -22,16 +23,13 @@ public class SearchScreen extends BaseScreen<Division> {
 
 
     private String inputText;
-    private final ArrayList<Fighter> allFighters;
+    private final List<Fighter> allFighters;
     private ArrayList<Fighter> filteredList;
     private final Table scrollTable;
 
     public SearchScreen(Core core) {
         super(null, core);
-        allFighters = gameViewModel.getAllFighters().stream().
-                sorted(Comparator.comparing(Fighter::getName))
-                .collect(Collectors
-                        .toCollection(ArrayList::new));
+        allFighters = gameViewModel.getAllFighters();
         filteredList = new ArrayList<>(allFighters);
         scrollTable = new Table();
     }

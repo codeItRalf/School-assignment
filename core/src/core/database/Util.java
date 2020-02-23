@@ -1,4 +1,4 @@
-package core.fsdb;
+package core.database;
 
 
 import java.io.IOException;

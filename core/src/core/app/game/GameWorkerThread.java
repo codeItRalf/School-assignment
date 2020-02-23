@@ -2,7 +2,7 @@ package core.app.game;
 
 import core.app.entity.Fighter;
 import core.app.entity.Team;
-import core.app.GameViewModel;
+import core.app.viewModel.GameViewModel;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -51,7 +51,7 @@ public class GameWorkerThread implements Runnable {
         });
     }
 
-  synchronized   protected void updateDatabaseWithResult(ArrayList<Fighter> winner, ArrayList<Fighter> loser) {
+  synchronized protected void updateDatabaseWithResult(ArrayList<Fighter> winner, ArrayList<Fighter> loser) {
         Team winnerTeam = gameViewModel.getTeamForFighter(winner.get(0));
         winnerTeam.incrementWinCount();
         winner.forEach(e -> {
@@ -63,7 +63,8 @@ public class GameWorkerThread implements Runnable {
         loserTeam.incrementLossCount();
     }
 
-    protected boolean gameMechanic(ArrayList<Fighter> team1, ArrayList<Fighter> team2) {
+   synchronized   protected boolean gameMechanic(ArrayList<Fighter> team1, ArrayList<Fighter> team2) {
+       System.out.println("random bound: " + team1.size());
         int dmg = team1.get(r.nextInt(team1.size())).getDmg();
         Fighter fighter = team2.get(r.nextInt(team2.size()));
         if (isKnockOut()) dmg = fighter.getHp();

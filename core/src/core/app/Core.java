@@ -14,7 +14,8 @@ import com.badlogic.gdx.utils.JsonValue;
 import core.app.entity.Division;
 import core.app.entity.Fighter;
 import core.app.entity.Team;
-import core.app.menuScreen.*;
+import core.app.screens.*;
+import core.app.viewModel.GameViewModel;
 
 public class Core extends Game {
     private Skin skin;

@@ -5,8 +5,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import core.app.Core;
 import core.app.game.GameThreadPool;
-import core.app.entity.Identity;
-import core.app.menuScreen.BaseScreen;
+import core.database.Identity;
+import core.app.screens.BaseScreen;
 
 
 public class GameRoundDialog<T extends Identity> extends BaseDialog<T> {

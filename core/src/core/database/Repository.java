@@ -1,14 +1,14 @@
-package core.fsdb;
+package core.database;
 
 
 import core.annotation.Ignore;
-import core.app.entity.Identity;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static core.fsdb.FileSystem.generateId;
+import static core.database.FileSystem.generateId;
 
 
 
@@ -107,6 +107,21 @@ public abstract class Repository<E extends Identity> implements RepositoryInterf
                 ReflectionUtil.setField(entity,e.getName(),null);
             }
         });
+    }
+
+
+    @Override
+    public E getWithIntFieldLowestValue(String field) {
+        return entities.parallelStream()
+                .min(Comparator.comparingInt(a -> (int) ReflectionUtil.getField(a, field)))
+                .get();
+    }
+
+    @Override
+    public E getWithIntFieldHighestValue(String field) {
+        return entities.parallelStream()
+                .max(Comparator.comparingInt(a -> (int) ReflectionUtil.getField(a, field)))
+                .get();
     }
 
     @Override

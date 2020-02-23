@@ -5,7 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import core.app.Core;
 import core.app.entity.Division;
-import core.app.entity.Identity;
+import core.database.Identity;
 
 import java.util.ArrayList;
 

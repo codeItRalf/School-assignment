@@ -1,22 +1,32 @@
-package core.fsdb;
+package core.database;
 
 import core.annotation.Entity;
-import core.annotation.Ignore;
 import core.annotation.Table;
-import core.app.entity.Identity;
 import core.app.entity.NoClass;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 public class ReflectionUtil<E extends  Identity> {
 
 
-    public static  <E extends Identity> boolean childrenExist(E entity) {
-        return entity.getClass().getAnnotation(Entity.class).foreignKey()[0].child() != NoClass.class;
+
+    static  <E extends Identity> boolean childrenExist(Class<?> clazz) {
+        return clazz.getAnnotation(Entity.class).foreignKey()[0].child() != NoClass.class;
+    }
+
+    static  <E extends Identity> boolean parentExist(Class<?> clazz) {
+        return clazz.getAnnotation(Entity.class).foreignKey()[0].parent() != NoClass.class;
+    }
+
+   public static  <E extends Identity> String getParentIdVariableName(Class<E> clazz){
+        return clazz.getAnnotation(Entity.class).foreignKey()[0].parentId();
+    }
+
+    public static <E extends Identity> String getChildVariableName(Class<E> clazz){
+        return  clazz.getAnnotation(Entity.class).foreignKey()[0].listOfChildren();
     }
 
     static public <E extends Identity> List<E> getChildrenFromParent(E entity) {

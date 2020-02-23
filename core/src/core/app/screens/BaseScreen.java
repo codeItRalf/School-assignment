@@ -1,4 +1,4 @@
-package core.app.menuScreen;
+package core.app.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
@@ -18,10 +18,10 @@ import core.app.dialog.ChangeNameDialog;
 import core.app.dialog.DeleteDialog;
 import core.app.dialog.GameRoundDialog;
 import core.app.entity.Division;
-import core.app.entity.Identity;
+import core.database.Identity;
 import core.app.entity.Team;
 import core.app.game.GameThreadPool.RoundChangeListener;
-import core.app.GameViewModel;
+import core.app.viewModel.GameViewModel;
 
 import java.util.Comparator;
 

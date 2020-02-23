@@ -1,12 +1,9 @@
-package core.fsdb;
+package core.database;
 
 
-
-import core.app.entity.Identity;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -46,10 +43,10 @@ public class MyObserver<T extends Identity> implements PropertyChangeListener {
 
     private void writeToFile(){
         while (queuedEntities.size() > 0){
-            System.out.println("queuedEntities.size()= " + queuedEntities.size());
             queuedEntities.forEach((k,v)-> repository.update(queuedEntities.remove(k)));
 
         }
         isWriting = false;
+        System.out.println("Queue work completed! Size: " + queuedEntities.size());
     }
 }

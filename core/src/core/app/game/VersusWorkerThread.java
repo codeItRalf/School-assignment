@@ -3,7 +3,7 @@ package core.app.game;
 import core.app.entity.Division;
 import core.app.entity.Fighter;
 import core.app.entity.Team;
-import core.app.GameViewModel;
+import core.app.viewModel.GameViewModel;
 
 import java.util.ArrayList;
 import java.util.stream.Collectors;

@@ -4,9 +4,8 @@ package core.app;
 import core.app.entity.Division;
 import core.app.entity.Fighter;
 import core.app.entity.Team;
-import core.fsdb.FileSystem;
-import core.fsdb.MyDatabase;
-import core.fsdb.Util;
+import core.database.FileSystem;
+import core.database.Util;
 
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;

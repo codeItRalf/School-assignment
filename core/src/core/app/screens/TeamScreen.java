@@ -1,4 +1,4 @@
-package core.app.menuScreen;
+package core.app.screens;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;

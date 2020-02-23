@@ -3,13 +3,14 @@ package core.app.entity;
 
 import core.annotation.Entity;
 import core.annotation.ForeignKey;
+import core.database.Identity;
 
 import java.util.Random;
 
 @Entity( primaryKey = "id", foreignKey = @ForeignKey(
         parent = Team.class,
         parentId = "teamId"))
-public class Fighter extends Identity  {
+public class Fighter extends Identity {
     private int teamId;
     private int hp = 15;
     private int dmg = 3;

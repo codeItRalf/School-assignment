@@ -5,6 +5,7 @@ package core.app.entity;
 import core.annotation.Entity;
 import core.annotation.ForeignKey;
 import core.annotation.Ignore;
+import core.database.Identity;
 
 import java.util.ArrayList;
 

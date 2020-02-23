@@ -1,83 +1,85 @@
-package core.app;
+package core.app.viewModel;
 
 
 import core.annotation.Table;
-import core.app.Repositary.DivisionRepository;
-import core.app.Repositary.FighterRepository;
-import core.app.Repositary.TeamRepository;
 import core.app.entity.Division;
 import core.app.entity.Fighter;
-import core.app.entity.Identity;
+import core.database.Identity;
 import core.app.entity.Team;
-import core.fsdb.FileSystem;
-import core.fsdb.MyDatabase;
-import core.fsdb.ViewModel;
+import core.database.FileSystem;
+import core.database.MyDatabase;
+import core.database.ViewModel;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 
 public class GameViewModel extends ViewModel{
 
     @Table(entity = Division.class)
-    private  DivisionRepository<Division> divRepo;
+    private  DivisionRepository divRepo;
 
     @Table(entity = Team.class)
-    private  TeamRepository<Team> teamRep;
+    private  TeamRepository teamRep;
 
     @Table(entity = Fighter.class)
-    private  FighterRepository<Fighter> fighterRepo;
+    private  FighterRepository fighterRepo;
 
     private int roundCount = -1;
 
     public GameViewModel() {
-        divRepo = new DivisionRepository<>(Division.class.getSimpleName());
-       teamRep = new TeamRepository<>(Team.class.getSimpleName());
-       fighterRepo = new FighterRepository<>(Fighter.class.getSimpleName());
+        divRepo = new DivisionRepository(Division.class.getSimpleName());
+       teamRep = new TeamRepository(Team.class.getSimpleName());
+       fighterRepo = new FighterRepository(Fighter.class.getSimpleName());
     }
 
 
     public Division getDivision(int id) {
-         Division division = (Division) getRepository(this,Division.class).get(id);
+         Division division = divRepo.get(id);
          setChildrenToParent(division, this);
          return division;
     }
 
     public Team getTeam(int id) {
-        Team team = (Team) getRepository(this,Team.class).get(id);
+        Team team = teamRep.get(id);
         setChildrenToParent(team, this);
         return team;
     }
 
     public Fighter getFighter(int id) {
-        Fighter fighter = (Fighter) getRepository(this,Fighter.class).get(id);
+        Fighter fighter = fighterRepo.get(id);
         return fighter;
     }
 
     public List<Division> getAllDivisions() {
-        List<Division> allDivisions = getRepository(this,Division.class).getAll();
+        List<Division> allDivisions =divRepo.getAll();
         allDivisions.forEach(e -> setChildrenToParent(e,this));
         return allDivisions;
     }
 
     public List<Team> getAllTeams() {
-        List<Team> allTeams = getRepository(this,Team.class).getAll();
+        List<Team> allTeams = teamRep.getAll();
         allTeams.forEach(e-> setChildrenToParent(e,this));
         return allTeams;
     }
 
     public List<Fighter> getAllFighters() {
-        return (List<Fighter>) getRepository(this,Fighter.class).getAll();
+        return (List<Fighter>) fighterRepo.getAll().stream().
+                sorted(Comparator.comparing(Fighter::getName))
+                .collect(Collectors
+                        .toCollection(ArrayList::new));
     }
 
 
     public Team getTeamForFighter(Fighter fighter) {
-        return (Team) getRepository(this,Team.class).get(fighter.getTeamId());
+        return (Team) teamRep.get(fighter.getTeamId());
     }
 
     public Division getDivisionForTeam(Team team) {
-        return (Division) getRepository(this,Division.class).get(team.getDivisionId());
+        return (Division)divRepo.get(team.getDivisionId());
     }
 
     public Division getDivisionForFighter(Fighter fighter) {
@@ -85,15 +87,15 @@ public class GameViewModel extends ViewModel{
     }
 
     public void insertDivision(Division division) {
-        getRepository(this, division.getClass()).insert(division);
+        divRepo.insert(division);
     }
 
     public void insertTeam(Team team) {
-        getRepository(this, team.getClass()).insert(team);
+        teamRep.insert(team);
     }
 
     public void insertFighter(Fighter fighter) {
-        getRepository(this, fighter.getClass()).insert(fighter);
+        fighterRepo.insert(fighter);
     }
 
     public void deleteEntity(Identity entity) {
@@ -115,18 +117,12 @@ public class GameViewModel extends ViewModel{
         updateRoundCount(roundCount);
     }
 
-    public Team getTheBestTeamInDiv(Division division) {
-        return division.getTeams()
-                .stream()
-                .max(Comparator.comparing(Team::getWins))
-                .get();
+    public Team getTheBestTeamInDiv(int index) {
+        return teamRep.getBestTeamFromDiv(index);
     }
 
-    public Team getTheWorstTeamInDiv(Division division) {
-        return division.getTeams()
-                .stream()
-                .min(Comparator.comparing(Team::getWins))
-                .get();
+    public Team getTheWorstTeamInDiv(int index) {
+        return teamRep.getWorstTeamFromDiv(index);
     }
 
     public int getRoundCount() {

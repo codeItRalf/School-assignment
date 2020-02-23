@@ -1,4 +1,4 @@
-package core.fsdb;
+package core.database;
 
 import core.annotation.Database;
 import core.app.GameDBGenerator;

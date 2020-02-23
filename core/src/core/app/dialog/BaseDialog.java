@@ -6,10 +6,9 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import core.app.Core;
-import core.app.entity.Identity;
-import core.app.GameViewModel;
+import core.database.Identity;
+import core.app.viewModel.GameViewModel;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;

@@ -6,7 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import core.app.Core;
 import core.app.entity.Division;
 import core.app.entity.Fighter;
-import core.app.entity.Identity;
+import core.database.Identity;
 import core.app.entity.Team;
 
 
