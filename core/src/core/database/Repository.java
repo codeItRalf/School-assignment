@@ -39,11 +39,6 @@ public abstract class Repository<E extends Identity> implements RepositoryInterf
             setNewId(entity);
         }
         if (!FileSystem.exists(dbName + "/" + entity.getClass().getSimpleName() + "/" + entity.getId())) {
-//            List<E> list =  getChildrenFromParent(entity);
-//            if (list != null) {
-//                list.forEach(this::insert);
-//                setIgnoreFieldsToNull(entity);
-//            }
             entity.addPropertyChangeListener(myObserver);
             entities.add(entity);
             FileSystem.serialize(entity);

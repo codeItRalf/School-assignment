@@ -1,12 +1,18 @@
 package core.database;
 
 import core.annotation.Entity;
+import core.annotation.Searchable;
 import core.annotation.Table;
 import core.app.entity.NoClass;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 
 public class ReflectionUtil<E extends  Identity> {
@@ -23,6 +29,13 @@ public class ReflectionUtil<E extends  Identity> {
 
    public static  <E extends Identity> String getParentIdVariableName(Class<E> clazz){
         return clazz.getAnnotation(Entity.class).foreignKey()[0].parentId();
+    }
+
+    public static  <E extends Identity>  String[] getSearchVariableName(Class<E> clazz){
+        return Arrays.stream(clazz.getDeclaredFields())
+                .filter(e -> e.getAnnotation(Searchable.class) != null)
+                .map(Field::getName)
+                .toArray(String[]::new);
     }
 
     public static <E extends Identity> String getChildVariableName(Class<E> clazz){
@@ -70,16 +83,24 @@ public class ReflectionUtil<E extends  Identity> {
         }
     }
 
-    static Object getField(Object object, String fieldName){
-        Field field;
+    public static Object getField(Object object, String fieldName){
+        Field field = null;
         Object fieldValue = null;
+        Class<?> c = object.getClass();
+        while (field == null && c != null){
+            try {
+                field = c.getDeclaredField(fieldName);
+            } catch (NoSuchFieldException e) {
+              c = c.getSuperclass();
+            }
+        }
+        field.setAccessible(true);
         try {
-            field = object.getClass().getDeclaredField(fieldName);
-            field.setAccessible(true);
             fieldValue =  field.get(object);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
+        } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
+
         return fieldValue;
     }
 

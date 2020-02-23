@@ -14,6 +14,7 @@ import core.app.entity.Division;
 import core.app.entity.Fighter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,14 +24,18 @@ public class SearchScreen extends BaseScreen<Division> {
 
 
     private String inputText;
-    private final List<Fighter> allFighters;
     private ArrayList<Fighter> filteredList;
     private final Table scrollTable;
+    private Sort sort;
+
+    enum Sort{
+        BY_NAME, BY_DAMAGE, BY_TEAM, SEARCHING
+    }
 
     public SearchScreen(Core core) {
         super(null, core);
-        allFighters = gameViewModel.getAllFighters();
-        filteredList = new ArrayList<>(allFighters);
+        filteredList = gameViewModel.getFightersSortedByName();
+        sort = Sort.BY_NAME;
         scrollTable = new Table();
     }
 
@@ -81,40 +86,41 @@ public class SearchScreen extends BaseScreen<Division> {
     }
 
     private void sortByTeam() {
-        filteredList = allFighters
-                .stream()
-                .parallel()
-                .sorted(Comparator.comparing(e -> gameViewModel.getTeamForFighter(e).getName()))
-                .collect(Collectors.toCollection(ArrayList::new));
+        if(sort != Sort.BY_TEAM){
+            filteredList = gameViewModel.getFightersSortedByTeam();
+            sort = Sort.BY_TEAM;
+        }else reverseOrder();
         getBody();
     }
 
+
+
     private void sortByDamage() {
-        filteredList = allFighters
-                .stream()
-                .parallel()
-                .sorted(Comparator.comparing(Fighter::getDmg).reversed())
-                .collect(Collectors.toCollection(ArrayList::new));
+        if(sort != Sort.BY_DAMAGE){
+            filteredList  = gameViewModel.getFightersSortedByDamage();
+            sort = Sort.BY_DAMAGE;
+        }else reverseOrder();
+
         getBody();
     }
 
     private void sortByName() {
-        filteredList = allFighters
-                .stream()
-                .parallel()
-                .sorted(Comparator.comparing(Fighter::getName))
-                .collect(Collectors.toCollection(ArrayList::new));
+        if (sort != Sort.BY_NAME){
+            filteredList = gameViewModel.getFightersSortedByName();
+            sort = Sort.BY_NAME;
+        }else reverseOrder();
+
         getBody();
     }
 
 
     private void filterList() {
-        filteredList = allFighters
-                .stream()
-                .parallel()
-                .filter(a -> a.getName().toLowerCase().contains(inputText.toLowerCase()))
-                .collect(Collectors.toCollection(ArrayList::new));
+        filteredList = gameViewModel.getFightersWithNameContaining(inputText);
         getBody();
+        sort = Sort.SEARCHING;
+    }
+    private void reverseOrder() {
+        Collections.reverse(filteredList);
     }
 
     @SuppressWarnings("DuplicatedCode")

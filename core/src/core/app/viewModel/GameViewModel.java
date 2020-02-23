@@ -54,8 +54,26 @@ public class GameViewModel extends ViewModel{
         return fighter;
     }
 
+    public ArrayList<Fighter> getFightersSortedByName(){
+       return fighterRepo.fightersSortedByName();
+    }
+
+    public ArrayList<Fighter> getFightersSortedByDamage(){
+        return fighterRepo.fightersSortedByDamage();
+    }
+
+    public ArrayList<Fighter> getFightersSortedByTeam(){
+        return fighterRepo.fightersSortedByTeam(this);
+    }
+
+    public ArrayList<Fighter> getFightersWithNameContaining(String subString){
+        ArrayList<Fighter> fighters = fighterRepo.filterFighterByNameContains(subString);
+        fighters.sort(Comparator.comparing(Identity::getName));
+        return fighters;
+    }
+
     public List<Division> getAllDivisions() {
-        List<Division> allDivisions =divRepo.getAll();
+        List<Division> allDivisions = divRepo.getAll();
         allDivisions.forEach(e -> setChildrenToParent(e,this));
         return allDivisions;
     }
