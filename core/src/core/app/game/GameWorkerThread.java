@@ -35,8 +35,8 @@ public class GameWorkerThread implements Runnable {
 
     protected void workCommand() {
         IntStream.range(0, gameViewModel.getDivision(divIndex).getTeams().size() - 1).forEach(indexA -> {
-            deepCopyTeam(indexA, teamA);
             IntStream.range(indexA + 1, gameViewModel.getDivision(divIndex).getTeams().size()).forEach(indexB -> {
+                deepCopyTeam(indexA, teamA);
                 deepCopyTeam(indexB, teamB);
                 boolean isGameOver = false;
                 while (!isGameOver) {
@@ -47,7 +47,7 @@ public class GameWorkerThread implements Runnable {
                     }
                 }
 
-                deepCopyTeam(indexA, teamA);
+
             });
         });
     }
@@ -57,8 +57,6 @@ public class GameWorkerThread implements Runnable {
         winnerTeam.incrementWinCount();
         winner.forEach(e -> {
             gameViewModel.getFighter(e.getId()).upgradeStats();
-//            int fighterIndex = winnerTeam.getFighters().indexOf(e);
-//            winnerTeam.getFighters().get(fighterIndex).upgradeStats();
         });
         Team loserTeam = gameViewModel.getTeamForFighter(loser.get(0));
         loserTeam.incrementLossCount();
