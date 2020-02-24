@@ -49,13 +49,17 @@ public class GameViewModel extends ViewModel{
         return team;
     }
 
+    public List<Team> getTeamsForDiv(Division division){
+        return  getChildrenAsList(division);
+    }
+
     public Fighter getFighter(int id) {
         Fighter fighter = fighterRepo.get(id);
         return fighter;
     }
 
-    public ArrayList<Fighter> getFightersForTeam(int teamID){
-        return fighterRepo.getFightersForTeam(teamID);
+    public List<Fighter> getFightersForTeam(Team team){
+        return  getChildrenAsList(team);
     }
 
     public ArrayList<Fighter> getFightersSortedByName(){

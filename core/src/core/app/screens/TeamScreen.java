@@ -14,6 +14,7 @@ import core.app.entity.Fighter;
 import core.app.entity.Team;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.IntStream;
 
 
@@ -66,7 +67,7 @@ public class TeamScreen extends BaseScreen<Team> {
         table = new Table();
         rootTable.add(table).growX();
         Table finalTable = table;
-        ArrayList<Fighter> fighterList = gameViewModel.getFightersForTeam(team.getId());
+        List<Fighter> fighterList = gameViewModel.getFightersForTeam(team);
         if(fighterList.size() > 0){
             fighterList.forEach(i ->{
                 Table listItemTable = new Table();

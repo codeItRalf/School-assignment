@@ -5,8 +5,10 @@ import core.database.Identity;
 import core.database.ReflectionUtil;
 import core.database.Repository;
 
+import java.sql.Ref;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.stream.Collectors;
 
 class FighterRepository extends Repository<Fighter> {
@@ -49,16 +51,6 @@ class FighterRepository extends Repository<Fighter> {
     ArrayList<Fighter> filterFighterByNameContains(String subString) {
          return (ArrayList<Fighter>) getWithStringFieldContains(ReflectionUtil.getSearchVariableName(Identity.class)[0],subString);
 
-    }
-
-
-    ArrayList<Fighter> getFightersForTeam(int teamId){
-         String parentId = ReflectionUtil.getParentIdVariableName(Fighter.class);
-         return entities
-                 .parallelStream()
-                 .filter(e-> ReflectionUtil.getField(e,parentId).equals(teamId))
-                 .sorted(Comparator.comparing(Fighter::getDmg).reversed())
-                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
 

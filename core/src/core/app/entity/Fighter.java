@@ -3,6 +3,7 @@ package core.app.entity;
 
 import core.annotation.Entity;
 import core.annotation.ForeignKey;
+import core.annotation.Positive;
 import core.database.Identity;
 
 import java.util.Random;
@@ -12,7 +13,10 @@ import java.util.Random;
         parentId = "teamId"))
 public class Fighter extends Identity {
     private int teamId;
+
+    @Positive
     private int hp = 15;
+    @Positive
     private int dmg = 3;
 
 

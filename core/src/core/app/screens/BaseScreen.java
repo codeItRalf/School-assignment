@@ -26,6 +26,7 @@ import core.app.game.GameThreadPool.RoundChangeListener;
 import core.app.viewModel.GameViewModel;
 
 import java.util.Comparator;
+import java.util.List;
 
 public abstract class BaseScreen<T extends Identity> extends ScreenAdapter implements RoundChangeListener {
 
@@ -199,12 +200,12 @@ Logger logger  = new Logger("BaseScreen", Logger.DEBUG);
         table.add(label).align(Align.center);
         rootTable.add(table);
         rootTable.row();
-
-        if(division.getTeams() != null && division.getTeams().size() > 0) {
+        List<Team> teams = gameViewModel.getTeamsForDiv(division);
+        if(teams.size() > 0) {
             table = new Table();
             rootTable.add(table).growX();
             Table finalTable = table;
-            division.getTeams()
+            teams
                     .stream()
                     .sorted(Comparator.comparing(Team::getWins).reversed())
                     .sorted(Comparator.comparing(Team::getDivStatus))

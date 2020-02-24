@@ -4,6 +4,7 @@ package core.app.entity;
 import core.annotation.Entity;
 import core.annotation.ForeignKey;
 import core.annotation.Ignore;
+import core.annotation.Positive;
 import core.database.Identity;
 
 import java.util.ArrayList;
@@ -19,8 +20,13 @@ import static core.annotation.ForeignKey.CASCADE;
         onDelete = CASCADE))
 public class Team extends Identity {
     private int divisionId;
+
+    @Positive
     private int wins;
+
+    @Positive
     private int losses;
+
     private DivStatus divStatus = DivStatus.UNCHANGED;
 
 

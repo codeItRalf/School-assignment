@@ -56,7 +56,7 @@ public abstract class  ViewModel {
         });
     }
 
-     protected  <E extends Identity>  Class<?> getChildClass(E entity) {
+     protected  <E extends Identity>  Class<E> getChildClass(E entity) {
 
         return entity.getClass().getAnnotation(Entity.class).foreignKey()[0].child();
     }
@@ -64,6 +64,11 @@ public abstract class  ViewModel {
 
     protected <T extends RepositoryInterface<Identity>> T getRepository(ViewModel viewModel, Class<?>  table){
         return ReflectionUtil.getRepository(viewModel, table);
+    }
+
+    protected <E extends Identity, T extends Identity> List<E> getChildrenAsList (T parent){
+        Class<E> child = (Class<E>) getChildClass(parent);
+      return (List<E>) getRepository(this,child).getWithIntFieldEqual(ReflectionUtil.getParentIdVariableName(child),parent.getId());
     }
 
 }
