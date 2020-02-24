@@ -27,7 +27,7 @@ public class VersusWorkerThread extends GameWorkerThread implements Runnable {
     @Override
     protected void workCommand() {
         boolean isGameOver = false;
-        while (!isGameOver) {
+        while (!isGameOver && teamA.size() >0 && teamB.size() > 0) {
             if (r.nextBoolean()) {
                 isGameOver = gameMechanic(teamA, teamB);
             } else {

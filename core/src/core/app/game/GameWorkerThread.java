@@ -39,7 +39,7 @@ public class GameWorkerThread implements Runnable {
                 deepCopyTeam(indexA, teamA);
                 deepCopyTeam(indexB, teamB);
                 boolean isGameOver = false;
-                while (!isGameOver) {
+                while (!isGameOver && teamA.size() >0 && teamB.size() > 0) {
                     if (r.nextBoolean()) {
                         isGameOver = gameMechanic(teamA, teamB);
                     } else {
@@ -63,7 +63,6 @@ public class GameWorkerThread implements Runnable {
     }
 
    synchronized   protected boolean gameMechanic(ArrayList<Fighter> team1, ArrayList<Fighter> team2) {
-       System.out.println("random bound: " + team1.size());
         int dmg = team1.get(r.nextInt(team1.size())).getDmg();
         Fighter fighter = team2.get(r.nextInt(team2.size()));
         if (isKnockOut()) dmg = fighter.getHp();
