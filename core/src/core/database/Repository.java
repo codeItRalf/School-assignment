@@ -16,7 +16,7 @@ public abstract class Repository<E extends Identity> implements RepositoryInterf
     private final String dbName = MyDatabase.class.getSimpleName();
 
 
-    private List<E> entities;
+    protected List<E> entities;
     private final MyObserver<E> myObserver;
 
     public Repository(String entityName) {

@@ -24,7 +24,7 @@ public class ChangeNameDialog<T extends Identity> extends BaseDialog<T> {
     @Override
     protected void actionRequest() {
       String className =  t.getClass().getSimpleName();
-      if(t!= null)t.setName(inputText);
+        t.setName(inputText);
       if(className.equals(Division.class.getSimpleName())){
             core.showDivisionScreen((Division) t);
       }else if(className.equals(Team.class.getSimpleName())){
@@ -34,8 +34,5 @@ public class ChangeNameDialog<T extends Identity> extends BaseDialog<T> {
       }else {
            throw new ClassCastException();
       }
-
-
-
     }
 }

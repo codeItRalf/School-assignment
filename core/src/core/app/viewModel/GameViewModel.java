@@ -54,6 +54,10 @@ public class GameViewModel extends ViewModel{
         return fighter;
     }
 
+    public ArrayList<Fighter> getFightersForTeam(int teamID){
+        return fighterRepo.getFightersForTeam(teamID);
+    }
+
     public ArrayList<Fighter> getFightersSortedByName(){
        return fighterRepo.fightersSortedByName();
     }

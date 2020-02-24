@@ -52,4 +52,14 @@ class FighterRepository extends Repository<Fighter> {
     }
 
 
+    ArrayList<Fighter> getFightersForTeam(int teamId){
+         String parentId = ReflectionUtil.getParentIdVariableName(Fighter.class);
+         return entities
+                 .parallelStream()
+                 .filter(e-> ReflectionUtil.getField(e,parentId).equals(teamId))
+                 .sorted(Comparator.comparing(Fighter::getDmg).reversed())
+                 .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+
 }
