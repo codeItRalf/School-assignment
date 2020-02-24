@@ -2,6 +2,7 @@ package core.database;
 
 
 import core.annotation.Ignore;
+import core.annotation.Positive;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -38,7 +39,8 @@ public abstract class Repository<E extends Identity> implements RepositoryInterf
         if (entity.getId() == -1) {
             setNewId(entity);
         }
-        if (!FileSystem.exists(dbName + "/" + entity.getClass().getSimpleName() + "/" + entity.getId())) {
+        if (!FileSystem.exists(dbName + "/" + entity.getClass().getSimpleName() + "/" + entity.getId())
+        && checkPositiveValueIsValid(entity)) {
             entity.addPropertyChangeListener(myObserver);
             entities.add(entity);
             FileSystem.serialize(entity);
@@ -54,8 +56,11 @@ public abstract class Repository<E extends Identity> implements RepositoryInterf
 
     @Override
     public void update(E entity) {
-        setIgnoreFieldsToNull(entity);
-        FileSystem.serialize(entity);
+        if (checkPositiveValueIsValid(entity)){
+            setIgnoreFieldsToNull(entity);
+            checkPositiveValueIsValid(entity);
+            FileSystem.serialize(entity);
+        }
     }
 
 
@@ -101,6 +106,18 @@ public abstract class Repository<E extends Identity> implements RepositoryInterf
             if (e.getAnnotation(Ignore.class) != null) {
                 ReflectionUtil.setField(entity,e.getName(),null);
             }
+        });
+    }
+
+    private  boolean checkPositiveValueIsValid(E entity) {
+     return  Arrays.stream(entity.getClass().getDeclaredFields()).allMatch(e -> {
+            boolean isValid = true;
+            if (e.getAnnotation(Positive.class) != null) {
+                if((int) ReflectionUtil.getField(entity,e.getName()) < 0){
+                    isValid = false;
+                }
+            }
+           return isValid;
         });
     }
 

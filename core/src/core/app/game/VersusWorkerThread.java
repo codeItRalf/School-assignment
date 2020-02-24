@@ -60,6 +60,6 @@ public class VersusWorkerThread extends GameWorkerThread implements Runnable {
             losersDiv.getTeams().add(winnersDiv.getTeams().remove(winnersIndex));
             winnerTeam.setDivStatus(Team.DivStatus.UP);
             loserTeam.setDivStatus(Team.DivStatus.DOWN);
-        }
+         }
     }
 }
