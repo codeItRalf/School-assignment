@@ -138,7 +138,7 @@ public abstract class Repository<E extends Identity> implements RepositoryInterf
                 .get();
     }
 
-    @Override
+
     public void removeFile(E entity) {
         String path = pathWithSlash + entity.getId();
         FileSystem.delete(path);

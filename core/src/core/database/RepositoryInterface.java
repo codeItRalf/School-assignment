@@ -9,7 +9,6 @@ public interface RepositoryInterface<E extends Identity> {
      void insert(E entity);
      void remove(E entity);
      void update(E entity);
-     void removeFile(E e);
      List<E> getAll();
      List<E> getWithIntFieldEqual(String field, int i);
      List<E> getWithIntFieldLessOrEqual(String field, int i);

@@ -22,7 +22,6 @@ public class Core extends Game {
     private BitmapFont bitmapFont;
 
 
-    //Logic and ViewModel
     private final GameViewModel gameViewModel;
 
     public Core(GameViewModel gameViewModel) {

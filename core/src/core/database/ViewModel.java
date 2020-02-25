@@ -3,6 +3,7 @@ package core.database;
 
 import core.annotation.Entity;
 import core.annotation.ForeignKey;
+import core.app.appViewModel.GameViewModel;
 import core.app.entity.NoClass;
 
 import java.util.List;
@@ -44,12 +45,13 @@ public abstract class  ViewModel {
         return entity.getClass().getAnnotation(Entity.class).foreignKey()[0].onDelete() == ForeignKey.CASCADE;
     }
 
-    protected <E extends Identity> void removeChildren(E entity) {
+    protected <E extends Identity> void removeChildren(E entity, GameViewModel gameViewModel) {
         List<E> childList = ReflectionUtil.getChildrenFromParent(entity);
         IntStream.range(0, childList != null ? childList.size() : 0).forEach(index -> {
-                getRepository(this, entity.getClass()).removeFile( childList.get(index));
-            if (index != childList.size() - 1 && ReflectionUtil.childrenExist(childList.get(index).getClass())) {
-                removeChildren(childList.get(index));
+            System.out.println("Remove child");
+                getRepository(gameViewModel, childList.get(0).getClass()).remove( childList.get(index));
+            if (ReflectionUtil.childrenExist(childList.get(index).getClass())) {
+                removeChildren(childList.get(index), gameViewModel);
             }
         });
     }

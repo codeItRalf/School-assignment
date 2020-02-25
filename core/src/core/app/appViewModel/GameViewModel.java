@@ -129,7 +129,7 @@ public class GameViewModel extends ViewModel{
 
     public void deleteEntity(Identity entity) {
         if(deepRemove(entity)){
-            removeChildren(entity);
+            removeChildren(entity, this);
         }
         getRepository(this,entity.getClass()).remove(entity);
     }
