@@ -23,7 +23,7 @@ import core.app.entity.Division;
 import core.database.Identity;
 import core.app.entity.Team;
 import core.app.game.GameThreadPool.RoundChangeListener;
-import core.app.viewModel.GameViewModel;
+import core.app.appViewModel.GameViewModel;
 
 import java.util.Comparator;
 import java.util.List;

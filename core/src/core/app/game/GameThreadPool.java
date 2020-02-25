@@ -4,7 +4,7 @@ import core.app.Core;
 import core.database.Identity;
 import core.app.entity.Team;
 import core.app.screens.BaseScreen;
-import core.app.viewModel.GameViewModel;
+import core.app.appViewModel.GameViewModel;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;

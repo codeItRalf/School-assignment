@@ -5,11 +5,10 @@ import core.annotation.Database;
 import core.app.entity.Division;
 import core.app.entity.Fighter;
 import core.app.entity.Team;
-import core.app.viewModel.GameViewModel;
+import core.app.appViewModel.GameViewModel;
 import core.database.FileSystem;
 import core.database.Util;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;

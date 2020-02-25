@@ -1,14 +1,13 @@
-package core.app.viewModel;
+package core.app.appViewModel;
 
 import core.app.entity.Team;
-import core.database.Identity;
 import core.database.ReflectionUtil;
 import core.database.Repository;
 
 import java.util.Comparator;
 
 
-class TeamRepository extends Repository<Team> {
+public class TeamRepository extends Repository<Team> {
 
 
     public TeamRepository(String pathString) {

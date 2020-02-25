@@ -2,7 +2,7 @@ package core.app.game;
 
 import core.app.entity.Fighter;
 import core.app.entity.Team;
-import core.app.viewModel.GameViewModel;
+import core.app.appViewModel.GameViewModel;
 
 import java.util.ArrayList;
 import java.util.Random;

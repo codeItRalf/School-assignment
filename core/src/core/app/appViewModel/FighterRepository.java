@@ -1,17 +1,15 @@
-package core.app.viewModel;
+package core.app.appViewModel;
 
 import core.app.entity.Fighter;
 import core.database.Identity;
 import core.database.ReflectionUtil;
 import core.database.Repository;
 
-import java.sql.Ref;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
 import java.util.stream.Collectors;
 
-class FighterRepository extends Repository<Fighter> {
+public class FighterRepository extends Repository<Fighter> {
 
 
     public   FighterRepository(String pathString) {

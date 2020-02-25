@@ -1,4 +1,4 @@
-package core.app.viewModel;
+package core.app.appViewModel;
 
 
 import core.annotation.Database;

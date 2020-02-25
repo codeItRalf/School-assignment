@@ -1,4 +1,4 @@
-package core.app.viewModel;
+package core.database;
 
 import core.annotation.Database;
 import core.annotation.Table;
@@ -7,11 +7,8 @@ import core.database.FileSystem;
 import core.database.Repository;
 import core.database.ViewModel;
 
-import javax.print.DocFlavor;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
+
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Arrays;
 
 public class InitUtil {

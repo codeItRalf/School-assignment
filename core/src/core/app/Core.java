@@ -15,7 +15,7 @@ import core.app.entity.Division;
 import core.app.entity.Fighter;
 import core.app.entity.Team;
 import core.app.screens.*;
-import core.app.viewModel.GameViewModel;
+import core.app.appViewModel.GameViewModel;
 
 public class Core extends Game {
     private Skin skin;
