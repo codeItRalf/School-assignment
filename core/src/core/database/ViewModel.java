@@ -11,9 +11,7 @@ import java.util.stream.IntStream;
 
 public abstract class  ViewModel {
 
-    public ViewModel() {
-        new MyDatabase();
-    }
+
 
 
 

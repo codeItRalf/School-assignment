@@ -4,6 +4,7 @@ package core.database;
 import core.annotation.Ignore;
 import core.annotation.Positive;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -14,14 +15,15 @@ import static core.database.FileSystem.generateId;
 
 
 public abstract class Repository<E extends Identity> implements RepositoryInterface<E> {
-    private final String dbName = MyDatabase.class.getSimpleName();
+    private final String pathWithSlash;
 
 
     protected List<E> entities;
     private final MyObserver<E> myObserver;
 
-    public Repository(String entityName) {
-        this.entities =  initEntityList(entityName);
+    public Repository(String pathWithSlash) {
+        this.entities =  initEntityList(pathWithSlash);
+        this.pathWithSlash = pathWithSlash;
         this.myObserver = new MyObserver<E>(entities,this);
     }
 
@@ -39,11 +41,11 @@ public abstract class Repository<E extends Identity> implements RepositoryInterf
         if (entity.getId() == -1) {
             setNewId(entity);
         }
-        if (!FileSystem.exists(dbName + "/" + entity.getClass().getSimpleName() + "/" + entity.getId())
+        if (!FileSystem.exists(pathWithSlash + entity.getId())
         && checkPositiveValueIsValid(entity)) {
             entity.addPropertyChangeListener(myObserver);
             entities.add(entity);
-            FileSystem.serialize(entity);
+            FileSystem.serialize(pathWithSlash, entity);
         }
     }
 
@@ -59,7 +61,7 @@ public abstract class Repository<E extends Identity> implements RepositoryInterf
         if (checkPositiveValueIsValid(entity)){
             setIgnoreFieldsToNull(entity);
             checkPositiveValueIsValid(entity);
-            FileSystem.serialize(entity);
+            FileSystem.serialize(pathWithSlash, entity);
         }
     }
 
@@ -138,22 +140,25 @@ public abstract class Repository<E extends Identity> implements RepositoryInterf
 
     @Override
     public void removeFile(E entity) {
-        String path = dbName + "/" + entity.getClass().getSimpleName() + "/" + entity.getId();
+        String path = pathWithSlash + entity.getId();
         FileSystem.delete(path);
     }
 
 
 
     protected   void setNewId(E entity) {
-        entity.setId(generateId(MyDatabase.class.getSimpleName() + "/" + entity.getClass().getSimpleName()));
+        entity.setId(generateId(pathWithSlash));
     }
 
 
 
-    protected   List<E> initEntityList(String type) {
-        List<Integer> ids = FileSystem.getAllIds(MyDatabase.class.getSimpleName() + "/" + type);
+    protected   List<E> initEntityList(String path) {
+        List<Integer> ids = FileSystem.getAllIds(path);
+        if(ids == null || ids.size() < 1){
+            return new ArrayList<>();
+        }
         return ids.stream().map(e -> {
-            E object = (E) FileSystem.deserialize(type, e);
+            E object = (E) FileSystem.deserialize(path, e);
             return object;
         }).collect(Collectors.toList());
     }

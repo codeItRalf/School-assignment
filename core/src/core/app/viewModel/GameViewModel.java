@@ -1,14 +1,12 @@
 package core.app.viewModel;
 
 
+import core.annotation.Database;
 import core.annotation.Table;
 import core.app.entity.Division;
 import core.app.entity.Fighter;
-import core.database.Identity;
+import core.database.*;
 import core.app.entity.Team;
-import core.database.FileSystem;
-import core.database.MyDatabase;
-import core.database.ViewModel;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -16,7 +14,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-
+@Database(name = "MyDatabase")
 public class GameViewModel extends ViewModel{
 
     @Table(entity = Division.class)
@@ -31,9 +29,10 @@ public class GameViewModel extends ViewModel{
     private int roundCount = -1;
 
     public GameViewModel() {
-        divRepo = new DivisionRepository(Division.class.getSimpleName());
-       teamRep = new TeamRepository(Team.class.getSimpleName());
-       fighterRepo = new FighterRepository(Fighter.class.getSimpleName());
+        InitUtil.Injector(this);
+//        divRepo = new DivisionRepository(Division.class.getSimpleName());
+//       teamRep = new TeamRepository(Team.class.getSimpleName());
+//       fighterRepo = new FighterRepository(Fighter.class.getSimpleName());
     }
 
 
@@ -156,7 +155,7 @@ public class GameViewModel extends ViewModel{
     }
 
     public int getRoundCount() {
-        String path = MyDatabase.class.getSimpleName() + "/fightCount";
+        String path = this.getClass().getAnnotation(Database.class).name()+ "/fightCount";
         if (!FileSystem.exists(path)) {
             FileSystem.writeFile(path, "1");
         }
@@ -164,7 +163,7 @@ public class GameViewModel extends ViewModel{
     }
 
     public void updateRoundCount(int fightCount) {
-        String path = MyDatabase.class.getSimpleName() + "/fightCount";
+        String path = this.getClass().getAnnotation(Database.class).name() + "/fightCount";
         FileSystem.writeFile(path, String.valueOf(fightCount));
     }
 

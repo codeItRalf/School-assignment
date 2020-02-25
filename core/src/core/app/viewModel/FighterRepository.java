@@ -14,8 +14,8 @@ import java.util.stream.Collectors;
 class FighterRepository extends Repository<Fighter> {
 
 
-     FighterRepository(String entityName) {
-        super(entityName);
+    public   FighterRepository(String pathString) {
+        super(pathString);
     }
 
 

@@ -11,8 +11,8 @@ import java.util.Comparator;
 class TeamRepository extends Repository<Team> {
 
 
-     TeamRepository(String entityName) {
-        super(entityName);
+    public TeamRepository(String pathString) {
+        super(pathString);
     }
 
 

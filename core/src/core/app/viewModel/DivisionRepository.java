@@ -7,7 +7,7 @@ import core.database.Repository;
  class DivisionRepository extends Repository<Division> {
 
 
-     DivisionRepository(String entityName) {
-        super(entityName);
+     public  DivisionRepository(String pathString) {
+        super(pathString);
     }
 }

@@ -74,7 +74,7 @@ public class FileSystem {
      * @param dirName Path of the directory to create.
      * @return Returns true if the directory was created.
      */
-     static boolean createDir(String dirName) {
+     public static boolean createDir(String dirName) {
         return new File(dirName).mkdir();
     }
 
@@ -109,9 +109,8 @@ public class FileSystem {
 
 
     static <E extends Identity> Object deserialize(String path, int id){
-        String rootPath = MyDatabase.class.getSimpleName() + "/" + path +  "/" + id;
         Object o = null;
-        try(var in = new ObjectInputStream(new FileInputStream(rootPath))){
+        try(var in = new ObjectInputStream(new FileInputStream(path + id))){
             o = in.readObject();
         }
         catch(IOException ex )
@@ -125,9 +124,8 @@ public class FileSystem {
         return o;
     }
 
-     public static void serialize(Identity obj){
-        String path = MyDatabase.class.getSimpleName() + "/" + obj.getClass().getSimpleName() + "/" + obj.getId();
-        try (var out = new ObjectOutputStream(new FileOutputStream(path,false))) {
+     public static void serialize(String path, Identity obj){
+        try (var out = new ObjectOutputStream(new FileOutputStream(path + obj.getId(),false))) {
             out.writeObject(obj);
 
         } catch (IOException e) {
