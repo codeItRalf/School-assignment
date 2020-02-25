@@ -45,13 +45,13 @@ public abstract class  ViewModel {
         return entity.getClass().getAnnotation(Entity.class).foreignKey()[0].onDelete() == ForeignKey.CASCADE;
     }
 
-    protected <E extends Identity> void removeChildren(E entity, GameViewModel gameViewModel) {
+    protected <E extends Identity> void removeChildren(E entity) {
         List<E> childList = ReflectionUtil.getChildrenFromParent(entity);
         IntStream.range(0, childList != null ? childList.size() : 0).forEach(index -> {
             System.out.println("Remove child");
-                getRepository(gameViewModel, childList.get(0).getClass()).remove( childList.get(index));
+                getRepository(this, childList.get(0).getClass()).remove( childList.get(index));
             if (ReflectionUtil.childrenExist(childList.get(index).getClass())) {
-                removeChildren(childList.get(index), gameViewModel);
+                removeChildren(childList.get(index));
             }
         });
     }
