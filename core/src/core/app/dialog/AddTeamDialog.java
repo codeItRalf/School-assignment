@@ -22,7 +22,7 @@ public class AddTeamDialog extends BaseDialog<Division> {
     @Override
     protected void actionRequest() {
         Team team = new Team(inputText, -1, t.getId(), new ArrayList<>());
-        viewModel.insertTeam(team);
+        gameViewModel.insertTeam(team);
         core.showDivisionScreen(t);
 
     }

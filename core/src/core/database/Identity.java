@@ -1,4 +1,6 @@
-package core.app.entity;
+package core.database;
+
+import core.annotation.Searchable;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -9,6 +11,8 @@ abstract public class Identity implements Serializable {
     private static final long serialVersionUID = 3333L;
 
     private int id;
+
+    @Searchable
     private String name;
 
     protected final PropertyChangeSupport support = new PropertyChangeSupport(this);

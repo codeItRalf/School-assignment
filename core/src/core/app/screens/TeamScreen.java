@@ -1,4 +1,4 @@
-package core.app.menuScreen;
+package core.app.screens;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -10,8 +10,11 @@ import com.badlogic.gdx.utils.Align;
 import core.app.Core;
 import core.app.dialog.AddFighterDialog;
 import core.app.dialog.MoveToDivisionDialog;
+import core.app.entity.Fighter;
 import core.app.entity.Team;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.IntStream;
 
 
@@ -34,7 +37,7 @@ public class TeamScreen extends BaseScreen<Team> {
         table.add(setNameLabel());
         rootTable.add(table);
         rootTable.row();
-        Label label = new Label("Division: " + core.getViewModel().getDivisionForTeam(team).getName(), skin);
+        Label label = new Label("Division: " + core.getGameViewModel().getDivisionForTeam(team).getName(), skin);
         label.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -64,16 +67,17 @@ public class TeamScreen extends BaseScreen<Team> {
         table = new Table();
         rootTable.add(table).growX();
         Table finalTable = table;
-        if(team.getFighters() != null && team.getFighters().size() > 0){
-            IntStream.range(0, team.getFighters().size()).forEach(i ->{
+        List<Fighter> fighterList = gameViewModel.getFightersForTeam(team);
+        if(fighterList.size() > 0){
+            fighterList.forEach(i ->{
                 Table listItemTable = new Table();
-                Label itemLabel = new Label(team.getFighters().get(i).getName() ,skin);
+                Label itemLabel = new Label(i.getName() ,skin);
                 itemLabel.setAlignment(Align.left);
                 listItemTable.add(itemLabel).align(Align.center).width(CELL_WIDTH);
-                itemLabel = new Label(team.getFighters().get(i).getDmg()+"", skin);
+                itemLabel = new Label(i.getDmg()+"", skin);
                 itemLabel.setAlignment(Align.center);
                 listItemTable.add(itemLabel).align(Align.center).width(CELL_WIDTH);
-                itemLabel = new Label(team.getFighters().get(i).getHp() + "", skin);
+                itemLabel = new Label(i.getHp() + "", skin);
                 itemLabel.setAlignment(Align.right);
                 listItemTable.add(itemLabel).align(Align.center).width(CELL_WIDTH);
                 finalTable.add(listItemTable).growX();
@@ -81,7 +85,7 @@ public class TeamScreen extends BaseScreen<Team> {
                 listItemTable.addListener(new ClickListener(){
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
-                        core.setScreen(new FighterScreen(team.getFighters().get(i),core));
+                        core.setScreen(new FighterScreen(i,core));
                     }
                 });
             });

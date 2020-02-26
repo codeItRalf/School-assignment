@@ -1,7 +1,5 @@
-package core.fsdb;
+package core.database;
 
-
-import core.app.entity.Identity;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -20,7 +18,7 @@ public class FileSystem {
      * @param fileName Path of the file to read from.
      * @return Returns string with the data read, or null if something went wrong.
      */
-     public static String readFile(String fileName) {
+      public static String readFile(String fileName) {
         try {
             return new String(Files.readAllBytes(Paths.get(fileName)));
         } catch (IOException e) {
@@ -35,7 +33,7 @@ public class FileSystem {
      * @param fileName Path of the file to write to.
      * @param data     The data to be written into the file.
      */
-     public static void writeFile(String fileName, String data) {
+      public static void writeFile(String fileName, String data) {
         try {
             BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName));
             bufferedWriter.write(data);
@@ -51,7 +49,7 @@ public class FileSystem {
      * @param filePath Path to check.
      * @return Returns true if the path exists, else returns false.
      */
-     public static boolean exists(String filePath) {
+      public static boolean exists(String filePath) {
         return Files.exists(Paths.get(filePath));
     }
 
@@ -76,7 +74,7 @@ public class FileSystem {
      * @param dirName Path of the directory to create.
      * @return Returns true if the directory was created.
      */
-     static boolean createDir(String dirName) {
+     public static boolean createDir(String dirName) {
         return new File(dirName).mkdir();
     }
 
@@ -111,9 +109,8 @@ public class FileSystem {
 
 
     static <E extends Identity> Object deserialize(String path, int id){
-        String rootPath = MyDatabase.class.getSimpleName() + "/" + path +  "/" + id;
         Object o = null;
-        try(var in = new ObjectInputStream(new FileInputStream(rootPath))){
+        try(var in = new ObjectInputStream(new FileInputStream(path + id))){
             o = in.readObject();
         }
         catch(IOException ex )
@@ -127,9 +124,8 @@ public class FileSystem {
         return o;
     }
 
-    public static void serialize(Identity obj){
-        String path = MyDatabase.class.getSimpleName() + "/" + obj.getClass().getSimpleName() + "/" + obj.getId();
-        try (var out = new ObjectOutputStream(new FileOutputStream(path,false))) {
+     public static void serialize(String path, Identity obj){
+        try (var out = new ObjectOutputStream(new FileOutputStream(path + obj.getId(),false))) {
             out.writeObject(obj);
 
         } catch (IOException e) {
@@ -140,7 +136,7 @@ public class FileSystem {
 
 
 
-    public   static File[] getSubFolders(String databasePath){
+       static File[] getSubFolders(String databasePath){
         return new File(databasePath).listFiles(File::isDirectory);
     }
 
@@ -162,7 +158,7 @@ synchronized static int generateId(String path) {
         return ref.id +1;
     }
 
-    public static List<Integer> getAllIds(String path){
+     static List<Integer> getAllIds(String path){
          return   Arrays.stream(Objects.requireNonNull(getDirFiles(path)))
                 .map(File::toString)
                 .map(e-> e.replaceAll("[^0-9]",""))

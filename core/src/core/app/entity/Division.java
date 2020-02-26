@@ -5,12 +5,13 @@ package core.app.entity;
 import core.annotation.Entity;
 import core.annotation.ForeignKey;
 import core.annotation.Ignore;
+import core.database.Identity;
 
 import java.util.ArrayList;
 
 import static core.annotation.ForeignKey.CASCADE;
 
-@Entity(primaryKey = "id", foreignKey = @ForeignKey(
+@Entity( primaryKey = "id", foreignKey = @ForeignKey(
         child = Team.class,
         listOfChildren = "teams",
         onDelete = CASCADE))

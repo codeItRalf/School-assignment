@@ -3,21 +3,29 @@ package core.app.entity;
 
 import core.annotation.Entity;
 import core.annotation.ForeignKey;
+import core.annotation.Positive;
+import core.database.Identity;
 
 import java.util.Random;
 
 @Entity( primaryKey = "id", foreignKey = @ForeignKey(
         parent = Team.class,
         parentId = "teamId"))
-public class Fighter extends Identity  {
+public class Fighter extends Identity {
     private int teamId;
+
+    @Positive
     private int hp = 15;
+    @Positive
     private int dmg = 3;
 
-    public enum attribute {
+
+    public enum Attribute {
         DMG,
         HP
     }
+
+
 
     public Fighter() {
     }
@@ -75,5 +83,6 @@ public class Fighter extends Identity  {
         this.dmg += r.nextInt(50) == 0 ? 50 : 1;
         support.firePropertyChange("upgrade", oldSum, this.hp + this.dmg);
     }
+
 
 }

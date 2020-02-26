@@ -1,22 +1,21 @@
 package core.app.game;
 
 import core.app.Core;
-import core.app.entity.Identity;
+import core.database.Identity;
 import core.app.entity.Team;
-import core.app.menuScreen.BaseScreen;
-import core.app.ViewModel;
+import core.app.screens.BaseScreen;
+import core.app.appViewModel.GameViewModel;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.IntStream;
 
 
 public class GameThreadPool {
 
     private Core core;
-    private ViewModel viewModel;
+    private GameViewModel gameViewModel;
     private int value;
     private RoundChangeListener roundChangeListener;
 
@@ -24,7 +23,7 @@ public class GameThreadPool {
     public GameThreadPool(Core core, int round, BaseScreen<? extends Identity> tBaseScreen) {
         this.core = core;
         this.value = round;
-        this.viewModel = core.getViewModel();
+        this.gameViewModel = core.getGameViewModel();
         this.roundChangeListener = tBaseScreen;
     }
 
@@ -34,22 +33,29 @@ public class GameThreadPool {
 
     public void run() {
         roundChangeListener.update(true);
-        int actualRound = viewModel.getActualRoundCount();
+        int actualRound = gameViewModel.getActualRoundCount();
         IntStream.range(actualRound, value).forEach(e -> {
-            ExecutorService executorService = Executors.newFixedThreadPool(viewModel.getAllDivisions().size());
-            IntStream.range(0, viewModel.getAllDivisions().size()).forEach(index -> {
-                Runnable worker = new GameWorkerThread(viewModel, index);
+            ExecutorService executorService = Executors.newFixedThreadPool(gameViewModel.getAllDivisions().size());
+            IntStream.range(0, gameViewModel.getAllDivisions().size()).forEach(index -> {
+                Runnable worker = new GameWorkerThread(gameViewModel, index);
                 executorService.execute(worker);
             });
             executorService.shutdown();
             while (!executorService.isTerminated()) {
             }
             //If end of season, match worst and best teams of division and reset stats.
-            if (viewModel.getActualRoundCount() % 10 == 0) {
-                runSeasonEnding();
-                viewModel.getAllTeams().forEach(Team::resetStats);
+            if (gameViewModel.getActualRoundCount() % 10 == 0) {
+               runSeasonEnding();
+                if(gameViewModel.teamHasChangedDivision()){
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+                gameViewModel.getAllTeams().forEach(Team::resetStats);
             }
-            viewModel.incrementRoundCount();
+            gameViewModel.incrementRoundCount();
         });
         try {
             Thread.sleep(100);
@@ -62,13 +68,13 @@ public class GameThreadPool {
     private void runSeasonEnding() {
         var teams = new ArrayList<Team>();
         ExecutorService executorService = Executors.newFixedThreadPool(1);
-        IntStream.range(0, viewModel.getAllDivisions().size()).forEach(index -> {
+        IntStream.range(0, gameViewModel.getAllDivisions().size()).forEach(index -> {
             if (index != 0) {
-                teams.add(viewModel.getTheBestTeamInDiv(viewModel.getDivision(index)));
+                teams.add(gameViewModel.getTheBestTeamInDiv(index));
             }
-            teams.add(viewModel.getTheWorstTeamInDiv(viewModel.getDivision(index)));
+            teams.add(gameViewModel.getTheWorstTeamInDiv(index));
             if (teams.size() > 1) {
-                Runnable worker = new VersusWorkerThread(viewModel, teams.remove(0), teams.remove(0));
+                Runnable worker = new VersusWorkerThread(gameViewModel, teams.remove(0), teams.remove(0));
                 executorService.execute(worker);
             }
         });

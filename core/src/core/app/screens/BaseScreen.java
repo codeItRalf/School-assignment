@@ -1,12 +1,14 @@
-package core.app.menuScreen;
+package core.app.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
+import com.badlogic.gdx.scenes.scene2d.utils.*;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Logger;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -18,12 +20,13 @@ import core.app.dialog.ChangeNameDialog;
 import core.app.dialog.DeleteDialog;
 import core.app.dialog.GameRoundDialog;
 import core.app.entity.Division;
-import core.app.entity.Identity;
+import core.database.Identity;
 import core.app.entity.Team;
 import core.app.game.GameThreadPool.RoundChangeListener;
-import core.app.ViewModel;
+import core.app.appViewModel.GameViewModel;
 
 import java.util.Comparator;
+import java.util.List;
 
 public abstract class BaseScreen<T extends Identity> extends ScreenAdapter implements RoundChangeListener {
 
@@ -35,7 +38,7 @@ public abstract class BaseScreen<T extends Identity> extends ScreenAdapter imple
     protected final Skin uiSkin;
     protected final TextField.TextFieldStyle textFieldStyle;
     protected final Core core;
-    protected final ViewModel viewModel;
+    protected final GameViewModel gameViewModel;
     public static DesktopWorker desktopWorker;
     private int dragStartX, dragStartY;
     private int windowStartX, windowStartY;
@@ -54,7 +57,7 @@ Logger logger  = new Logger("BaseScreen", Logger.DEBUG);
         this.t = t;
         this.skin = core.getSkin();
         this.core = core;
-        this.viewModel = core.getViewModel();
+        this.gameViewModel = core.getGameViewModel();
         this.textFieldStyle = core.getTextFieldStyle();
         uiSkin = new Skin(Gdx.files.internal("default_skin/uiskin.json"));
     }
@@ -153,7 +156,7 @@ Logger logger  = new Logger("BaseScreen", Logger.DEBUG);
     }
 
     protected Label getSeason() {
-        return new Label("Season " + viewModel.getActualRoundCount() / 10, skin);
+        return new Label("Season " + gameViewModel.getActualRoundCount() / 10, skin);
     }
 
     private Table getSearchButton() {
@@ -197,14 +200,15 @@ Logger logger  = new Logger("BaseScreen", Logger.DEBUG);
         table.add(label).align(Align.center);
         rootTable.add(table);
         rootTable.row();
-
-        if(division.getTeams() != null && division.getTeams().size() > 0) {
+        List<Team> teams = gameViewModel.getTeamsForDiv(division);
+        if(teams.size() > 0) {
             table = new Table();
             rootTable.add(table).growX();
             Table finalTable = table;
-            division.getTeams()
+            teams
                     .stream()
                     .sorted(Comparator.comparing(Team::getWins).reversed())
+                    .sorted(Comparator.comparing(Team::getDivStatus))
                     .forEach(e -> {
                         Table listItemTable = getTeamListItem(e);
                         finalTable.add(listItemTable).growX();
@@ -215,10 +219,22 @@ Logger logger  = new Logger("BaseScreen", Logger.DEBUG);
                                 core.setScreen(new TeamScreen(e, core));
                             }
                         });
+                        if(e.getDivStatus() != Team.DivStatus.UNCHANGED){
+                            listItemTable.setBackground(getBackground(e.getDivStatus()));
+                        }
                     });
         }
 
         return rootTable;
+    }
+
+    private Drawable getBackground(Team.DivStatus divStatus) {
+        Pixmap bgPixmap = new Pixmap(1,1, Pixmap.Format.RGB565);
+        if (divStatus.equals(Team.DivStatus.UP))
+            bgPixmap.setColor(Color.GREEN);
+            else bgPixmap.setColor(Color.RED);
+        bgPixmap.fill();
+        return  new TextureRegionDrawable(new TextureRegion(new Texture(bgPixmap)));
     }
 
 
@@ -267,7 +283,7 @@ Logger logger  = new Logger("BaseScreen", Logger.DEBUG);
     }
 
     protected Label getRoundButton() {
-        Label label = new Label("Round: " + viewModel.getActualRoundCount(), skin);
+        Label label = new Label("Round: " + gameViewModel.getActualRoundCount(), skin);
         label.setAlignment(Align.left);
         label.addListener(new ClickListener() {
             @Override

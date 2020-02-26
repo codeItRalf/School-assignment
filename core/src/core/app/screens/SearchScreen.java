@@ -1,4 +1,4 @@
-package core.app.menuScreen;
+package core.app.screens;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -14,7 +14,9 @@ import core.app.entity.Division;
 import core.app.entity.Fighter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -22,17 +24,18 @@ public class SearchScreen extends BaseScreen<Division> {
 
 
     private String inputText;
-    private final ArrayList<Fighter> allFighters;
     private ArrayList<Fighter> filteredList;
     private final Table scrollTable;
+    private Sort sort;
+
+    enum Sort{
+        BY_NAME, BY_DAMAGE, BY_TEAM, SEARCHING
+    }
 
     public SearchScreen(Core core) {
         super(null, core);
-        allFighters = viewModel.getAllFighters().stream().
-                sorted(Comparator.comparing(Fighter::getName))
-                .collect(Collectors
-                        .toCollection(ArrayList::new));
-        filteredList = new ArrayList<>(allFighters);
+        filteredList = gameViewModel.getFightersSortedByName();
+        sort = Sort.BY_NAME;
         scrollTable = new Table();
     }
 
@@ -83,40 +86,41 @@ public class SearchScreen extends BaseScreen<Division> {
     }
 
     private void sortByTeam() {
-        filteredList = allFighters
-                .stream()
-                .parallel()
-                .sorted(Comparator.comparing(e -> viewModel.getTeamForFighter(e).getName()))
-                .collect(Collectors.toCollection(ArrayList::new));
+        if(sort != Sort.BY_TEAM){
+            filteredList = gameViewModel.getFightersSortedByTeam();
+            sort = Sort.BY_TEAM;
+        }else reverseOrder();
         getBody();
     }
 
+
+
     private void sortByDamage() {
-        filteredList = allFighters
-                .stream()
-                .parallel()
-                .sorted(Comparator.comparing(Fighter::getDmg).reversed())
-                .collect(Collectors.toCollection(ArrayList::new));
+        if(sort != Sort.BY_DAMAGE){
+            filteredList  = gameViewModel.getFightersSortedByDamage();
+            sort = Sort.BY_DAMAGE;
+        }else reverseOrder();
+
         getBody();
     }
 
     private void sortByName() {
-        filteredList = allFighters
-                .stream()
-                .parallel()
-                .sorted(Comparator.comparing(Fighter::getName))
-                .collect(Collectors.toCollection(ArrayList::new));
+        if (sort != Sort.BY_NAME){
+            filteredList = gameViewModel.getFightersSortedByName();
+            sort = Sort.BY_NAME;
+        }else reverseOrder();
+
         getBody();
     }
 
 
     private void filterList() {
-        filteredList = allFighters
-                .stream()
-                .parallel()
-                .filter(a -> a.getName().toLowerCase().contains(inputText.toLowerCase()))
-                .collect(Collectors.toCollection(ArrayList::new));
+        filteredList = gameViewModel.getFightersWithNameContaining(inputText);
         getBody();
+        sort = Sort.SEARCHING;
+    }
+    private void reverseOrder() {
+        Collections.reverse(filteredList);
     }
 
     @SuppressWarnings("DuplicatedCode")
@@ -134,7 +138,7 @@ public class SearchScreen extends BaseScreen<Division> {
                 itemLabel = new Label(filteredList.get(i).getDmg() + "", skin);
                 itemLabel.setAlignment(Align.center);
                 listItemTable.add(itemLabel).align(Align.center).width(CELL_WIDTH);
-                itemLabel = new Label(viewModel.getTeamForFighter(filteredList.get(i)).getName(), skin);
+                itemLabel = new Label(gameViewModel.getTeamForFighter(filteredList.get(i)).getName(), skin);
                 itemLabel.setAlignment(Align.right);
                 listItemTable.add(itemLabel).align(Align.center).width(CELL_WIDTH);
                 table.add(listItemTable).growX();
